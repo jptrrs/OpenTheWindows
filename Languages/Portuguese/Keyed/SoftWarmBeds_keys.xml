@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+  <!--settings-->
+  <SoftWarmBeds>Soft Warm Beds</SoftWarmBeds>
+  <ColorDisplayOptionPillowLabel>Cor da função da cama no travesseiro e lençol; cor do material da roupa de cama na colcha</ColorDisplayOptionPillowLabel>
+  <ColorDisplayOptionPillowTooltip>Enfatiza o material da roupa de cama.</ColorDisplayOptionPillowTooltip>
+  <ColorDisplayOptionBlanketLabel>Cor da função da cama na colcha; cor do material da roupa de cama no travesseiro e lençol</ColorDisplayOptionBlanketLabel>
+  <ColorDisplayOptionBlanketTooltip>Enfatiza a função da cama. Usa a cor do jogo base para a cama dos colonos.</ColorDisplayOptionBlanketTooltip>
+  <ColorWashLevel>Suavização da cor no travesseiro e lençol</ColorWashLevel>
+  <ColorWashNone>Tecido perfeitamente tingido.</ColorWashNone>
+  <ColorWashNormal>Contraste ideal com a colcha.</ColorWashNormal>
+  <ColorWashTotal>Lençóis branquinhos. Quem precisa de indicações coloridas?</ColorWashTotal>
+  <PleaseReload>Favor recarregar.</PleaseReload>
+  <!--ui-->
+  <TabBedding>Fazer Cama</TabBedding>
+  <BedMade>Esta cama está feita em {1_label}.</BedMade>
+  <BedNotMade>Esta cama está desfeita.</BedNotMade>
+  <NoBeddings>Sem roupa de cama.</NoBeddings>
+  <CommandUnmakeBed>Desfazer</CommandUnmakeBed>
+  <CommandUnmakeBedDesc>Remover a roupa de cama atual para que ela seja substituída por outra.</CommandUnmakeBedDesc>
+  <MessageOutOfNearbyBeddingsFor>{PAWN_labelShort} não encontrou nenhuma roupa de cama livre por perto para {BED_label}.</MessageOutOfNearbyBeddingsFor>
+  <StatsReport_BedInsulation>Enquanto na cama actual</StatsReport_BedInsulation>
+</LanguageData>

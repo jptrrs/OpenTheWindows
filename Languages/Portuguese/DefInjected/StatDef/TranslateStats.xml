@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+  
+  <BedStuffEffectMultiplierInsulation_Cold.label>multiplicador de efeito do material isolante para frio.</BedStuffEffectMultiplierInsulation_Cold.label>
+
+  <BedStuffEffectMultiplierInsulation_Heat.label>multiplicador de efeito do material isolante para calor.</BedStuffEffectMultiplierInsulation_Heat.label>
+
+  <Bed_Insulation_Cold.label>Isolamento - Frio</Bed_Insulation_Cold.label>
+  <Bed_Insulation_Cold.description>O quanto essa cama melhora a temperatura confortável mínima do usuário. Valores maiores permitem sobreviver em temperaturas mais frias.</Bed_Insulation_Cold.description>
+
+  <Bed_Insulation_Heat.label>Isolamento - Calor</Bed_Insulation_Heat.label>
+  <Bed_Insulation_Heat.description>O quanto essa cama melhora a temperatura confortável máxima do usuário. Valores maiores permitem sobreviver em temperaturas mais quentes.</Bed_Insulation_Heat.description>
+
+  <Textile_Softness.label>Maciez</Textile_Softness.label>
+  <Textile_Softness.description>Determina o quão confortável um objeto feito deste material é. Quando usado em roupa de cama, afeta o quanto de descanso a cama fornece.</Textile_Softness.description>
+
+</LanguageData>

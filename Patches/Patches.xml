@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+  
+  <!--to Stats_Basics_General-->
+  <Operation Class="PatchOperationSequence">
+    <success>Always</success>
+    <operations>
+      <li Class="PatchOperationAdd">
+        <xpath>*/StatDef[defName = "Beauty"]/parts</xpath>
+        <value>
+          <li Class="OpenTheWindows.StatPart_Landscape"/>
+        </value>
+      </li>
+    </operations>
+  </Operation>
+
+</Patch>

@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <ThingDef ParentName="BuildingBase" Name="WindowBase" Abstract="True">
+    <thingClass>OpenTheWindows.Building_Window</thingClass>
+    <category>Building</category>
+    <altitudeLayer>Building</altitudeLayer>
+    <fillPercent>1</fillPercent>
+    <useHitPoints>true</useHitPoints>
+    <stuffCategories>
+      <li>Metallic</li>
+      <li>Woody</li>
+    </stuffCategories>
+    <statBases>
+      <Flammability>1.0</Flammability>
+    </statBases>
+    <leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+    <selectable>true</selectable>
+    <rotatable>true</rotatable>
+    <!--doors are false!-->
+    <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
+    <designationCategory>Structure</designationCategory>
+    <designationHotKey>Misc3</designationHotKey>
+    <holdsRoof>true</holdsRoof>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+    <passability>Impassable</passability>
+    <blockLight>false</blockLight>
+    <blockWind>true</blockWind>
+    <coversFloor>true</coversFloor>
+    <castEdgeShadows>true</castEdgeShadows>
+    <canOverlapZones>false</canOverlapZones>
+    <tickerType>Rare</tickerType>
+    <placeWorkers>
+      <li>OpenTheWindows.PlaceWorker_Window</li>
+    </placeWorkers>
+    <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
+    <building>
+      <isInert>true</isInert>
+      <canPlaceOverWall>true</canPlaceOverWall>
+      <!--<blueprintClass>OpenTheWindows.Blueprint_Window</blueprintClass>-->
+    </building>
+    <researchPrerequisites>
+      <li>ComplexFurniture</li>
+    </researchPrerequisites>
+    <comps>
+      <li Class="CompProperties_Flickable">
+        <commandTexture>UI/OpenWindows</commandTexture>
+        <commandLabelKey>CommandDesignateOpenCloseWindowLabel</commandLabelKey>
+        <commandDescKey>CommandDesignateOpenCloseWindowDesc</commandDescKey>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ThingDef ParentName="WindowBase">
+    <defName>Window</defName>
+    <label>Window</label>
+    <description>A small window that allows outside light in. Comes with a view.</description>
+    <graphicData>
+      <texPath>Things/Building/Window</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+      </damageData>
+    </graphicData>
+    <statBases>
+      <WorkToBuild>1000</WorkToBuild>
+      <MaxHitPoints>100</MaxHitPoints>
+      <Flammability>1.0</Flammability>
+    </statBases>
+    <size>(1,1)</size>
+    <costStuffCount>25</costStuffCount>
+    <costList>
+      <Steel>5</Steel>
+    </costList>
+  </ThingDef>
+
+  <ThingDef ParentName="WindowBase">
+    <defName>LargeWindow</defName>
+    <label>Large Window</label>
+    <description>A big window that lets a large amount of light and the landscape in.</description>
+    <graphicData>
+      <texPath>Things/Building/LargeWindow</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <drawSize>(4,4)</drawSize>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+      </damageData>
+    </graphicData>
+    <statBases>
+      <WorkToBuild>1600</WorkToBuild>
+      <MaxHitPoints>100</MaxHitPoints>
+      <Flammability>1.0</Flammability>
+    </statBases>
+    <size>(3,1)</size>
+    <costStuffCount>50</costStuffCount>
+    <costList>
+      <Steel>10</Steel>
+    </costList>
+  </ThingDef>
+</Defs>

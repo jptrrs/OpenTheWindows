@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+
+  <Window.label>Janela</Window.label>
+  <Window.description>Uma pequena janela para deixar luz entrar. Tem uma vista.</Window.description>
+
+  <LargeWindow.label>Janela Grande</LargeWindow.label>
+  <LargeWindow.description>Uma janela grande que deixa passar muita luz junto com a paisagem.</Window.description>
+
+</LanguageData>

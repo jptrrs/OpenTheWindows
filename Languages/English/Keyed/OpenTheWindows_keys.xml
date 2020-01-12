@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+  <!--ui-->
+  <ClosedWindow>Closed</ClosedWindow>
+  <LandscapeToThe>Landscape to the</LandscapeToThe>
+  <CommandDesignateOpenCloseWindowLabel>Designate Open/Close</CommandDesignateOpenCloseWindowLabel>
+  <CommandDesignateOpenCloseWindowDesc>Designate this window to be open or closed. A colonist will come soon to perform the task.</CommandDesignateOpenCloseWindowDesc>
+  
+  <!--settings-->
+  <OpenTheWindows>Open The Windows!</OpenTheWindows>
+  <IndoorsNoNaturalLightPenalty>Outdoors need acceleration</IndoorsNoNaturalLightPenalty>
+  <IndoorsNoNaturalLightPenaltyDesc>Multiplies the outdoors level degradation when the pawn is indoors but not under a window.</IndoorsNoNaturalLightPenaltyDesc>
+  <BeautySensitivityReduction>Beauty sensitivity reduction</BeautySensitivityReduction>
+  <BeautySensitivityReductionDesc>Numbs the pawns' sensitivity to beauty to compensate for the amount added by "Nature is Beautiful" and captured by the windows.</BeautySensitivityReductionDesc>
+  
+</LanguageData>

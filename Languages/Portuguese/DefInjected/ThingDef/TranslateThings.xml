@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+
+  <Beddings.label>Roupa de Cama</Beddings.label>
+
+  <Rede.label>Rede</Rede.label>
+  <Rede.description>A cama mais simples e mais prática já inventada, feita só de corda e um pouco de tecido ou couro. Dá pra pendurar em qualquer lugar e até levar com você para poder tirar uma soneca quando estiver viajando. Suspensa no ar, lhe mantém fresco, o que é perfeito para um clima tropical. Não é tão confortável como uma cama de verdade no entanto.</Rede.description>
+
+  <SingleBedding.label>roupa de cama de solteiro</SingleBedding.label>
+  <SingleBedding.description>Conjunto de colchão, travesseiros, lençóis e cobertor para uma cama de solteiro. Fornece conforto e isolamento térmico para quem estiver na cama.</SingleBedding.description>
+
+  <DoubleBedding.label>roupa de cama de casal</DoubleBedding.label>
+  <DoubleBedding.description>Conjunto de colchão, travesseiros, lençóis e cobertor para uma cama de casal. Fornece conforto e isolamento térmico para quem estiver na cama.</DoubleBedding.description>
+
+</LanguageData>
