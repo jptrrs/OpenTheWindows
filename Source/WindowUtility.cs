@@ -162,7 +162,7 @@ namespace OpenTheWindows
                     }
                     for (int i = 1; i < 1 + reach + deep; i++)
                     {
-                        IntVec3 target = new IntVec3(cellx - i, 0, cellz);
+                        IntVec3 target = new IntVec3(Math.Max(0, cellx - i), 0, cellz);
                         if (target.Walkable(map) & !map.roofGrid.Roofed(target)) maxReachB++;
                         else break;
                     }
@@ -178,25 +178,25 @@ namespace OpenTheWindows
                     //add borders if on extremity
                     if (!large || c + nextOnTop == start)
                     {
-                        for (int f = 1; f <= reach; f++)
-                        {
+                        //for (int f = 1; f <= reach; f++)
+                        //{
                             for (int i = 1; i <= maxReach; i++)
                             {
-                                area.Add(new IntVec3(cellx + i, 0, cellz + f));
-                                area.Add(new IntVec3(cellx - i, 0, cellz + f));
+                                area.Add(new IntVec3(cellx + i, 0, cellz + 1));
+                                area.Add(new IntVec3(cellx - i, 0, cellz + 1));
                             }
-                        }
+                        //}
                     }
                     if (!large || c + nextOnBottom == end)
                     {
-                        for (int f = 1; f <= reach; f++)
-                        {
+                        //for (int f = 1; f <= reach; f++)
+                        //{
                             for (int i = 1; i <= maxReach; i++)
                             {
-                                area.Add(new IntVec3(cellx + i, 0, cellz - f));
-                                area.Add(new IntVec3(cellx - i, 0, cellz - f));
+                                area.Add(new IntVec3(cellx + i, 0, cellz - 1));
+                                area.Add(new IntVec3(cellx - i, 0, cellz - 1));
                             }
-                        }
+                        //}
                     }
 
                     //clean cell itself
@@ -221,7 +221,7 @@ namespace OpenTheWindows
                     }
                     for (int i = 1; i <= reach + deep; i++)
                     {
-                        IntVec3 target = new IntVec3(cellx, 0, cellz - i);
+                        IntVec3 target = new IntVec3(cellx, 0, Math.Max(0, cellz - i));
                         if (target.Walkable(map) & !map.roofGrid.Roofed(target)) maxReachB++;
                         else break;
                     }
@@ -237,25 +237,25 @@ namespace OpenTheWindows
                     //add borders if on extremity
                     if (!large || c + nextOnRight == start)
                     {
-                        for (int f = 1; f <= reach; f++)
-                        {
+                        //for (int f = 1; f <= reach; f++)
+                        //{
                             for (int i = 1; i <= maxReach; i++)
                             {
-                                area.Add(new IntVec3(cellx + f, 0, cellz + i));
-                                area.Add(new IntVec3(cellx + f, 0, cellz - i));
-                            }
+                                area.Add(new IntVec3(cellx + 1, 0, cellz + i));
+                                area.Add(new IntVec3(cellx + 1, 0, cellz - i));
+                            //}
                         }
                     }
                     if (!large || c + nextOnLeft == end)
                     {
-                        for (int f = 1; f <= reach; f++)
-                        {
+                        //for (int f = 1; f <= reach; f++)
+                        //{
                             for (int i = 1; i <= maxReach; i++)
                             {
-                                area.Add(new IntVec3(cellx - f, 0, cellz + i));
-                                area.Add(new IntVec3(cellx - f, 0, cellz - i));
+                                area.Add(new IntVec3(cellx - 1, 0, cellz + i));
+                                area.Add(new IntVec3(cellx - 1, 0, cellz - i));
                             }
-                        }
+                        //}
                     }
 
                     //clean cell itself
@@ -312,53 +312,53 @@ namespace OpenTheWindows
             }
         }
 
-        public static Rot4 WindowRotationAt(IntVec3 loc, Map map)
-        {
-            int num = 0;
-            int num2 = 0;
-            num += AlignQualityAgainst(loc + IntVec3.East, map);
-            num += AlignQualityAgainst(loc + IntVec3.West, map);
-            num2 += AlignQualityAgainst(loc + IntVec3.North, map);
-            num2 += AlignQualityAgainst(loc + IntVec3.South, map);
-            if (num >= num2)
-            {
-                return Rot4.North;
-            }
-            return Rot4.East;
-        }
+        //public static Rot4 WindowRotationAt(IntVec3 loc, Map map)
+        //{
+        //    int num = 0;
+        //    int num2 = 0;
+        //    num += AlignQualityAgainst(loc + IntVec3.East, map);
+        //    num += AlignQualityAgainst(loc + IntVec3.West, map);
+        //    num2 += AlignQualityAgainst(loc + IntVec3.North, map);
+        //    num2 += AlignQualityAgainst(loc + IntVec3.South, map);
+        //    if (num >= num2)
+        //    {
+        //        return Rot4.North;
+        //    }
+        //    return Rot4.East;
+        //}
 
-        private static int AlignQualityAgainst(IntVec3 c, Map map)
-        {
-            if (!c.InBounds(map))
-            {
-                return 0;
-            }
-            if (!c.Walkable(map))
-            {
-                return 9;
-            }
-            List<Thing> thingList = c.GetThingList(map);
-            for (int i = 0; i < thingList.Count; i++)
-            {
-                Thing thing = thingList[i];
-                if (typeof(Building_Window).IsAssignableFrom(thing.def.thingClass))
-                {
-                    return 1;
-                }
-                Thing thing2 = thing as Blueprint;
-                if (thing2 != null)
-                {
-                    if (thing2.def.entityDefToBuild.passability == Traversability.Impassable)
-                    {
-                        return 9;
-                    }
-                    if (typeof(Building_Window).IsAssignableFrom(thing.def.thingClass))
-                    {
-                        return 1;
-                    }
-                }
-            }
-            return 0;
-        }
+        //private static int AlignQualityAgainst(IntVec3 c, Map map)
+        //{
+        //    if (!c.InBounds(map))
+        //    {
+        //        return 0;
+        //    }
+        //    if (!c.Walkable(map))
+        //    {
+        //        return 9;
+        //    }
+        //    List<Thing> thingList = c.GetThingList(map);
+        //    for (int i = 0; i < thingList.Count; i++)
+        //    {
+        //        Thing thing = thingList[i];
+        //        if (typeof(Building_Window).IsAssignableFrom(thing.def.thingClass))
+        //        {
+        //            return 1;
+        //        }
+        //        Thing thing2 = thing as Blueprint;
+        //        if (thing2 != null)
+        //        {
+        //            if (thing2.def.entityDefToBuild.passability == Traversability.Impassable)
+        //            {
+        //                return 9;
+        //            }
+        //            if (typeof(Building_Window).IsAssignableFrom(thing.def.thingClass))
+        //            {
+        //                return 1;
+        //            }
+        //        }
+        //    }
+        //    return 0;
+        //}
     }
 }

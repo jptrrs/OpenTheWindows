@@ -5,6 +5,6 @@
   <Window.description>Uma pequena janela para deixar luz entrar. Tem uma vista.</Window.description>
 
   <LargeWindow.label>Janela Grande</LargeWindow.label>
-  <LargeWindow.description>Uma janela grande que deixa passar muita luz junto com a paisagem.</Window.description>
+  <LargeWindow.description>Uma janela grande que deixa passar muita luz junto com a paisagem.</LargeWindow.description>
 
 </LanguageData>

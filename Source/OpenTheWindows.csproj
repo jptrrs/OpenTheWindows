@@ -108,15 +108,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Defs\Needs.xml">
-      <Link>Needs.xml</Link>
+    <Content Include="..\About\About.xml">
+      <Link>About.xml</Link>
     </Content>
-    <Content Include="..\Defs\Things.xml">
-      <Link>Things.xml</Link>
-    </Content>
-    <Content Include="About.xml" />
-    <Content Include="Languages\English\Keyed\OpenTheWindows.xml" />
-    <Content Include="OpenTheWindows.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

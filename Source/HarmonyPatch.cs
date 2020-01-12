@@ -38,7 +38,7 @@ namespace OpenTheWindows
                         harmonyInstance.Patch(original: AccessTools.Method(type: typeof(Need_Beauty), name: "LevelFromBeauty"),
                             prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(LevelFromBeauty_Postfix)), transpiler: null);
 
-                        OpenTheWindowsSettings.IsBeautyOn = true;
+                        //OpenTheWindowsSettings.IsBeautyOn = true;
                     }
                 }))();
             }
