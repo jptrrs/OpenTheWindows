@@ -27,11 +27,14 @@ namespace OpenTheWindows
             harmonyInstance.Patch(original: AccessTools.Method(type: typeof(Need_Outdoors), name: "NeedInterval"),
                 prefix: new HarmonyMethod(type: patchType, name: nameof(NeedInterval_Prefix)), postfix: null, transpiler: null);
 
+            harmonyInstance.Patch(original: AccessTools.Method(type: typeof(CompFlickable), name: "DoFlick"),
+                prefix: new HarmonyMethod(type: patchType, name: nameof(DoFlick_Prefix)), postfix: null, transpiler: null);
+
             try
             {
                 ((Action)(() =>
                 {
-                    if (LoadedModManager.RunningModsListForReading.Any(x => x.Name == "Nature is Beautiful v2.5 [1.0]"))
+                    if (LoadedModManager.RunningModsListForReading.Any(x => x.Name.Contains("Nature is Beautiful") /*== "Nature is Beautiful v2.5 [1.0]"*/))
                     {
                         Log.Message("[OpenTheWindows] Nature is Beautiful detected! Adapting...");
 
@@ -45,7 +48,7 @@ namespace OpenTheWindows
             catch (TypeLoadException ex) { }
         }
 
-        public static float WindowFiltering = 0.1f; //Make it variable?
+        public static float WindowFiltering = 0.1f; 
 
         public static void GameGlowAt_Postfix(GlowGrid __instance, IntVec3 c, ref float __result)
         {
@@ -212,5 +215,15 @@ namespace OpenTheWindows
         }
 
         private static float ModifiedBeautyImpactFactor() => 0.1f - (OpenTheWindowsSettings.BeautySensitivityReduction / 10); // original is 0.1f ... testing
+
+        public static bool DoFlick_Prefix(object __instance)
+        {
+            if (__instance is CompWindow compWindow)
+            {
+                compWindow.DoFlick();
+                return true;
+            }
+            else return false;
+        }
     }
 }

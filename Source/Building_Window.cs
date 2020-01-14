@@ -10,11 +10,22 @@ namespace OpenTheWindows
     {
         //public bool blocked;
 
-        private CompFlickable flickableComp;
-
+        public static IntVec3 end;
+        public static IntVec3 start;
+        public LinkDirections Facing;   
         public List<IntVec3> illuminated;
+        public bool isFacingSet = false;
+        private CompWindow compWindow;
+        private bool Venting = false;
+        public override Graphic Graphic
+        {
+            get
+            {
+                return this.compWindow.CurrentGraphic;
+            }
+        }
 
-        public bool Open => this.TryGetComp<CompFlickable>().SwitchIsOn;
+        public bool Open => this.TryGetComp<CompWindow>().SwitchIsOn;
 
         //private static int AlignQualityAgainst(IntVec3 c, Map map)
         //{
@@ -121,47 +132,12 @@ namespace OpenTheWindows
             base.ExposeData();
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
-                if (flickableComp == null)
+                if (compWindow == null)
                 {
-                    flickableComp = base.GetComp<CompFlickable>();
+                    compWindow = base.GetComp<CompWindow>();
                 }
             }
         }
-
-        public override string GetInspectString()
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.Append(base.GetInspectString());
-            if (!FlickUtility.WantsToBeOn(this))
-            {
-                if (stringBuilder.Length > 0)
-                {
-                    stringBuilder.AppendLine();
-                }
-                stringBuilder.Append("ClosedWindow".Translate());
-            }
-            if (isFacingSet)
-            {
-                if (stringBuilder.Length > 0)
-                {
-                    stringBuilder.AppendLine();
-                }
-                stringBuilder.Append("Facing " + FacingCardinal() + ".");
-            }
-            return stringBuilder.ToString();
-        }
-
-        public override void SpawnSetup(Map map, bool rsal)
-        {
-            flickableComp = base.GetComp<CompFlickable>();
-            base.SpawnSetup(map, rsal);
-            map.GetComponent<MapComp_Windows>().RegisterWindow(this);
-            map.GetComponent<MapComp_Windows>().RegenGrid();
-            map.glowGrid.MarkGlowGridDirty(base.Position);
-            WindowUtility.FindWindowExternalFacing(this);
-        }
-
-        public LinkDirections Facing;
 
         public Direction8Way FacingCardinal()
         {
@@ -190,57 +166,56 @@ namespace OpenTheWindows
             return dir;
         }
 
-        public bool isFacingSet = false;
+        public override string GetInspectString()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append(base.GetInspectString());
+            if (!FlickUtility.WantsToBeOn(this))
+            {
+                if (stringBuilder.Length > 0)
+                {
+                    stringBuilder.AppendLine();
+                }
+                stringBuilder.Append("ClosedWindow".Translate());
+            }
+            if (isFacingSet)
+            {
+                if (stringBuilder.Length > 0)
+                {
+                    stringBuilder.AppendLine();
+                }
+                stringBuilder.Append("Facing " + FacingCardinal() + ".");
+            }
+            return stringBuilder.ToString();
+        }
 
+        public override void SpawnSetup(Map map, bool rsal)
+        {
+            compWindow = GetComp<CompWindow>();
+            base.SpawnSetup(map, rsal);
+            map.GetComponent<MapComp_Windows>().RegisterWindow(this);
+            map.GetComponent<MapComp_Windows>().RegenGrid();
+            map.glowGrid.MarkGlowGridDirty(base.Position);
+            WindowUtility.FindWindowExternalFacing(this);
+            DebugViewSettings.logSignals = true;
+        }
         public override void TickRare()
         {
             Map.GetComponent<MapComp_Windows>().RegenGrid();
+            if (Venting) GenTemperature.EqualizeTemperaturesThroughBuilding(this, 14f, true);
         }
 
         protected override void ReceiveCompSignal(string signal)
         {
-            if (signal == "FlickedOff") def.blockLight = true;
-            if (signal == "FlickedOn") def.blockLight = false;
-            if (signal == "FlickedOff" || signal == "FlickedOn" || signal == "ScheduledOn" || signal == "ScheduledOff")
+            if (signal == "lightOff") def.blockLight = true;
+            if (signal == "lightOn") def.blockLight = false;
+            if (signal == "lightOff" || signal == "lightOn" || signal == "ScheduledOn" || signal == "ScheduledOff")
             {
                 Map.GetComponent<MapComp_Windows>().RegenGrid();
                 Map.glowGrid.MarkGlowGridDirty(base.Position);
             }
+            if (signal == "ventOn") Venting = true;
+            if (signal == "ventOff") Venting = false;
         }
-
-        public override Graphic Graphic
-        {
-            get
-            {
-                return this.flickableComp.CurrentGraphic;
-            }
-        }
-
-        public static IntVec3 start;
-        public static IntVec3 end;
-
-        //private void SetupExtremities()
-        //{
-        //    LinkDirections dirA;
-        //    LinkDirections dirB;
-        //    IntVec3 centerAdjustB;
-        //    IntVec3 centerAdjustA;
-        //    if (Rotation.IsHorizontal)
-        //    {
-        //        dirA = LinkDirections.Up;
-        //        dirB = LinkDirections.Down;
-        //        centerAdjustA = new IntVec3(1, 0, -1);
-        //        centerAdjustB = new IntVec3(1, 0, +1);
-        //    }
-        //    else
-        //    {
-        //        dirA = LinkDirections.Right;
-        //        dirB = LinkDirections.Left;
-        //        centerAdjustA = new IntVec3(-1, 0, 1);
-        //        centerAdjustB = new IntVec3(+1, 0, 1);
-        //    }
-        //    start = GenAdj.CellsAdjacentAlongEdge(Position + centerAdjustA, Rotation, def.size, dirA).FirstOrFallback();
-        //    end = GenAdj.CellsAdjacentAlongEdge(Position + centerAdjustB, Rotation, def.size, dirB).FirstOrFallback();
-        //}
     }
 }

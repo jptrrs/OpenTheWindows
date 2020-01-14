@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Glass+Lights</li>
+		</mods>
+		<match Class="PatchOperationSequence">
+			<success>Normal</success>
+			<operations>
+
+				<!--<li Class="PatchOperationRemove">
+					<xpath>/Defs/ThingDef[defName = "Window"]/designationCategory</xpath>
+				</li>-->
+				<!--Can't do that, since there would be no use for reinforced glass!-->
+				
+				<li Class="PatchOperationReplace">
+					<xpath>/Defs/ThingDef[defName = "OpenWindow"]/costList</xpath>
+					<value>
+						<costList>
+							<Glass>1</Glass>
+						</costList>
+					</value>				
+				</li>
+
+				<li Class="PatchOperationReplace">
+					<xpath>/Defs/ThingDef[defName = "LargeOpenWindow"]/costList</xpath>
+					<value>
+						<costList>
+							<Glass>3</Glass>
+						</costList>
+					</value>				
+				</li>
+
+			</operations>
+		</match> 
+	</Operation>
+
+</Patch>
+

@@ -1,5 +1,4 @@
-﻿using RimWorld;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Verse;
 
@@ -180,22 +179,22 @@ namespace OpenTheWindows
                     {
                         //for (int f = 1; f <= reach; f++)
                         //{
-                            for (int i = 1; i <= maxReach; i++)
-                            {
-                                area.Add(new IntVec3(cellx + i, 0, cellz + 1));
-                                area.Add(new IntVec3(cellx - i, 0, cellz + 1));
-                            }
+                        for (int i = 1; i <= maxReach; i++)
+                        {
+                            area.Add(new IntVec3(cellx + i, 0, cellz + 1));
+                            area.Add(new IntVec3(cellx - i, 0, cellz + 1));
+                        }
                         //}
                     }
                     if (!large || c + nextOnBottom == end)
                     {
                         //for (int f = 1; f <= reach; f++)
                         //{
-                            for (int i = 1; i <= maxReach; i++)
-                            {
-                                area.Add(new IntVec3(cellx + i, 0, cellz - 1));
-                                area.Add(new IntVec3(cellx - i, 0, cellz - 1));
-                            }
+                        for (int i = 1; i <= maxReach; i++)
+                        {
+                            area.Add(new IntVec3(cellx + i, 0, cellz - 1));
+                            area.Add(new IntVec3(cellx - i, 0, cellz - 1));
+                        }
                         //}
                     }
 
@@ -239,10 +238,10 @@ namespace OpenTheWindows
                     {
                         //for (int f = 1; f <= reach; f++)
                         //{
-                            for (int i = 1; i <= maxReach; i++)
-                            {
-                                area.Add(new IntVec3(cellx + 1, 0, cellz + i));
-                                area.Add(new IntVec3(cellx + 1, 0, cellz - i));
+                        for (int i = 1; i <= maxReach; i++)
+                        {
+                            area.Add(new IntVec3(cellx + 1, 0, cellz + i));
+                            area.Add(new IntVec3(cellx + 1, 0, cellz - i));
                             //}
                         }
                     }
@@ -250,11 +249,11 @@ namespace OpenTheWindows
                     {
                         //for (int f = 1; f <= reach; f++)
                         //{
-                            for (int i = 1; i <= maxReach; i++)
-                            {
-                                area.Add(new IntVec3(cellx - 1, 0, cellz + i));
-                                area.Add(new IntVec3(cellx - 1, 0, cellz - i));
-                            }
+                        for (int i = 1; i <= maxReach; i++)
+                        {
+                            area.Add(new IntVec3(cellx - 1, 0, cellz + i));
+                            area.Add(new IntVec3(cellx - 1, 0, cellz - i));
+                        }
                         //}
                     }
 

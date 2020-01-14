@@ -41,16 +41,23 @@
       <li>ComplexFurniture</li>
     </researchPrerequisites>
     <comps>
-      <li Class="CompProperties_Flickable">
-        <commandTexture>UI/OpenWindows</commandTexture>
-        <commandLabelKey>CommandDesignateOpenCloseWindowLabel</commandLabelKey>
-        <commandDescKey>CommandDesignateOpenCloseWindowDesc</commandDescKey>
+      <li Class="OpenTheWindows.CompProperties_Window">
+        <commandTexture>UI/LightIcon</commandTexture>
+        <commandLabelKey>CommandOpenCloseWindowLightLabel</commandLabelKey>
+        <commandDescKey>CommandOpenCloseWindowLightDesc</commandDescKey>
+        <signal>light</signal>
+      </li>
+      <li Class="OpenTheWindows.CompProperties_Window">
+        <commandTexture>UI/AirVentIcon</commandTexture>
+        <commandLabelKey>CommandOpenCloseWindowVentLabel</commandLabelKey>
+        <commandDescKey>CommandOpenCloseWindowVentDesc</commandDescKey>
+        <signal>vent</signal>
       </li>
     </comps>
   </ThingDef>
 
   <ThingDef ParentName="WindowBase">
-    <defName>Window</defName>
+    <defName>OpenWindow</defName>
     <label>Window</label>
     <description>A small window that allows outside light in. Comes with a view.</description>
     <graphicData>
@@ -76,7 +83,7 @@
   </ThingDef>
 
   <ThingDef ParentName="WindowBase">
-    <defName>LargeWindow</defName>
+    <defName>LargeOpenWindow</defName>
     <label>Large Window</label>
     <description>A big window that lets a large amount of light and the landscape in.</description>
     <graphicData>
@@ -96,7 +103,7 @@
       <Flammability>1.0</Flammability>
     </statBases>
     <size>(3,1)</size>
-    <costStuffCount>50</costStuffCount>
+    <costStuffCount>75</costStuffCount>
     <costList>
       <Steel>10</Steel>
     </costList>
