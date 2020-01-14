@@ -1,3 +1,5 @@
+![Preview](https://github.com/jptrrs/OpenTheWindows/blob/master/About/Preview.png)
+
 # [JPT] Open The Windows!
 Natural Light for RimWorld
 
