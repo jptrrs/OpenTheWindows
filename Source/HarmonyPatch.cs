@@ -41,15 +41,16 @@ namespace OpenTheWindows
                         harmonyInstance.Patch(original: AccessTools.Method(type: typeof(Need_Beauty), name: "LevelFromBeauty"),
                             prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(LevelFromBeauty_Postfix)), transpiler: null);
 
-                        //OpenTheWindowsSettings.IsBeautyOn = true;
+                        OpenTheWindowsSettings.IsBeautyOn = true;
                     }
                 }))();
             }
             catch (TypeLoadException ex) { }
         }
 
-        public static float WindowFiltering = 0.1f; 
+        public static float WindowFiltering = 0.1f;
 
+        [HarmonyAfter(new string[] { "Dubwise.Dubs_Skylights" })]
         public static void GameGlowAt_Postfix(GlowGrid __instance, IntVec3 c, ref float __result)
         {
             //Experimenting w/ float light grid
@@ -71,6 +72,7 @@ namespace OpenTheWindows
 
         public static RoofDef[] roofGridCopy;
 
+        [HarmonyAfter(new string[] { "Dubwise.Dubs_Skylights" })]
         public static void Regenerate_Prefix(SectionLayer_LightingOverlay __instance)
         {
             FieldInfo sectionInfo = AccessTools.Field(typeof(SectionLayer), "section");
@@ -99,7 +101,8 @@ namespace OpenTheWindows
                 }
             }
         }
-
+        
+        [HarmonyAfter(new string[] { "Dubwise.Dubs_Skylights" })]
         public static void Regenerate_Postfix(SectionLayer_LightingOverlay __instance)
         {
             FieldInfo sectionInfo = AccessTools.Field(typeof(SectionLayer), "section");
@@ -110,12 +113,14 @@ namespace OpenTheWindows
             roofGridCInfo.SetValue(map.roofGrid, roofGridCopy);
         }
 
+        [HarmonyAfter(new string[] { "Dubwise.Dubs_Skylights" })]
         public static bool NeedInterval_Prefix(object __instance)
         {
             NeedInterval(__instance);
             return true;
         }
 
+        [HarmonyAfter(new string[] { "Dubwise.Dubs_Skylights" })]
         public static void NeedInterval(object __instance)
         {
             PropertyInfo disabledInfo = AccessTools.Property(__instance.GetType(), "Disabled");
