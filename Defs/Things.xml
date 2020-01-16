@@ -51,7 +51,7 @@
         <commandTexture>UI/AirVentIcon</commandTexture>
         <commandLabelKey>CommandOpenCloseWindowVentLabel</commandLabelKey>
         <commandDescKey>CommandOpenCloseWindowVentDesc</commandDescKey>
-        <signal>vent</signal>
+        <signal>air</signal>
       </li>
     </comps>
   </ThingDef>

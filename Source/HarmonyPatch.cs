@@ -15,7 +15,7 @@ namespace OpenTheWindows
 
         static HarmonyPatches()
         {
-            HarmonyInstance.DEBUG = true;
+            //HarmonyInstance.DEBUG = false;
             HarmonyInstance harmonyInstance = HarmonyInstance.Create("JPT_OpenTheWindows");
 
             harmonyInstance.Patch(original: AccessTools.Method(type: typeof(GlowGrid), name: "GameGlowAt"),
@@ -30,11 +30,17 @@ namespace OpenTheWindows
             harmonyInstance.Patch(original: AccessTools.Method(type: typeof(CompFlickable), name: "DoFlick"),
                 prefix: new HarmonyMethod(type: patchType, name: nameof(DoFlick_Prefix)), postfix: null, transpiler: null);
 
+            harmonyInstance.Patch(original: AccessTools.Method(type: typeof(CoverUtility), name: "BaseBlockChance", new Type[] { typeof(Thing) }), prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(BaseBlockChance_Postfix)), transpiler: null);
+
+            harmonyInstance.Patch(original: AccessTools.Method(type: typeof(GenGrid), name: "CanBeSeenOver", new Type[] { typeof(Building) }), prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(CanBeSeenOver_Postfix)), transpiler: null);
+
+            harmonyInstance.Patch(original: AccessTools.Method(type: typeof(ThingDef), name: "SpecialDisplayStats"), prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(SpecialDisplayStats_Postfix)), transpiler: null);
+
             try
             {
                 ((Action)(() =>
                 {
-                    if (LoadedModManager.RunningModsListForReading.Any(x => x.Name.Contains("Nature is Beautiful") /*== "Nature is Beautiful v2.5 [1.0]"*/))
+                    if (LoadedModManager.RunningModsListForReading.Any(x => x.Name.Contains("Nature is Beautiful")))
                     {
                         Log.Message("[OpenTheWindows] Nature is Beautiful detected! Adapting...");
 
@@ -50,7 +56,6 @@ namespace OpenTheWindows
 
         public static float WindowFiltering = 0.1f;
 
-        [HarmonyAfter(new string[] { "Dubwise.Dubs_Skylights" })]
         public static void GameGlowAt_Postfix(GlowGrid __instance, IntVec3 c, ref float __result)
         {
             //Experimenting w/ float light grid
@@ -102,7 +107,7 @@ namespace OpenTheWindows
             }
         }
         
-        [HarmonyAfter(new string[] { "Dubwise.Dubs_Skylights" })]
+        [HarmonyBefore(new string[] { "Dubwise.Dubs_Skylights" })]
         public static void Regenerate_Postfix(SectionLayer_LightingOverlay __instance)
         {
             FieldInfo sectionInfo = AccessTools.Field(typeof(SectionLayer), "section");
@@ -113,14 +118,12 @@ namespace OpenTheWindows
             roofGridCInfo.SetValue(map.roofGrid, roofGridCopy);
         }
 
-        [HarmonyAfter(new string[] { "Dubwise.Dubs_Skylights" })]
         public static bool NeedInterval_Prefix(object __instance)
         {
             NeedInterval(__instance);
             return true;
         }
 
-        [HarmonyAfter(new string[] { "Dubwise.Dubs_Skylights" })]
         public static void NeedInterval(object __instance)
         {
             PropertyInfo disabledInfo = AccessTools.Property(__instance.GetType(), "Disabled");
@@ -177,15 +180,12 @@ namespace OpenTheWindows
             if (pawn.InBed() && num < 0f)
             {
                 num *= DeltaFactor_InBed;
-            }
-            // no natural light penality:
+            }   // no natural light penality:
             if (roofDef != null && !pawn.Map.GetComponent<MapComp_Windows>().WindowGrid[pawn.Map.cellIndices.CellToIndex(pawn.Position)])
             {
                 if (num < 0f) num *= DeltaFactor_NoNaturalLight();
                 else num /= DeltaFactor_NoNaturalLight();
-                //Log.Message("NeedInterval Outdoors postfixed by " + DeltaFactor_NoNaturalLight() + " to " + num);
-            }
-            //
+            } //
             num *= 0.0025f;
             float _curLevel = curLevel;
             if (num < 0f)
@@ -208,7 +208,6 @@ namespace OpenTheWindows
         private const float Delta_OutdoorsNoRoof = 8f;
         private const float DeltaFactor_InBed = 0.2f;
 
-        //modded
         private static float DeltaFactor_NoNaturalLight() => OpenTheWindowsSettings.IndoorsNoNaturalLightPenalty; //indoors accelerated degradation when not under windows
 
         public static void LevelFromBeauty_Postfix(Need_Beauty __instance, float beauty, ref float __result)
@@ -229,6 +228,60 @@ namespace OpenTheWindows
                 return true;
             }
             else return false;
+        }
+
+        public static void BaseBlockChance_Postfix(Thing thing, ref float __result)
+        {
+            if (thing is Building_Window)
+            {
+                __result = WindowBaseBlockChance(thing as Building_Window, __result);
+            }
+        }
+
+        public static float WindowBaseBlockChance(Building_Window window, float result)
+        {
+            if (FlickUtility.WantsToBeOn(window))
+            {
+                return WindowBaseFillPercent;
+            }
+            else return result;
+        }
+
+        private const float WindowBaseFillPercent = 0.7f;
+
+        public static void CanBeSeenOver_Postfix(Building b, ref bool __result)
+        {
+            if (b is Building_Window && FlickUtility.WantsToBeOn(b))
+            {
+                __result = true;
+            }
+        }
+        //public static void Fillage_Prefix(ref ThingDef __instance) //This can intercept a method when it calls for a specific property!
+        //{
+        //    StackTrace stackTrace = new StackTrace();
+        //    MethodBase target = AccessTools.Method(type: typeof(ThingDef), name: "SpecialDisplayStats") as MethodBase;
+        //    //if (stackTrace.GetFrame(3).GetMethod() == target) Log.Message("eureka!"); //lighter load, but gotta know the method position on the stack
+        //    foreach (StackFrame sf in stackTrace.GetFrames())
+        //    {
+        //        //Log.Message(sf.GetMethod().Name);
+        //        if (sf.GetMethod().Equals(target)) Log.Message("eureka!");
+        //        //{
+        //        //    Log.Message(sf.GetMethod().Name);
+        //        //}
+        //    }
+        //}
+
+        public static void SpecialDisplayStats_Postfix(ThingDef __instance, ref IEnumerable<StatDrawEntry> __result)
+        {
+            if (typeof(Building_Window).IsAssignableFrom(__instance.thingClass))
+            {
+                StatDrawEntry x = new StatDrawEntry(StatCategoryDefOf.Basics, "CoverEffectiveness".Translate(), WindowBaseFillPercent.ToStringPercent(), 0, string.Empty)
+                {
+                    overrideReportText = "CoverEffectivenessExplanation".Translate()
+                };
+                StatDrawEntry[] y = new StatDrawEntry[] { x };
+                __result = y;
+            }
         }
     }
 }

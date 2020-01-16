@@ -26,10 +26,10 @@ namespace OpenTheWindows
                 if (switchOnInt)
                 {
                     parent.BroadcastCompSignal(FlickedOnSignal());
-                }
+                                    }
                 else
                 {
-                    this.parent.BroadcastCompSignal(FlickedOffSignal());
+                    parent.BroadcastCompSignal(FlickedOffSignal());
                 }
                 if (parent.Spawned)
                 {
@@ -38,7 +38,7 @@ namespace OpenTheWindows
             }
         }
 
-        private CompProperties_Window Props
+        public CompProperties_Window Props
         {
             get
             {
@@ -61,6 +61,11 @@ namespace OpenTheWindows
             base.Initialize(props);
             FlickedOnSignal();
             FlickedOffSignal();
+        }
+        public override void PostExposeData()
+        {
+            base.PostExposeData();
+            Scribe_Values.Look<bool>(ref switchOnInt, "switchOn", true, false);
         }
     }
 }

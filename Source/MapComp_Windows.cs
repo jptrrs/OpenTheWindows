@@ -33,11 +33,13 @@ namespace OpenTheWindows
             foreach (Building_Window window in cachedWindows)
             {
                 window.CastLight();
+                Log.Message("RegenGrid debug "+window+": illuminated:" + window.illuminated);
                 foreach (IntVec3 c in window.illuminated)
                 {
                     WindowGrid[map.cellIndices.CellToIndex(c)] = true;
                     //LightGrid[map.cellIndices.CellToIndex(c)] = 0f;
                 }
+                Log.Message("RegenGrid debug " + window + ": isFacingSet:" + window.isFacingSet);
                 if (!window.isFacingSet) WindowUtility.FindWindowExternalFacing(window);
             }
         }
