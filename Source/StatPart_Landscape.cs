@@ -31,7 +31,7 @@ namespace OpenTheWindows
 
         public static float WindowViewBeauty(Building_Window window)
         {
-            if (window != null && window.isFacingSet)
+            if (window != null && window.open && window.isFacingSet && window.illuminated.Count > 0)
             {
                 List<IntVec3> view = new List<IntVec3>();
                 foreach (IntVec3 c in window.illuminated)
