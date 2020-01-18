@@ -1,5 +1,6 @@
 ﻿using RimWorld;
 using System.Collections.Generic;
+using System;
 using System.Linq;
 using System.Text;
 using Verse;
@@ -13,18 +14,23 @@ namespace OpenTheWindows
         public LinkDirections Facing;   
         public List<IntVec3> illuminated;
         public bool isFacingSet = false;
-        private CompWindow compLight;
-        private CompWindow compAir;
-        private bool venting = false;
+        private CompWindow mainComp;
+        public bool open = true;
+        public bool venting = false;
+        public int size => Math.Max(def.size.x, def.size.z);
+        public float ventRate => size * 14f;
+        public float closedVentFactor = 0.5f;
+
         public override Graphic Graphic
         {
             get
             {
-                return compLight.CurrentGraphic;
+                return mainComp.CurrentGraphic;
             }
         }
 
-        public bool Open => this.TryGetComp<CompWindow>().SwitchIsOn;
+        //public bool Open => compLight.SwitchIsOn;//=> this.TryGetComp<CompWindow>().SwitchIsOn;
+        //public bool Venting => compAir.SwitchIsOn;
 
         //private static int AlignQualityAgainst(IntVec3 c, Map map)
         //{
@@ -107,7 +113,7 @@ namespace OpenTheWindows
 
         public void CastLight()
         {
-            if (Open)
+            if (open)
             {
                 illuminated = new List<IntVec3>(WindowUtility.CalculateWindowLightCells(def, Position, Rotation, Map).ToList());
             }
@@ -129,13 +135,10 @@ namespace OpenTheWindows
         public override void ExposeData()
         {
             base.ExposeData();
-            //Scribe_Values.Look<bool>(ref Open, "open", true, false);
+            Scribe_Values.Look<bool>(ref open, "open", true, false);
+            Scribe_Values.Look<bool>(ref venting, "venting", false, false);
             Scribe_Values.Look<bool>(ref isFacingSet, "isFacingSet", true, false);
-            if (Scribe.mode == LoadSaveMode.PostLoadInit)
-            {
-                if (compLight == null) compLight = GetComps<CompWindow>().Where(c => c.Props.signal == "light").FirstOrDefault();
-                if (compAir == null) compAir = GetComps<CompWindow>().Where(c => c.Props.signal == "air").FirstOrDefault();
-            }
+            Scribe_Values.Look<LinkDirections>(ref Facing, "Facing", LinkDirections.None, false);
         }
 
         public Direction8Way FacingCardinal()
@@ -169,13 +172,16 @@ namespace OpenTheWindows
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append(base.GetInspectString());
-            if (!FlickUtility.WantsToBeOn(this))
+            if (!open)
             {
-                if (stringBuilder.Length > 0)
-                {
-                    stringBuilder.AppendLine();
-                }
+                if (stringBuilder.Length > 0) stringBuilder.AppendLine();
                 stringBuilder.Append("ClosedWindow".Translate());
+                if (venting) stringBuilder.Append("butVenting".Translate());
+            }
+            else if (!venting)
+            {
+                if (stringBuilder.Length > 0) stringBuilder.AppendLine();
+                stringBuilder.Append("notVenting".Translate());
             }
             if (isFacingSet)
             {
@@ -184,45 +190,43 @@ namespace OpenTheWindows
                     stringBuilder.AppendLine();
                 }
                 stringBuilder.Append("Facing " + FacingCardinal() + ".");
-            }
+            }           
             return stringBuilder.ToString();
         }
 
         public override void SpawnSetup(Map map, bool rsal)
         {
-            compLight = GetComps<CompWindow>().Where(c => c.Props.signal == "light").FirstOrDefault();
-            compAir = GetComps<CompWindow>().Where(c => c.Props.signal == "air").FirstOrDefault();
             base.SpawnSetup(map, rsal);
+            mainComp = GetComps<CompWindow>().FirstOrDefault();
+            if (GetComps<CompWindow>().Count() == 1) venting = true;
             map.GetComponent<MapComp_Windows>().RegisterWindow(this);
             map.GetComponent<MapComp_Windows>().RegenGrid();
             map.glowGrid.MarkGlowGridDirty(Position);
-            WindowUtility.FindWindowExternalFacing(this);
+            if (!isFacingSet) WindowUtility.FindWindowExternalFacing(this);
         }
         public override void TickRare()
         {
+            if (!isFacingSet) WindowUtility.FindWindowExternalFacing(this);
+            if (venting)
+            {
+                float vent = open ? ventRate : ventRate * closedVentFactor;
+                GenTemperature.EqualizeTemperaturesThroughBuilding(this, vent, true);
+            }
             Map.GetComponent<MapComp_Windows>().RegenGrid();
-            if (venting) GenTemperature.EqualizeTemperaturesThroughBuilding(this, 14f, true);
         }
 
         protected override void ReceiveCompSignal(string signal)
         {
-            if (signal == "lightOff")
+            if (signal == "lightOff" || signal == "bothOff") open = false;
+            if (signal == "lightOn" || signal == "bothOn") open = true;
+            if (signal == "lightOff" || signal == "lightOn" || signal == "bothOff" || signal == "bothOn")
             {
-                def.blockLight = true;
-                //def.fillPercent = 1f; //TODO this changes cover  for every one!
-            }
-            if (signal == "lightOn") //
-            {
-                def.blockLight = false;
-                //def.fillPercent = defaultFillPercent;
-            }
-            if (signal == "lightOff" || signal == "lightOn" || signal == "ScheduledOn" || signal == "ScheduledOff")
-            {
+                if (!isFacingSet) WindowUtility.FindWindowExternalFacing(this);
                 Map.GetComponent<MapComp_Windows>().RegenGrid();
-                Map.glowGrid.MarkGlowGridDirty(base.Position);
+                Map.glowGrid.MarkGlowGridDirty(Position);
             }
-            if (signal == "airOn") venting = true;
-            if (signal == "airOff") venting = false;
+            if (signal == "airOn" || signal == "bothOn") venting = true;
+            if (signal == "airOff" || signal == "bothOff") venting = false;
         }
     }
 }

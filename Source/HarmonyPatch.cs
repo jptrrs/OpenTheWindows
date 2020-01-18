@@ -15,7 +15,7 @@ namespace OpenTheWindows
 
         static HarmonyPatches()
         {
-            //HarmonyInstance.DEBUG = false;
+            //HarmonyInstance.DEBUG = true;
             HarmonyInstance harmonyInstance = HarmonyInstance.Create("JPT_OpenTheWindows");
 
             harmonyInstance.Patch(original: AccessTools.Method(type: typeof(GlowGrid), name: "GameGlowAt"),
@@ -28,13 +28,17 @@ namespace OpenTheWindows
                 prefix: new HarmonyMethod(type: patchType, name: nameof(NeedInterval_Prefix)), postfix: null, transpiler: null);
 
             harmonyInstance.Patch(original: AccessTools.Method(type: typeof(CompFlickable), name: "DoFlick"),
-                prefix: new HarmonyMethod(type: patchType, name: nameof(DoFlick_Prefix)), postfix: null, transpiler: null);
+                prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(DoFlick_Postfix)), transpiler: null);
+
+            harmonyInstance.Patch(original: AccessTools.Method(type: typeof(CompFlickable), name: "PostExposeData", new Type[] { }),
+                prefix: new HarmonyMethod(type: patchType, name: nameof(PostExposeData_Prefix)), postfix: null, transpiler: null);
 
             harmonyInstance.Patch(original: AccessTools.Method(type: typeof(CoverUtility), name: "BaseBlockChance", new Type[] { typeof(Thing) }), prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(BaseBlockChance_Postfix)), transpiler: null);
 
             harmonyInstance.Patch(original: AccessTools.Method(type: typeof(GenGrid), name: "CanBeSeenOver", new Type[] { typeof(Building) }), prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(CanBeSeenOver_Postfix)), transpiler: null);
 
-            harmonyInstance.Patch(original: AccessTools.Method(type: typeof(ThingDef), name: "SpecialDisplayStats"), prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(SpecialDisplayStats_Postfix)), transpiler: null);
+            harmonyInstance.Patch(original: AccessTools.Method(type: typeof(ThingDef), name: "SpecialDisplayStats"), 
+                prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(SpecialDisplayStats_Postfix)), transpiler: null);
 
             try
             {
@@ -42,12 +46,27 @@ namespace OpenTheWindows
                 {
                     if (LoadedModManager.RunningModsListForReading.Any(x => x.Name.Contains("Nature is Beautiful")))
                     {
-                        Log.Message("[OpenTheWindows] Nature is Beautiful detected! Adapting...");
+                        Log.Message("[OpenTheWindows] Nature is Beautiful detected! Integrating...");
 
                         harmonyInstance.Patch(original: AccessTools.Method(type: typeof(Need_Beauty), name: "LevelFromBeauty"),
                             prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(LevelFromBeauty_Postfix)), transpiler: null);
 
                         OpenTheWindowsSettings.IsBeautyOn = true;
+                    }
+                }))();
+            }
+            catch (TypeLoadException ex) { }
+
+            try
+            {
+                ((Action)(() =>
+                {
+                    if (LoadedModManager.RunningModsListForReading.Any(x => x.Name == "Dubs Skylights"))
+                    {
+                        Log.Message("[OpenTheWindows] Dubs Skylights detected! Integrating...");
+
+                        harmonyInstance.Patch(original: AccessTools.Method("Dubs_Skylight.MapComp_Skylights:RegenGrid"),
+                            prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(MapComp_Skylights_RegenGrid_Postfix)), transpiler: null);
                     }
                 }))();
             }
@@ -58,15 +77,6 @@ namespace OpenTheWindows
 
         public static void GameGlowAt_Postfix(GlowGrid __instance, IntVec3 c, ref float __result)
         {
-            //Experimenting w/ float light grid
-            //FieldInfo mapinfo = AccessTools.Field(typeof(GlowGrid), "map");
-            //Map map = (Map)mapinfo.GetValue(__instance);
-            //if (__result < 1f && map.GetComponent<MapComp_Windows>().LightGrid[map.cellIndices.CellToIndex(c)] > 0f)
-            //{
-            //    __result = Mathf.Max(__result, map.skyManager.CurSkyGlow - WindowFiltering);
-            //}
-
-            //Experimenting w/ uniform light transmission
             FieldInfo mapinfo = AccessTools.Field(typeof(GlowGrid), "map");
             Map map = (Map)mapinfo.GetValue(__instance);
             if (__result < 1f && map.GetComponent<MapComp_Windows>().WindowGrid[map.cellIndices.CellToIndex(c)])
@@ -92,7 +102,7 @@ namespace OpenTheWindows
 
             foreach (Building_Window t in component.cachedWindows)
             {
-                if (t.Open)
+                if (t.open)
                 {
                     t.CastLight();
                     foreach (IntVec3 c in t.OccupiedRect())
@@ -106,7 +116,7 @@ namespace OpenTheWindows
                 }
             }
         }
-        
+
         [HarmonyBefore(new string[] { "Dubwise.Dubs_Skylights" })]
         public static void Regenerate_Postfix(SectionLayer_LightingOverlay __instance)
         {
@@ -215,19 +225,29 @@ namespace OpenTheWindows
             FieldInfo baseLevelInfo = AccessTools.Field(__instance.def.GetType(), "baseLevel");
             float baseLevel = (float)baseLevelInfo.GetValue(__instance.def);
             __result = Mathf.Clamp01(baseLevel + beauty * ModifiedBeautyImpactFactor());
-            //Log.Message("LevelFromBeauty postfixed by "+ ModifiedBeautyImpactFactor() + " to " + __result);
         }
 
         private static float ModifiedBeautyImpactFactor() => 0.1f - (OpenTheWindowsSettings.BeautySensitivityReduction / 10); // original is 0.1f ... testing
 
-        public static bool DoFlick_Prefix(object __instance)
+        public static void DoFlick_Postfix(CompFlickable __instance)
         {
             if (__instance is CompWindow compWindow)
             {
-                compWindow.DoFlick();
+                compWindow.SwitchIsOn = !compWindow.SwitchIsOn;
+            }
+        }
+
+        public static bool PostExposeData_Prefix(CompFlickable __instance, bool ___switchOnInt, bool ___wantSwitchOn)
+        {
+            if (__instance is CompWindow compWindow)
+            {
+                if (Scribe.mode == LoadSaveMode.PostLoadInit)
+                {
+                    compWindow.SetupState();
+                }
                 return true;
             }
-            else return false;
+            return false;
         }
 
         public static void BaseBlockChance_Postfix(Thing thing, ref float __result)
@@ -256,6 +276,7 @@ namespace OpenTheWindows
                 __result = true;
             }
         }
+
         //public static void Fillage_Prefix(ref ThingDef __instance) //This can intercept a method when it calls for a specific property!
         //{
         //    StackTrace stackTrace = new StackTrace();
@@ -282,6 +303,14 @@ namespace OpenTheWindows
                 StatDrawEntry[] y = new StatDrawEntry[] { x };
                 __result = y;
             }
+        }
+
+        public static void MapComp_Skylights_RegenGrid_Postfix(MapComponent __instance)
+        {
+            Type type = AccessTools.TypeByName("Dubs_Skylight.MapComp_Skylights");
+            FieldInfo skylightGridinfo = AccessTools.Field(type, "SkylightGrid");
+            bool[] skyLightGrid = (bool[])skylightGridinfo.GetValue(__instance);
+            __instance.map.GetComponent<MapComp_Windows>().WindowGrid.AddRangeToArray(skyLightGrid);
         }
     }
 }

@@ -2,7 +2,11 @@
 <LanguageData>
   <!--ui-->
   <ClosedWindow>Closed</ClosedWindow>
+  <butVenting>, but venting.</butVenting>
+  <notVenting>Sealed</notVenting>
   <LandscapeToThe>Landscape to the</LandscapeToThe>
+  <CommandDesignateOpenCloseWindowLabel>Designate Open/Close</CommandDesignateOpenCloseWindowLabel>
+  <CommandDesignateOpenCloseWindowDesc>Designate this window to be open or closed. A colonist will come soon to perform the task.</CommandDesignateOpenCloseWindowDesc>
   <CommandOpenCloseWindowLightLabel>Allow Light</CommandOpenCloseWindowLightLabel>
   <CommandOpenCloseWindowLightDesc>Allow or block light to pass through the window. A colonist will come soon to perform the task.</CommandOpenCloseWindowLightDesc>
   <CommandOpenCloseWindowVentLabel>Allow Air</CommandOpenCloseWindowVentLabel>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+  <!--ui-->
+  <ClosedWindow>Fechada</ClosedWindow>
+  <butVenting>, mas ventilando.</butVenting>
+  <notVenting>Vedada</notVenting>
+  <LandscapeToThe>Vista para o</LandscapeToThe>
+  <CommandDesignateOpenCloseWindowLabel>Designar aberto/fechado</CommandDesignateOpenCloseWindowLabel>
+  <CommandDesignateOpenCloseWindowDesc>Designe esta janela para ser aberta ou fechada. Um colono virá em breve para realizar a tarefa.</CommandDesignateOpenCloseWindowDesc>
+  <CommandOpenCloseWindowLightLabel>Permitir Luz</CommandOpenCloseWindowLightLabel>
+  <CommandOpenCloseWindowLightDesc>Impedir ou permitir a passagem de luz pela janela. Um colono virá em breve para realizar a tarefa.</CommandOpenCloseWindowLightDesc>
+  <CommandOpenCloseWindowVentLabel>Permitir Ar</CommandOpenCloseWindowVentLabel>
+  <CommandOpenCloseWindowVentDesc>Impedir ou permitir a passagem de ar pela janela. Um colono virá em breve para realizar a tarefa.</CommandOpenCloseWindowVentDesc>  
+  
+  <!--settings-->
+  <OpenTheWindows>Open The Windows!</OpenTheWindows>
+  <IndoorsNoNaturalLightPenalty>Aceleração da necessidade de ar livre</IndoorsNoNaturalLightPenalty>
+  <IndoorsNoNaturalLightPenaltyDesc>Multiplica o decaimento do nível da necessidade de exterior quando o peão está em ambientes fechados sem janelas</IndoorsNoNaturalLightPenaltyDesc>
+  <BeautySensitivityReduction>Redução da sensitividade à beleza</BeautySensitivityReduction>
+  <BeautySensitivityReductionDesc>Reduz a sensibilidade à beleza para compensar o acréscimo de "Nature is Beautiful" mais aquela capturada pelas janelas.</BeautySensitivityReductionDesc>
+  
+</LanguageData>

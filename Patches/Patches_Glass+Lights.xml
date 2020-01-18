@@ -8,13 +8,12 @@
 			<success>Normal</success>
 			<operations>
 
-				<!--<li Class="PatchOperationRemove">
+				<li Class="PatchOperationRemove">
 					<xpath>/Defs/ThingDef[defName = "Window"]/designationCategory</xpath>
-				</li>-->
-				<!--Can't do that, since there would be no use for reinforced glass!-->
+				</li>
 				
 				<li Class="PatchOperationReplace">
-					<xpath>/Defs/ThingDef[defName = "OpenWindow"]/costList</xpath>
+					<xpath>Defs/ThingDef[defName = "OpenWindow"]/costList</xpath>
 					<value>
 						<costList>
 							<Glass>1</Glass>
@@ -23,13 +22,51 @@
 				</li>
 
 				<li Class="PatchOperationReplace">
-					<xpath>/Defs/ThingDef[defName = "LargeOpenWindow"]/costList</xpath>
+					<xpath>Defs/ThingDef[defName = "LargeOpenWindow"]/costList</xpath>
 					<value>
 						<costList>
 							<Glass>3</Glass>
 						</costList>
 					</value>				
 				</li>
+        
+        <li Class="PatchOperationAdd">
+          <xpath>Defs/ThingDef[defName = "ReinforcedOpenWindow"]</xpath>
+          <value>
+            <costList>
+              <ReinforcedGlass>1</ReinforcedGlass>
+            </costList>
+          </value>
+        </li>
+
+        <li Class="PatchOperationAdd">
+          <xpath>Defs/ThingDef[defName = "LargeReinforcedOpenWindow"]</xpath>
+          <value>
+            <costList>
+              <ReinforcedGlass>3</ReinforcedGlass>
+            </costList>
+          </value>
+        </li>
+
+        <li Class="PatchOperationReplace">
+          <xpath>Defs/ThingDef[@ParentName="WindowBase"]/researchPrerequisites/li[.="Glassworks"]</xpath>
+          <value>
+            <li>GlassworksResearch</li>
+          </value>
+        </li>
+
+        <li Class="PatchOperationReplace">
+          <xpath>Defs/ThingDef[@ParentName="WindowBase"]/defName[contains(text(),"Reinforced")]/../researchPrerequisites</xpath>
+          <value>
+            <researchPrerequisites>
+							<li>ReinforcedGlassResearch</li>
+            </researchPrerequisites>
+          </value>
+        </li>
+
+        <li Class="PatchOperationRemove">
+          <xpath>Defs/ResearchProjectDef[defName = "Glassworks"]</xpath>
+        </li>
 
 			</operations>
 		</match> 

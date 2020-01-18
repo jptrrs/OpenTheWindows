@@ -24,7 +24,6 @@ namespace OpenTheWindows
             Building_Window window = req.Thing as Building_Window;
             if (req.HasThing && window != null)
             {
-                //Log.Message(window + " is calculating stats. (value " + value + ")");
                 value += WindowViewBeauty(window);
             }
             return;

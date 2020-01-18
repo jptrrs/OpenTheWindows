@@ -6,7 +6,7 @@ namespace OpenTheWindows
     {
         public CompProperties_Window()
         {
-            this.compClass = typeof(CompWindow);
+            compClass = typeof(CompWindow);
         }
 
         public string signal = "";

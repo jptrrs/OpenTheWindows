@@ -2,13 +2,33 @@
 using Harmony;
 using RimWorld;
 using Verse;
-using Verse.Sound;
 
 namespace OpenTheWindows
 {
     public class CompWindow : CompFlickable
     {
-        public bool switchOnInt = true;
+        FieldInfo baseWantSwitchInfo = AccessTools.Field(typeof(CompFlickable), "wantSwitchOn");
+        FieldInfo baseSwitchOnIntInfo = AccessTools.Field(typeof(CompFlickable), "switchOnInt");
+
+        public CompProperties_Window Props
+        {
+            get
+            {
+                return (CompProperties_Window)props;
+            }
+        }
+
+        public bool switchOnInt
+        {
+            get
+            {
+                return (bool)baseSwitchOnIntInfo.GetValue(this);
+            }
+            set
+            {
+                baseSwitchOnIntInfo.SetValue(this, value);
+            }
+        }
 
         public new bool SwitchIsOn
         {
@@ -22,11 +42,10 @@ namespace OpenTheWindows
                 {
                     return;
                 }
-                switchOnInt = value;
                 if (switchOnInt)
                 {
                     parent.BroadcastCompSignal(FlickedOnSignal());
-                                    }
+                }
                 else
                 {
                     parent.BroadcastCompSignal(FlickedOffSignal());
@@ -38,20 +57,6 @@ namespace OpenTheWindows
             }
         }
 
-        public CompProperties_Window Props
-        {
-            get
-            {
-                return (CompProperties_Window)props;
-            }
-        }
-
-        public new void DoFlick()
-        {
-            SwitchIsOn = !SwitchIsOn;
-            SoundDefOf.FlickSwitch.PlayOneShot(new TargetInfo(this.parent.Position, this.parent.Map, false));
-        }
-
         public new string FlickedOffSignal() => Props.signal + "Off";
 
         public new string FlickedOnSignal() => Props.signal + "On";
@@ -61,11 +66,18 @@ namespace OpenTheWindows
             base.Initialize(props);
             FlickedOnSignal();
             FlickedOffSignal();
+            SetupState();
         }
-        public override void PostExposeData()
+
+        public void SetupState()
         {
-            base.PostExposeData();
-            Scribe_Values.Look<bool>(ref switchOnInt, "switchOn", true, false);
+            Building_Window window = parent as Building_Window;
+            bool state = false;
+            if (Props.signal == "light" || Props.signal == "both") state = window.open;
+            else if (Props.signal == "air") state = window.venting;
+            baseWantSwitchInfo.SetValue(this, state);
+            baseSwitchOnIntInfo.SetValue(this, state);
+            SwitchIsOn = state;
         }
     }
 }
