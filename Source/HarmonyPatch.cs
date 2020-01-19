@@ -2,7 +2,9 @@
 using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using UnityEngine;
 using Verse;
 
@@ -13,9 +15,11 @@ namespace OpenTheWindows
     {
         private static readonly Type patchType = typeof(HarmonyPatches);
 
+        public static bool ExpandedRoofing = false;
+
         static HarmonyPatches()
         {
-            //HarmonyInstance.DEBUG = true;
+            HarmonyInstance.DEBUG = true;
             HarmonyInstance harmonyInstance = HarmonyInstance.Create("JPT_OpenTheWindows");
 
             harmonyInstance.Patch(original: AccessTools.Method(type: typeof(GlowGrid), name: "GameGlowAt"),
@@ -40,38 +44,46 @@ namespace OpenTheWindows
             harmonyInstance.Patch(original: AccessTools.Method(type: typeof(ThingDef), name: "SpecialDisplayStats"), 
                 prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(SpecialDisplayStats_Postfix)), transpiler: null);
 
-            try
+            if (LoadedModManager.RunningModsListForReading.Any(x => x.Name.Contains("Nature is Beautiful")))
             {
-                ((Action)(() =>
-                {
-                    if (LoadedModManager.RunningModsListForReading.Any(x => x.Name.Contains("Nature is Beautiful")))
-                    {
-                        Log.Message("[OpenTheWindows] Nature is Beautiful detected! Integrating...");
+                Log.Message("[OpenTheWindows] Nature is Beautiful detected! Integrating...");
 
-                        harmonyInstance.Patch(original: AccessTools.Method(type: typeof(Need_Beauty), name: "LevelFromBeauty"),
-                            prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(LevelFromBeauty_Postfix)), transpiler: null);
+                harmonyInstance.Patch(original: AccessTools.Method(type: typeof(Need_Beauty), name: "LevelFromBeauty"),
+                    prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(LevelFromBeauty_Postfix)), transpiler: null);
 
-                        OpenTheWindowsSettings.IsBeautyOn = true;
-                    }
-                }))();
+                OpenTheWindowsSettings.IsBeautyOn = true;
             }
-            catch (TypeLoadException ex) { }
-
-            try
+            
+            if (LoadedModManager.RunningModsListForReading.Any(x => x.Name == "Dubs Skylights"))
             {
-                ((Action)(() =>
-                {
-                    if (LoadedModManager.RunningModsListForReading.Any(x => x.Name == "Dubs Skylights"))
-                    {
-                        Log.Message("[OpenTheWindows] Dubs Skylights detected! Integrating...");
+                Log.Message("[OpenTheWindows] Dubs Skylights detected! Integrating...");
 
-                        harmonyInstance.Patch(original: AccessTools.Method("Dubs_Skylight.MapComp_Skylights:RegenGrid"),
-                            prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(MapComp_Skylights_RegenGrid_Postfix)), transpiler: null);
-                    }
-                }))();
+                harmonyInstance.Patch(original: AccessTools.Method("Dubs_Skylight.MapComp_Skylights:RegenGrid"),
+                    prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(MapComp_Skylights_RegenGrid_Postfix)), transpiler: null);
             }
-            catch (TypeLoadException ex) { }
+
+        //    if (AccessTools.TypeByName("ExpandedRoofing.HarmonyPatches") is Type expandedRoofingType)
+        //    {
+        //        Log.Message("[OpenTheWindows] Expanded Roofing detected! Integrating...");
+
+        //        harmonyInstance.Patch(original: AccessTools.Method(expandedRoofingType,"TransparentRoofLightingOverlayFix"),
+        //            prefix: new HarmonyMethod(type: patchType, name: nameof(TransparentRoofBlock_Prefix)), postfix: null, transpiler: null);
+
+        //        harmonyInstance.Patch(original: AccessTools.Method(expandedRoofingType,"PlantLightingFix"),
+        //            prefix: new HarmonyMethod(type: patchType, name: nameof(TransparentRoofBlock_Prefix)), postfix: null, transpiler: null);
+        //    }
         }
+
+        //[HarmonyBefore(new string[] { "rimworld.whyisthat.expandedroofing.main" })]
+        //public static void TransparentRoofBlock_Prefix()
+        //{
+        //    Log.Message("Blocking TransparentRoof");
+        //}
+
+        //public static void TransparentRoofBlock_Postfix()
+        //{
+        //    Log.Message("TransparentRoof Postfix!");
+        //}
 
         public static float WindowFiltering = 0.1f;
 
@@ -99,6 +111,23 @@ namespace OpenTheWindows
             RoofDef[] roofGrid = (RoofDef[])roofGridInfo.GetValue(map.roofGrid);
 
             roofGridCopy = new List<RoofDef>(roofGrid).ToArray();
+
+            if (ExpandedRoofing)
+            {
+                Log.Message("ExpandedRoofing is on, expanding roofGrid.");
+                Type type = AccessTools.TypeByName("ExpandedRoofing.RoofDefOf");
+                FieldInfo roofTransparentInfo = AccessTools.Field(type, "RoofTransparent");
+                RoofDef roofTransparent = (RoofDef)roofTransparentInfo.GetValue(map.roofGrid);
+
+                foreach (RoofDef r in roofGrid)
+                {
+                    if (r == roofTransparent)
+                    {
+                        roofGrid.AddToArray(r);
+                        Log.Message("Added transparent roof at " + r.index);
+                    }
+                }
+            }
 
             foreach (Building_Window t in component.cachedWindows)
             {
@@ -245,9 +274,9 @@ namespace OpenTheWindows
                 {
                     compWindow.SetupState();
                 }
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
 
         public static void BaseBlockChance_Postfix(Thing thing, ref float __result)
