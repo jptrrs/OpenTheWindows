@@ -19,7 +19,7 @@ namespace OpenTheWindows
 
         static HarmonyPatches()
         {
-            HarmonyInstance.DEBUG = true;
+            //HarmonyInstance.DEBUG = true;
             HarmonyInstance harmonyInstance = HarmonyInstance.Create("JPT_OpenTheWindows");
 
             harmonyInstance.Patch(original: AccessTools.Method(type: typeof(GlowGrid), name: "GameGlowAt"),
