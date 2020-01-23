@@ -17,9 +17,12 @@ namespace OpenTheWindows
         private CompWindow mainComp;
         public bool open = true;
         public bool venting = false;
+        public bool leaks = false;
         public int size => Math.Max(def.size.x, def.size.z);
         public float ventRate => size * 14f;
         public float closedVentFactor = 0.5f;
+        public float leakVentFactor = 0.1f;
+        public int adjacentRoofCount;
 
         public override Graphic Graphic
         {
@@ -28,9 +31,6 @@ namespace OpenTheWindows
                 return mainComp.CurrentGraphic;
             }
         }
-
-        //public bool Open => compLight.SwitchIsOn;//=> this.TryGetComp<CompWindow>().SwitchIsOn;
-        //public bool Venting => compAir.SwitchIsOn;
 
         //private static int AlignQualityAgainst(IntVec3 c, Map map)
         //{
@@ -120,8 +120,23 @@ namespace OpenTheWindows
             else if (illuminated != null)
             {
                 illuminated.Clear();
-                isFacingSet = false;
             }
+        }
+
+        public override void SpawnSetup(Map map, bool respawningAfterLoad)
+        {
+            base.SpawnSetup(map, respawningAfterLoad);
+            mainComp = GetComps<CompWindow>().FirstOrDefault();
+            if (mainComp.Props.signal == "both")
+            {
+                if (!respawningAfterLoad) venting = true;
+                leaks = true;
+            }
+            CastLight();
+            Map.GetComponent<MapComp_Windows>().RegenGrid();
+            Map.glowGrid.MarkGlowGridDirty(Position);
+            map.GetComponent<MapComp_Windows>().RegisterWindow(this);
+            if (!isFacingSet) WindowUtility.FindWindowExternalFacing(this);
         }
 
         public override void DeSpawn(DestroyMode mode = DestroyMode.Vanish)
@@ -172,56 +187,94 @@ namespace OpenTheWindows
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append(base.GetInspectString());
-            if (!open)
-            {
-                if (stringBuilder.Length > 0) stringBuilder.AppendLine();
-                stringBuilder.Append("ClosedWindow".Translate());
-                if (venting) stringBuilder.Append("butVenting".Translate());
-            }
-            else if (!venting)
-            {
-                if (stringBuilder.Length > 0) stringBuilder.AppendLine();
-                stringBuilder.Append("notVenting".Translate());
-            }
             if (isFacingSet)
             {
-                if (stringBuilder.Length > 0)
+                if (!open)
                 {
-                    stringBuilder.AppendLine();
+                    if (stringBuilder.Length > 0) stringBuilder.AppendLine();
+                    stringBuilder.Append("ClosedWindow".Translate());
+                    if (venting) stringBuilder.Append("butVenting".Translate());
                 }
+                else if (!venting)
+                {
+                    if (stringBuilder.Length > 0) stringBuilder.AppendLine();
+                    stringBuilder.Append("notVenting".Translate());
+                }
+                if (stringBuilder.Length > 0) stringBuilder.AppendLine();
                 stringBuilder.Append("Facing " + FacingCardinal() + ".");
-            }           
+            }
+            else
+            {
+                if (stringBuilder.Length > 0) stringBuilder.AppendLine();
+                stringBuilder.Append("cantDetermineSides".Translate());
+            }
             return stringBuilder.ToString();
         }
 
-        public override void SpawnSetup(Map map, bool rsal)
-        {
-            base.SpawnSetup(map, rsal);
-            mainComp = GetComps<CompWindow>().FirstOrDefault();
-            if (GetComps<CompWindow>().Count() == 1) venting = true;
-            map.GetComponent<MapComp_Windows>().RegisterWindow(this);
-            map.GetComponent<MapComp_Windows>().RegenGrid();
-            map.glowGrid.MarkGlowGridDirty(Position);
-            if (!isFacingSet) WindowUtility.FindWindowExternalFacing(this);
-        }
         public override void TickRare()
         {
-            if (!isFacingSet) WindowUtility.FindWindowExternalFacing(this);
+            bool doRegenGrid = false;
             if (venting)
             {
                 float vent = open ? ventRate : ventRate * closedVentFactor;
                 GenTemperature.EqualizeTemperaturesThroughBuilding(this, vent, true);
+            } 
+            else if(leaks && !open)
+            {
+                float vent = ventRate * leakVentFactor;
+                GenTemperature.EqualizeTemperaturesThroughBuilding(this, vent, true);
             }
-            Map.GetComponent<MapComp_Windows>().RegenGrid();
+            if (open && isFacingSet)
+            {
+                int areacheck = 0;
+                if (illuminated != null) areacheck = illuminated.Count();
+                CastLight();
+                if (illuminated.Count() != areacheck)
+                {
+                    doRegenGrid = true;
+                }
+            }
+            if (!isFacingSet || NeedExternalFacingUpdate(adjacentRoofCount))
+            {
+                WindowUtility.FindWindowExternalFacing(this);
+                if (!isFacingSet) CastLight();
+                doRegenGrid = true;
+            }
+            if (doRegenGrid)
+            {
+                Map.GetComponent<MapComp_Windows>().RegenGrid();
+                Map.mapDrawer.MapMeshDirty(Position, MapMeshFlag.GroundGlow);
+            }
+        }
+
+        private bool NeedExternalFacingUpdate(int previousCount)
+        {
+            int count = new int();
+            foreach (IntVec3 c in GenAdj.CellsAdjacentCardinal(this))
+            {
+                if (!Map.roofGrid.Roofed(c) && c.Walkable(Map)) count++;
+            }
+            adjacentRoofCount = count;
+            if (count != previousCount) return true;
+            else return false;
         }
 
         protected override void ReceiveCompSignal(string signal)
         {
-            if (signal == "lightOff" || signal == "bothOff") open = false;
-            if (signal == "lightOn" || signal == "bothOn") open = true;
+            if (signal == "lightOff" || signal == "bothOff")
+            {
+                def.blockLight = true;
+                open = false;
+            }
+            if (signal == "lightOn" || signal == "bothOn")
+            {
+                open = true;
+                def.blockLight = false;
+            }
             if (signal == "lightOff" || signal == "lightOn" || signal == "bothOff" || signal == "bothOn")
             {
                 if (!isFacingSet) WindowUtility.FindWindowExternalFacing(this);
+                CastLight();
                 Map.GetComponent<MapComp_Windows>().RegenGrid();
                 Map.glowGrid.MarkGlowGridDirty(Position);
             }

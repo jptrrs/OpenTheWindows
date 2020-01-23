@@ -1,10 +1,10 @@
 ﻿using Harmony;
 using RimWorld;
+using RimWorld.Planet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
 using UnityEngine;
 using Verse;
 
@@ -17,80 +17,95 @@ namespace OpenTheWindows
 
         public static bool ExpandedRoofing = false;
 
+        public static bool DubsSkylights = false;
+
         static HarmonyPatches()
         {
             //HarmonyInstance.DEBUG = true;
             HarmonyInstance harmonyInstance = HarmonyInstance.Create("JPT_OpenTheWindows");
 
-            harmonyInstance.Patch(original: AccessTools.Method(type: typeof(GlowGrid), name: "GameGlowAt"),
-                prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(GameGlowAt_Postfix)), transpiler: null);
+            //template:
+            //harmonyInstance.Patch(original: AccessTools.Method(type: typeof(?), name: "?"),
+            //prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(?)), transpiler: null);
 
-            harmonyInstance.Patch(original: AccessTools.Method(type: typeof(SectionLayer_LightingOverlay), name: "Regenerate"),
-                prefix: new HarmonyMethod(type: patchType, name: nameof(Regenerate_Prefix)), postfix: new HarmonyMethod(type: patchType, name: nameof(Regenerate_Postfix)), transpiler: null);
+            harmonyInstance.Patch(AccessTools.Method(typeof(GlowGrid), "GameGlowAt"),
+                null, new HarmonyMethod(patchType, nameof(GameGlowAt_Postfix)), null);
 
-            harmonyInstance.Patch(original: AccessTools.Method(type: typeof(Need_Outdoors), name: "NeedInterval"),
-                prefix: new HarmonyMethod(type: patchType, name: nameof(NeedInterval_Prefix)), postfix: null, transpiler: null);
+            harmonyInstance.Patch(AccessTools.Method(typeof(SectionLayer_LightingOverlay), "Regenerate"),
+                new HarmonyMethod(patchType, nameof(Regenerate_Prefix)), new HarmonyMethod(patchType, nameof(Regenerate_Postfix)), null);
 
-            harmonyInstance.Patch(original: AccessTools.Method(type: typeof(CompFlickable), name: "DoFlick"),
-                prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(DoFlick_Postfix)), transpiler: null);
+            harmonyInstance.Patch(AccessTools.Method(typeof(Need_Outdoors), "NeedInterval"),
+                new HarmonyMethod(patchType, nameof(NeedInterval_Prefix)), null, null);
 
-            harmonyInstance.Patch(original: AccessTools.Method(type: typeof(CompFlickable), name: "PostExposeData", new Type[] { }),
-                prefix: new HarmonyMethod(type: patchType, name: nameof(PostExposeData_Prefix)), postfix: null, transpiler: null);
+            harmonyInstance.Patch(AccessTools.Method(typeof(CompFlickable), "DoFlick"),
+                null, new HarmonyMethod(patchType, nameof(DoFlick_Postfix)), null);
 
-            harmonyInstance.Patch(original: AccessTools.Method(type: typeof(CoverUtility), name: "BaseBlockChance", new Type[] { typeof(Thing) }), prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(BaseBlockChance_Postfix)), transpiler: null);
+            harmonyInstance.Patch(AccessTools.Method(typeof(CompFlickable), "PostExposeData", new Type[] { }),
+                new HarmonyMethod(patchType, nameof(PostExposeData_Prefix)), null, null);
 
-            harmonyInstance.Patch(original: AccessTools.Method(type: typeof(GenGrid), name: "CanBeSeenOver", new Type[] { typeof(Building) }), prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(CanBeSeenOver_Postfix)), transpiler: null);
+            harmonyInstance.Patch(AccessTools.Method(typeof(CoverUtility), "BaseBlockChance", new Type[] { typeof(Thing) }), null, new HarmonyMethod(patchType, nameof(BaseBlockChance_Postfix)), null);
 
-            harmonyInstance.Patch(original: AccessTools.Method(type: typeof(ThingDef), name: "SpecialDisplayStats"), 
-                prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(SpecialDisplayStats_Postfix)), transpiler: null);
+            harmonyInstance.Patch(AccessTools.Method(typeof(GenGrid), "CanBeSeenOver", new Type[] { typeof(Building) }), null, new HarmonyMethod(patchType, nameof(CanBeSeenOver_Postfix)), null);
+
+            harmonyInstance.Patch(AccessTools.Method(typeof(ThingDef), "SpecialDisplayStats"),
+                null, new HarmonyMethod(patchType, nameof(SpecialDisplayStats_Postfix)), null);
+
+            harmonyInstance.Patch(AccessTools.Method(typeof(MapInterface), "MapInterfaceUpdate"),
+                null, new HarmonyMethod(patchType, nameof(MapInterfaceUpdate_Postfix)), null);
+
+            harmonyInstance.Patch(AccessTools.Method(typeof(PlaySettings), "DoPlaySettingsGlobalControls"),
+                null, new HarmonyMethod(patchType, nameof(DoPlaySettingsGlobalControls_Postfix)), null);
 
             if (LoadedModManager.RunningModsListForReading.Any(x => x.Name.Contains("Nature is Beautiful")))
             {
                 Log.Message("[OpenTheWindows] Nature is Beautiful detected! Integrating...");
 
-                harmonyInstance.Patch(original: AccessTools.Method(type: typeof(Need_Beauty), name: "LevelFromBeauty"),
-                    prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(LevelFromBeauty_Postfix)), transpiler: null);
+                harmonyInstance.Patch(AccessTools.Method(typeof(Need_Beauty), "LevelFromBeauty"),
+                    null, new HarmonyMethod(patchType, nameof(LevelFromBeauty_Postfix)), null);
 
                 OpenTheWindowsSettings.IsBeautyOn = true;
             }
-            
+
             if (LoadedModManager.RunningModsListForReading.Any(x => x.Name == "Dubs Skylights"))
             {
                 Log.Message("[OpenTheWindows] Dubs Skylights detected! Integrating...");
+                DubsSkylights = true;
 
-                harmonyInstance.Patch(original: AccessTools.Method("Dubs_Skylight.MapComp_Skylights:RegenGrid"),
-                    prefix: null, postfix: new HarmonyMethod(type: patchType, name: nameof(MapComp_Skylights_RegenGrid_Postfix)), transpiler: null);
+                harmonyInstance.Patch(AccessTools.Method("Dubs_Skylight.Patch_GameGlowAt:Postfix"),
+                    new HarmonyMethod(patchType, nameof(Patch_Inhibitor_Prefix)), null, null);
+
+                harmonyInstance.Patch(AccessTools.Method("Dubs_Skylight.Patch_SectionLayer_LightingOverlay_Regenerate:Prefix"),
+                    new HarmonyMethod(patchType, nameof(Patch_Inhibitor_Prefix)), null, null);
+
+                harmonyInstance.Patch(AccessTools.Method("Dubs_Skylight.Patch_SectionLayer_LightingOverlay_Regenerate:Postfix"),
+                    new HarmonyMethod(patchType, nameof(Patch_Inhibitor_Prefix)), null, null);
+
+                harmonyInstance.Patch(AccessTools.Method("Dubs_Skylight.MapComp_Skylights:RegenGrid"),
+                    null, new HarmonyMethod(patchType, nameof(RegenGrid_Postfix)), null);
+
             }
 
-        //    if (AccessTools.TypeByName("ExpandedRoofing.HarmonyPatches") is Type expandedRoofingType)
-        //    {
-        //        Log.Message("[OpenTheWindows] Expanded Roofing detected! Integrating...");
+            if (AccessTools.TypeByName("ExpandedRoofing.HarmonyPatches") is Type expandedRoofingType)
+            {
+                Log.Message("[OpenTheWindows] Expanded Roofing detected! Integrating...");
+                ExpandedRoofing = true;
 
-        //        harmonyInstance.Patch(original: AccessTools.Method(expandedRoofingType,"TransparentRoofLightingOverlayFix"),
-        //            prefix: new HarmonyMethod(type: patchType, name: nameof(TransparentRoofBlock_Prefix)), postfix: null, transpiler: null);
-
-        //        harmonyInstance.Patch(original: AccessTools.Method(expandedRoofingType,"PlantLightingFix"),
-        //            prefix: new HarmonyMethod(type: patchType, name: nameof(TransparentRoofBlock_Prefix)), postfix: null, transpiler: null);
-        //    }
+                harmonyInstance.Patch(AccessTools.Method("ExpandedRoofing.CompCustomRoof:PostSpawnSetup"),
+                    null, new HarmonyMethod(patchType, nameof(RegenGrid_Postfix)), null);
+            }
         }
 
-        //[HarmonyBefore(new string[] { "rimworld.whyisthat.expandedroofing.main" })]
-        //public static void TransparentRoofBlock_Prefix()
-        //{
-        //    Log.Message("Blocking TransparentRoof");
-        //}
-
-        //public static void TransparentRoofBlock_Postfix()
-        //{
-        //    Log.Message("TransparentRoof Postfix!");
-        //}
+        public static bool Patch_Inhibitor_Prefix(/*MethodBase __originalMethod*/)
+        {
+            //Log.Message(__originalMethod.Name + " was inhibited");
+            return false;
+        }
 
         public static float WindowFiltering = 0.1f;
 
-        public static void GameGlowAt_Postfix(GlowGrid __instance, IntVec3 c, ref float __result)
+        public static void GameGlowAt_Postfix(IntVec3 c, ref float __result)
         {
-            FieldInfo mapinfo = AccessTools.Field(typeof(GlowGrid), "map");
-            Map map = (Map)mapinfo.GetValue(__instance);
+            Map map = Find.CurrentMap;
             if (__result < 1f && map.GetComponent<MapComp_Windows>().WindowGrid[map.cellIndices.CellToIndex(c)])
             {
                 __result = Mathf.Max(__result, map.skyManager.CurSkyGlow - WindowFiltering);
@@ -99,60 +114,26 @@ namespace OpenTheWindows
 
         public static RoofDef[] roofGridCopy;
 
-        [HarmonyAfter(new string[] { "Dubwise.Dubs_Skylights" })]
-        public static void Regenerate_Prefix(SectionLayer_LightingOverlay __instance)
+        //[HarmonyAfter(new string[] { "Dubwise.Dubs_Skylights" })]
+        public static void Regenerate_Prefix()
         {
-            FieldInfo sectionInfo = AccessTools.Field(typeof(SectionLayer), "section");
-            Section section = (Section)sectionInfo.GetValue(__instance);
-            FieldInfo mapinfo = AccessTools.Field(typeof(Section), "map");
-            Map map = (Map)mapinfo.GetValue(section);
+            Map map = Find.CurrentMap;
             MapComp_Windows component = map.GetComponent<MapComp_Windows>();
             FieldInfo roofGridInfo = AccessTools.Field(typeof(RoofGrid), "roofGrid");
             RoofDef[] roofGrid = (RoofDef[])roofGridInfo.GetValue(map.roofGrid);
-
             roofGridCopy = new List<RoofDef>(roofGrid).ToArray();
-
-            if (ExpandedRoofing)
+            foreach (int i in (from t in component.WindowGrid.Select((s, i) => new { s, i })
+                               where t.s is true
+                               select t.i).ToList())
             {
-                Log.Message("ExpandedRoofing is on, expanding roofGrid.");
-                Type type = AccessTools.TypeByName("ExpandedRoofing.RoofDefOf");
-                FieldInfo roofTransparentInfo = AccessTools.Field(type, "RoofTransparent");
-                RoofDef roofTransparent = (RoofDef)roofTransparentInfo.GetValue(map.roofGrid);
-
-                foreach (RoofDef r in roofGrid)
-                {
-                    if (r == roofTransparent)
-                    {
-                        roofGrid.AddToArray(r);
-                        Log.Message("Added transparent roof at " + r.index);
-                    }
-                }
-            }
-
-            foreach (Building_Window t in component.cachedWindows)
-            {
-                if (t.open)
-                {
-                    t.CastLight();
-                    foreach (IntVec3 c in t.OccupiedRect())
-                    {
-                        roofGrid[map.cellIndices.CellToIndex(c)] = null;
-                    }
-                    foreach (IntVec3 c in t.illuminated)
-                    {
-                        roofGrid[map.cellIndices.CellToIndex(c)] = null;
-                    }
-                }
+                roofGrid[i] = null;
             }
         }
 
-        [HarmonyBefore(new string[] { "Dubwise.Dubs_Skylights" })]
-        public static void Regenerate_Postfix(SectionLayer_LightingOverlay __instance)
+        //[HarmonyBefore(new string[] { "Dubwise.Dubs_Skylights" })]
+        public static void Regenerate_Postfix()
         {
-            FieldInfo sectionInfo = AccessTools.Field(typeof(SectionLayer), "section");
-            Section section = (Section)sectionInfo.GetValue(__instance);
-            FieldInfo mapinfo = AccessTools.Field(typeof(Section), "map");
-            Map map = (Map)mapinfo.GetValue(section);
+            Map map = Find.CurrentMap;
             FieldInfo roofGridCInfo = AccessTools.Field(typeof(RoofGrid), "roofGrid");
             roofGridCInfo.SetValue(map.roofGrid, roofGridCopy);
         }
@@ -192,7 +173,7 @@ namespace OpenTheWindows
             {
                 if (roofDef == null)
                 {
-                    num = Delta_IndoorsNoRoof; //X
+                    num = Delta_IndoorsNoRoof;
                 }
                 else if (!roofDef.isThickRoof)
                 {
@@ -206,7 +187,7 @@ namespace OpenTheWindows
             }
             else if (roofDef == null)
             {
-                num = Delta_OutdoorsNoRoof; //X
+                num = Delta_OutdoorsNoRoof;
             }
             else if (roofDef.isThickRoof)
             {
@@ -219,7 +200,8 @@ namespace OpenTheWindows
             if (pawn.InBed() && num < 0f)
             {
                 num *= DeltaFactor_InBed;
-            }   // no natural light penality:
+            }   
+            // no natural light penality:
             if (roofDef != null && !pawn.Map.GetComponent<MapComp_Windows>().WindowGrid[pawn.Map.cellIndices.CellToIndex(pawn.Position)])
             {
                 if (num < 0f) num *= DeltaFactor_NoNaturalLight();
@@ -305,11 +287,10 @@ namespace OpenTheWindows
                 __result = true;
             }
         }
-
         //public static void Fillage_Prefix(ref ThingDef __instance) //This can intercept a method when it calls for a specific property!
         //{
         //    StackTrace stackTrace = new StackTrace();
-        //    MethodBase target = AccessTools.Method(type: typeof(ThingDef), name: "SpecialDisplayStats") as MethodBase;
+        //    MethodBase target = AccessTools.Method(typeof(ThingDef), "SpecialDisplayStats") as MethodBase;
         //    //if (stackTrace.GetFrame(3).GetMethod() == target) Log.Message("eureka!"); //lighter load, but gotta know the method position on the stack
         //    foreach (StackFrame sf in stackTrace.GetFrames())
         //    {
@@ -320,7 +301,6 @@ namespace OpenTheWindows
         //        //}
         //    }
         //}
-
         public static void SpecialDisplayStats_Postfix(ThingDef __instance, ref IEnumerable<StatDrawEntry> __result)
         {
             if (typeof(Building_Window).IsAssignableFrom(__instance.thingClass))
@@ -334,12 +314,34 @@ namespace OpenTheWindows
             }
         }
 
-        public static void MapComp_Skylights_RegenGrid_Postfix(MapComponent __instance)
+        public static void MapInterfaceUpdate_Postfix()
         {
-            Type type = AccessTools.TypeByName("Dubs_Skylight.MapComp_Skylights");
-            FieldInfo skylightGridinfo = AccessTools.Field(type, "SkylightGrid");
-            bool[] skyLightGrid = (bool[])skylightGridinfo.GetValue(__instance);
-            __instance.map.GetComponent<MapComp_Windows>().WindowGrid.AddRangeToArray(skyLightGrid);
+            if (Find.CurrentMap == null || WorldRendererUtility.WorldRenderedNow)
+            {
+                return;
+            }
+            NaturalLightOverlay naturalLightMap = new NaturalLightOverlay();
+            naturalLightMap.Update();
         }
+
+        public static void DoPlaySettingsGlobalControls_Postfix(WidgetRow row, bool worldView)
+        {
+            if (worldView)
+            {
+                return;
+            }
+            if (row == null || NaturalLightOverlay.Icon() == null)
+            {
+                return;
+            }
+            row.ToggleableIcon(ref NaturalLightOverlay.toggleShow, NaturalLightOverlay.Icon(), NaturalLightOverlay.IconTip(), null, null);
+        }
+
+        public static void RegenGrid_Postfix()
+        {
+            Find.CurrentMap.GetComponent<MapComp_Windows>().RegenGrid();
+        }
+
+        
     }
 }

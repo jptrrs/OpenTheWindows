@@ -19,86 +19,6 @@ namespace OpenTheWindows
             yield break;
         }
 
-        //public static IEnumerable<IntVec3> GetWindowLightAreas(IntVec3 center, Rot4 rot, IntVec2 size, Map map)
-        //{
-        //    CellRect rectA = default(CellRect);
-        //    CellRect rectB = default(CellRect);
-        //    int reach = Math.Max(size.x, size.z) / 2 + 1;
-        //    int deep = 2;
-        //    int maxReachA = 0;
-        //    int maxReachB = 0;
-        //    int maxReach = 0;
-
-        //    //find light limits
-        //    if (rot.IsHorizontal)
-        //    {
-        //        //test if window normals are clear
-        //        for (int i = 1; i < 1 + reach + deep; i++)
-        //        {
-        //            IntVec3 c = new IntVec3(center.x + i, 0, center.z);
-        //            if (c.Walkable(map) & !map.roofGrid.Roofed(c)) maxReachA++;
-        //            else break;
-        //        }
-        //        for (int i = 1; i < 1 + reach + deep; i++)
-        //        {
-        //            IntVec3 c = new IntVec3(center.x - i, 0, center.z);
-        //            if (c.Walkable(map) & !map.roofGrid.Roofed(c)) maxReachB++;
-        //            else break;
-        //        }
-        //        maxReach = Math.Max(maxReachA, maxReachB);
-
-        //        //sets limits acordingly
-        //        rectA.minX = center.x + 1;
-        //        rectA.maxX = center.x + maxReach;
-        //        rectB.minX = center.x - maxReach;
-        //        rectB.maxX = center.x - 1;
-        //        rectB.minZ = (rectA.minZ = center.z - reach);
-        //        rectB.maxZ = (rectA.maxZ = center.z + reach);
-        //    }
-        //    else
-        //    {
-        //        //test if window normals are clear
-        //        for (int i = 1; i < 1 + reach + deep; i++)
-        //        {
-        //            IntVec3 c = new IntVec3(center.x, 0, center.z + i);
-        //            if (c.Walkable(map) & !map.roofGrid.Roofed(c)) maxReachA++;
-        //            else break;
-        //        }
-        //        for (int i = 1; i < 1 + reach + deep; i++)
-        //        {
-        //            IntVec3 c = new IntVec3(center.x, 0, center.z - i);
-        //            if (c.Walkable(map) & !map.roofGrid.Roofed(c)) maxReachB++;
-        //            else break;
-        //        }
-        //        maxReach = Math.Max(maxReachA, maxReachB);
-
-        //        //sets limits acordingly
-        //        rectA.minZ = center.z + 1;
-        //        rectA.maxZ = center.z + maxReach;
-        //        rectB.minZ = center.z - maxReach;
-        //        rectB.maxZ = center.z - 1;
-        //        rectB.minX = (rectA.minX = center.x - reach);
-        //        rectB.maxX = (rectA.maxX = center.x + reach);
-        //    }
-
-        //    //draws window light areas
-        //    for (int z = rectA.minZ; z <= rectA.maxZ; z++)
-        //    {
-        //        for (int x = rectA.minX; x <= rectA.maxX; x++)
-        //        {
-        //            yield return new IntVec3(x, 0, z);
-        //        }
-        //    }
-        //    for (int z2 = rectB.minZ; z2 <= rectB.maxZ; z2++)
-        //    {
-        //        for (int x2 = rectB.minX; x2 <= rectB.maxX; x2++)
-        //        {
-        //            yield return new IntVec3(x2, 0, z2);
-        //        }
-        //    }
-        //    yield break;
-        //}
-
         private static bool DoesLightReach(IntVec3 watchCell, IntVec3 buildingCenter, Map map)
         {
             return (watchCell.Walkable(map) && GenSight.LineOfSightToEdges(buildingCenter, watchCell, map, true, null));
@@ -289,14 +209,14 @@ namespace OpenTheWindows
             }
             foreach (IntVec3 c in GenAdj.CellsAdjacentAlongEdge(window.Position + centerAdjustA, window.Rotation, window.def.size, dirA))
             {
-                if (window.illuminated.Contains(c) && !window.Map.roofGrid.Roofed(c))
+                if (!window.Map.roofGrid.Roofed(c))
                 {
                     openSideA.Add(c);
                 }
             }
             foreach (IntVec3 c in GenAdj.CellsAdjacentAlongEdge(window.Position + centerAdjustB, window.Rotation, window.def.size, dirB))
             {
-                if (window.illuminated.Contains(c) && !window.Map.roofGrid.Roofed(c))
+                if (!window.Map.roofGrid.Roofed(c))
                 {
                     openSideB.Add(c);
                 }
@@ -306,10 +226,7 @@ namespace OpenTheWindows
                 window.Facing = (openSideA.Count > openSideB.Count) ? dirA : dirB;
                 window.isFacingSet = true;
             }
-            else
-            {
-                window.isFacingSet = false;
-            }
+            else window.isFacingSet = false;
         }
 
         //public static Rot4 WindowRotationAt(IntVec3 loc, Map map)

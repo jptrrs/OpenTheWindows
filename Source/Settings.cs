@@ -3,12 +3,6 @@ using Verse;
 
 namespace OpenTheWindows
 {
-    public enum ColorDisplayOption
-    {
-        Pillow = 0,
-        Blanket = 1,
-    }
-
     public class OpenTheWindowsMod : Mod
     {
         private OpenTheWindowsSettings settings;
@@ -36,8 +30,6 @@ namespace OpenTheWindows
 
     public class OpenTheWindowsSettings : ModSettings
     {
-        public static ColorDisplayOption colorDisplayOption = ColorDisplayOption.Pillow;
-
         private const float indoorsNoNaturalLightPenaltyDefault = 3f; //indoors accelerated degradation when not under windows
 
         public static float IndoorsNoNaturalLightPenalty = indoorsNoNaturalLightPenaltyDefault;

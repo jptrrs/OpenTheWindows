@@ -10,7 +10,6 @@ namespace OpenTheWindows
         {
             Map currentMap = Find.CurrentMap;
             GenDraw.DrawFieldEdges(WindowUtility.CalculateWindowLightCells(def, center, rot, currentMap).ToList());
-            //GenDraw.DrawFieldEdges(WindowUtility.CalculateWindowLightCells(def, center, WindowUtility.WindowRotationAt(center, currentMap), currentMap).ToList());
         }
     }
 }

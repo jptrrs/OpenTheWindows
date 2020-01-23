@@ -18,7 +18,7 @@
     <holdsRoof>true</holdsRoof>
     <staticSunShadowHeight>1.0</staticSunShadowHeight>
     <passability>Impassable</passability>
-    <blockLight>true</blockLight>
+    <blockLight>false</blockLight>
     <blockWind>true</blockWind>
     <coversFloor>true</coversFloor>
     <castEdgeShadows>true</castEdgeShadows>
@@ -37,8 +37,8 @@
 
   <ThingDef ParentName="WindowBase">
     <defName>SimpleOpenWindow</defName>
-    <label>Simple Window</label>
-    <description>A simple shutter. Lets in light and air when open, nothing when closed. Comes with a view.</description>
+    <label>Rustic Window</label>
+    <description>A simple shutter that lets light and air in when open. But even closed it doesn't provide good insulation. Comes with a view.</description>
     <graphicData>
       <texPath>Things/Building/SimpleWindow</texPath>
       <graphicClass>Graphic_Multi</graphicClass>

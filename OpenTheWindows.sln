@@ -5,6 +5,18 @@ VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTheWindows", "Source\OpenTheWindows.csproj", "{AB5742EF-36E9-436A-9BE4-46330E1A33B0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0C7A5886-1A0C-40AC-9160-46C32C9C1CE6}"
+	ProjectSection(SolutionItems) = preProject
+		About\About.xml = About\About.xml
+		Patches\Patches.xml = Patches\Patches.xml
+		Patches\Patches_DubsSkylights.xml = Patches\Patches_DubsSkylights.xml
+		Patches\Patches_Expanded Roofing.xml = Patches\Patches_Expanded Roofing.xml
+		Patches\Patches_Glass+Lights.xml = Patches\Patches_Glass+Lights.xml
+		About\Preview.png = About\Preview.png
+		Defs\ResearchProjects.xml = Defs\ResearchProjects.xml
+		Defs\Things.xml = Defs\Things.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

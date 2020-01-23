@@ -8,9 +8,9 @@
 			<success>Normal</success>
 			<operations>
 
-				<li Class="PatchOperationRemove">
+				<!--<li Class="PatchOperationRemove">
 					<xpath>/Defs/ThingDef[defName = "Window"]/designationCategory</xpath>
-				</li>
+				</li>-->
 				
 				<li Class="PatchOperationReplace">
 					<xpath>Defs/ThingDef[defName = "OpenWindow"]/costList</xpath>

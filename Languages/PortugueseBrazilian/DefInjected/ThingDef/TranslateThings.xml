@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
 
-  <SimpleOpenWindow.label>Janela Simples</SimpleOpenWindow.label>
-  <SimpleOpenWindow.description>Uma janela simples. Deixa entrar ar e luz quando aberta, nada quando fechada. Tem uma vista.</SimpleOpenWindow.description>
+  <SimpleOpenWindow.label>Janela Rústica</SimpleOpenWindow.label>
+  <SimpleOpenWindow.description>Uma janela simples que deixa entrar ar e luz quando aberta. Mas mesmo fechada não veda totalmente a passagem de ar. Tem uma vista.</SimpleOpenWindow.description>
 
   <OpenWindow.label>Janela</OpenWindow.label>
   <OpenWindow.description>Uma janela com uma folha de vidro e uma veneziana. Controla a passagem de luz e de ar separadamente. Tem uma vista.</OpenWindow.description>
