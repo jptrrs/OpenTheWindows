@@ -106,9 +106,17 @@ namespace OpenTheWindows
         public static void GameGlowAt_Postfix(IntVec3 c, ref float __result)
         {
             Map map = Find.CurrentMap;
-            if (__result < 1f && map.GetComponent<MapComp_Windows>().WindowGrid[map.cellIndices.CellToIndex(c)])
+            try
+            { 
+                if (__result < 1f && map.GetComponent<MapComp_Windows>().WindowGrid[map.cellIndices.CellToIndex(c)])
+                {
+                    float x = Mathf.Max(0f, map.skyManager.CurSkyGlow - WindowFiltering);
+                    __result = Mathf.Max(__result, x);
+                }
+            }
+            catch (IndexOutOfRangeException e)
             {
-                __result = Mathf.Max(__result, map.skyManager.CurSkyGlow - WindowFiltering);
+                //Log.Message(map.ToString() + " cell " + c + " is out of range on GameGlowAt");
             }
         }
 
