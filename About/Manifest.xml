@@ -2,9 +2,9 @@
 <Manifest>
     <identifier>OpenTheWindows</identifier>
     <version>1.2</version>
-    <loadAfter>
-      <li>RimFridge</li>
-    </loadAfter>
+    <incompatibleWith>
+      <li>SW-Lightsabers</li>
+    </incompatibleWith>
     <suggests>
       <li>Dubs-Skylights</li>
       <li>ExpandedRoofing</li>
