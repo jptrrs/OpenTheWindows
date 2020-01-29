@@ -9,10 +9,10 @@ namespace OpenTheWindows
 {
     public class Building_Window : Building
     {
-        public static IntVec3 end;
-        public static IntVec3 start;
+        public IntVec3 end;
+        public IntVec3 start;
         public LinkDirections Facing;   
-        public List<IntVec3> illuminated;
+        public List<IntVec3> illuminated = new List<IntVec3>();
         public bool isFacingSet = false;
         private CompWindow mainComp;
         public bool open = true;
@@ -23,6 +23,7 @@ namespace OpenTheWindows
         public float closedVentFactor = 0.5f;
         public float leakVentFactor = 0.1f;
         public int adjacentRoofCount;
+        public bool updateRequest = false;
 
         public override Graphic Graphic
         {
@@ -115,7 +116,7 @@ namespace OpenTheWindows
         {
             if (open)
             {
-                illuminated = new List<IntVec3>(WindowUtility.CalculateWindowLightCells(def, Position, Rotation, Map).ToList());
+                illuminated = WindowUtility.CalculateWindowLightCells(this).ToList();
             }
             else if (illuminated != null)
             {
@@ -132,18 +133,33 @@ namespace OpenTheWindows
                 if (!respawningAfterLoad) venting = true;
                 leaks = true;
             }
+            WindowUtility.FindEnds(this);
             CastLight();
             Map.GetComponent<MapComp_Windows>().RegenGrid();
             Map.glowGrid.MarkGlowGridDirty(Position);
             map.GetComponent<MapComp_Windows>().RegisterWindow(this);
             if (!isFacingSet) WindowUtility.FindWindowExternalFacing(this);
+            //just link it!
+            if (OpenTheWindowsSettings.LinkWindows)
+            {
+                map.linkGrid.Notify_LinkerCreatedOrDestroyed(this);
+                map.mapDrawer.MapMeshDirty(Position, MapMeshFlag.Things, true, false);
+            }
         }
 
         public override void DeSpawn(DestroyMode mode = DestroyMode.Vanish)
         {
-            base.Map.GetComponent<MapComp_Windows>().DeRegisterWindow(this);
-            base.Map.GetComponent<MapComp_Windows>().RegenGrid();
-            base.Map.glowGrid.MarkGlowGridDirty(base.Position);
+            Map.GetComponent<MapComp_Windows>().DeRegisterWindow(this);
+            Map.GetComponent<MapComp_Windows>().RegenGrid();
+            Map.glowGrid.MarkGlowGridDirty(Position);
+            //just link it!
+            if (OpenTheWindowsSettings.LinkWindows)
+            {
+                Map.thingGrid.Deregister(this, false);
+                Map.linkGrid.Notify_LinkerCreatedOrDestroyed(this);
+                Map.mapDrawer.MapMeshDirty(Position, MapMeshFlag.Things, true, false);
+            }
+            //
             base.DeSpawn(mode);
         }
 
@@ -213,37 +229,23 @@ namespace OpenTheWindows
 
         public override void TickRare()
         {
-            bool doRegenGrid = false;
             if (venting)
             {
                 float vent = open ? ventRate : ventRate * closedVentFactor;
                 GenTemperature.EqualizeTemperaturesThroughBuilding(this, vent, true);
             } 
-            else if(leaks && !open)
+            else if (leaks && !open)
             {
                 float vent = ventRate * leakVentFactor;
                 GenTemperature.EqualizeTemperaturesThroughBuilding(this, vent, true);
             }
-            if (open && isFacingSet)
-            {
-                int areacheck = 0;
-                if (illuminated != null) areacheck = illuminated.Count();
-                CastLight();
-                if (illuminated.Count() != areacheck)
-                {
-                    doRegenGrid = true;
-                }
-            }
             if (!isFacingSet || NeedExternalFacingUpdate(adjacentRoofCount))
             {
                 WindowUtility.FindWindowExternalFacing(this);
-                if (!isFacingSet) CastLight();
-                doRegenGrid = true;
-            }
-            if (doRegenGrid)
-            {
+                CastLight();
                 Map.GetComponent<MapComp_Windows>().RegenGrid();
-                Map.mapDrawer.MapMeshDirty(Position, MapMeshFlag.GroundGlow);
+                Map.glowGrid.MarkGlowGridDirty(Position);
+                updateRequest = false;
             }
         }
 
@@ -252,11 +254,28 @@ namespace OpenTheWindows
             int count = new int();
             foreach (IntVec3 c in GenAdj.CellsAdjacentCardinal(this))
             {
-                if (!Map.roofGrid.Roofed(c) && c.Walkable(Map)) count++;
+                if (Map.roofGrid.Roofed(c) && c.Walkable(Map)) count++;
             }
             adjacentRoofCount = count;
             if (count != previousCount) return true;
             else return false;
+        }
+
+        public bool NeedLightUpdate()
+        {
+            if (open && isFacingSet) 
+            {
+                int areacheck = 0;
+                if (illuminated != null) areacheck = illuminated.Count();
+                CastLight();
+                if (illuminated.Count() != areacheck)
+                {
+                    Log.Message("LightUpdate on " + this + ", area count: "+areacheck+"/" + illuminated.Count());
+                    return true;
+                }
+                return false;
+            }
+            return false;
         }
 
         protected override void ReceiveCompSignal(string signal)

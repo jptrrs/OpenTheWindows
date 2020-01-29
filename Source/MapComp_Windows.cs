@@ -9,12 +9,25 @@ namespace OpenTheWindows
     public class MapComp_Windows : MapComponent
     {
         public List<Building_Window> cachedWindows = new List<Building_Window>();
-
+        public bool updateRequest = false;
         public bool[] WindowGrid;
-
+        public int[] WindowScanGrid;
         public MapComp_Windows(Map map) : base(map)
         {
             WindowGrid = new bool[map.cellIndices.NumGridCells];
+            WindowScanGrid = new int[map.cellIndices.NumGridCells];
+        }
+
+        public void CastNaturalLightOnDemand()
+        {
+            foreach (Building_Window window in cachedWindows)
+            {
+                if (window.NeedLightUpdate())
+                {
+                    RegenGrid();
+                    map.glowGrid.MarkGlowGridDirty(window.Position);
+                }
+            }
         }
 
         public void DeRegisterWindow(Building_Window window)
@@ -22,6 +35,17 @@ namespace OpenTheWindows
             if (cachedWindows.Contains(window))
             {
                 cachedWindows.Remove(window);
+                SetWindowScanArea(window, false);
+            }
+        }
+
+        public override void MapComponentTick()
+        {
+            base.MapComponentTick();
+            if (updateRequest)
+            {
+                CastNaturalLightOnDemand();
+                updateRequest = false;
             }
         }
 
@@ -68,10 +92,10 @@ namespace OpenTheWindows
                 Type type = AccessTools.TypeByName("Dubs_Skylight.MapComp_Skylights");
                 FieldInfo skylightGridinfo = AccessTools.Field(type, "SkylightGrid");
                 MethodInfo compInfo = AccessTools.Method(typeof(Map), "GetComponent", new[] { typeof(Type) });
-                bool[] skyLightGrid = (bool[])skylightGridinfo.GetValue(compInfo.Invoke(map, new[] { type }));                
+                bool[] skyLightGrid = (bool[])skylightGridinfo.GetValue(compInfo.Invoke(map, new[] { type }));
                 for (int i = 0; i < skyLightGrid.Length; i++)
                 {
-                    if(skyLightGrid[i] == true)
+                    if (skyLightGrid[i] == true)
                     {
                         WindowGrid[i] = true;
                     }
@@ -97,6 +121,42 @@ namespace OpenTheWindows
             if (!cachedWindows.Contains(window))
             {
                 cachedWindows.Add(window);
+                SetWindowScanArea(window, true);
+            }
+        }
+
+        private void SetWindowScanArea(Building_Window window, bool register)
+        {
+            Map map = window.Map;
+            int deep = WindowUtility.deep;
+            int reach = Math.Max(window.def.size.x, window.def.size.z) / 2 + 1;
+            int delta = register ? +1 : -1;
+
+            //front and back
+            foreach (IntVec3 c in GenAdj.OccupiedRect(window.Position, window.Rotation, window.def.size))
+            {
+                if (c.InBounds(map))
+                {
+                    int cellx = c.x;
+                    int cellz = c.z;
+                    for (int i = 1; i <= +reach + deep; i++)
+                    {
+                        if (window.Rotation.IsHorizontal)
+                        {
+                            IntVec3 targetA = new IntVec3(cellx + i, 0, cellz);
+                            if (targetA.InBounds(map)) WindowScanGrid[map.cellIndices.CellToIndex(targetA)] += delta;
+                            IntVec3 targetB = new IntVec3(Math.Max(0, cellx - i), 0, cellz);
+                            if (targetB.InBounds(map)) WindowScanGrid[map.cellIndices.CellToIndex(targetB)] += delta;
+                        }
+                        else
+                        {
+                            IntVec3 targetA = new IntVec3(cellx, 0, cellz + i);
+                            if (targetA.InBounds(map)) WindowScanGrid[map.cellIndices.CellToIndex(targetA)] += delta;
+                            IntVec3 targetB = new IntVec3(cellx, 0, Math.Max(0, cellz - i));
+                            if (targetB.InBounds(map)) WindowScanGrid[map.cellIndices.CellToIndex(targetB)] += delta;
+                        }
+                    }
+                }
             }
         }
     }

@@ -9,7 +9,9 @@ namespace OpenTheWindows
         public override void DrawGhost(ThingDef def, IntVec3 center, Rot4 rot, Color ghostCol)
         {
             Map currentMap = Find.CurrentMap;
-            GenDraw.DrawFieldEdges(WindowUtility.CalculateWindowLightCells(def, center, rot, currentMap).ToList());
+            IntVec3 start = WindowUtility.FindEnd(center, rot, def.size, false);
+            IntVec3 end = WindowUtility.FindEnd(center, rot, def.size, true);
+            GenDraw.DrawFieldEdges(WindowUtility.CalculateWindowLightCells(def.size, center, rot, currentMap, start, end).ToList());
         }
     }
 }

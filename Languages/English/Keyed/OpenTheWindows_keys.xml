@@ -20,5 +20,10 @@
   <IndoorsNoNaturalLightPenaltyDesc>Multiplies the outdoors level degradation when the pawn is indoors but not under a window.</IndoorsNoNaturalLightPenaltyDesc>
   <BeautySensitivityReduction>Beauty sensitivity reduction</BeautySensitivityReduction>
   <BeautySensitivityReductionDesc>Numbs the pawns' sensitivity to beauty to compensate for the amount added by "Nature is Beautiful" and captured by the windows.</BeautySensitivityReductionDesc>
+  <LinkOptionsLabel>Tweak the walls graphics</LinkOptionsLabel>
+  <RequiresRestart>requires a restart</RequiresRestart>
+  <LinkWindowsAndWalls>Link with the windows</LinkWindowsAndWalls>
+  <LinkVentsAndWalls>Link with vents &amp; coolers</LinkVentsAndWalls>
+  <LinkFridgesAndWalls>Link with vents, coolers &amp; refrigerators</LinkFridgesAndWalls>
   
 </LanguageData>

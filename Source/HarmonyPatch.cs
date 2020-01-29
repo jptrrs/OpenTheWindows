@@ -56,6 +56,24 @@ namespace OpenTheWindows
             harmonyInstance.Patch(AccessTools.Method(typeof(PlaySettings), "DoPlaySettingsGlobalControls"),
                 null, new HarmonyMethod(patchType, nameof(DoPlaySettingsGlobalControls_Postfix)), null);
 
+            harmonyInstance.Patch(AccessTools.Method(typeof(ThingGrid), "RegisterInCell"),
+                new HarmonyMethod(patchType, nameof(RegisterInCell_postfix)), null, null);
+
+            harmonyInstance.Patch(AccessTools.Method(typeof(ThingGrid), "DeregisterInCell"),
+                new HarmonyMethod(patchType, nameof(RegisterInCell_postfix)), null, null);
+
+            harmonyInstance.Patch(AccessTools.Method(typeof(RoofGrid), "SetRoof"),
+                new HarmonyMethod(patchType, nameof(SetRoof_postfix)), null, null);
+
+            if (OpenTheWindowsSettings.LinkVents)
+            {
+                harmonyInstance.Patch(AccessTools.Method(typeof(Building), "SpawnSetup"),
+                    null, new HarmonyMethod(patchType, nameof(Linking_SpawnSetup_postfix)), null);
+
+                harmonyInstance.Patch(AccessTools.Method(typeof(Building), "DeSpawn"),
+                    new HarmonyMethod(patchType, nameof(Linking_DeSpawn_prefix)), null, null);
+            }
+
             if (LoadedModManager.RunningModsListForReading.Any(x => x.Name.Contains("Nature is Beautiful")))
             {
                 Log.Message("[OpenTheWindows] Nature is Beautiful detected! Integrating...");
@@ -82,7 +100,6 @@ namespace OpenTheWindows
 
                 harmonyInstance.Patch(AccessTools.Method("Dubs_Skylight.MapComp_Skylights:RegenGrid"),
                     null, new HarmonyMethod(patchType, nameof(RegenGrid_Postfix)), null);
-
             }
 
             if (AccessTools.TypeByName("ExpandedRoofing.HarmonyPatches") is Type expandedRoofingType)
@@ -350,6 +367,47 @@ namespace OpenTheWindows
             Find.CurrentMap.GetComponent<MapComp_Windows>().RegenGrid();
         }
 
-        
+        public static void RegisterInCell_postfix(Thing t, IntVec3 c)
+        {
+            if (t is Building && t.def.passability == Traversability.Impassable)
+            {
+                MapComp_Windows mapComp = t.Map.GetComponent<MapComp_Windows>();
+                if (mapComp != null && mapComp.WindowScanGrid[t.Map.cellIndices.CellToIndex(c)] > 0)
+                {
+                    mapComp.updateRequest = true;
+                }
+            }
+        }
+
+        public static void SetRoof_postfix(RoofGrid __instance, IntVec3 c, RoofDef def)
+        {
+            FieldInfo mapInfo = AccessTools.Field(typeof(RoofGrid), "map");
+            Map map = (Map)mapInfo.GetValue(__instance);
+            MapComp_Windows mapComp = map.GetComponent<MapComp_Windows>();
+            if (mapComp != null && mapComp.WindowScanGrid[map.cellIndices.CellToIndex(c)] > 0)
+            {
+                mapComp.updateRequest = true;
+            }
+        }
+
+        public static void Linking_SpawnSetup_postfix(Building __instance, Map map)
+        {
+            if (__instance.def.graphicData != null && __instance.def.graphicData.linkType == LinkDrawerType.None && __instance.def.graphicData.linkFlags == (LinkFlags.Rock | LinkFlags.Wall))
+            {
+                map.linkGrid.Notify_LinkerCreatedOrDestroyed(__instance);
+                map.mapDrawer.MapMeshDirty(__instance.Position, MapMeshFlag.Things, true, false);
+            }
+        }
+
+        public static void Linking_DeSpawn_prefix(Building __instance)
+        {
+            if (__instance.def.graphicData != null && __instance.def.graphicData.linkType == LinkDrawerType.None && __instance.def.graphicData.linkFlags == (LinkFlags.Rock | LinkFlags.Wall))
+            {
+                Map map = __instance.Map;
+                map.thingGrid.Deregister(__instance, false);
+                map.linkGrid.Notify_LinkerCreatedOrDestroyed(__instance);
+                map.mapDrawer.MapMeshDirty(__instance.Position, MapMeshFlag.Things, true, false);
+            }
+        }
     }
 }

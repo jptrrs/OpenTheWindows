@@ -31,8 +31,14 @@
     <building>
       <isInert>true</isInert>
       <canPlaceOverWall>true</canPlaceOverWall>
-      <!--<blueprintClass>OpenTheWindows.Blueprint_Window</blueprintClass>-->
     </building>
+    <graphicData>
+      <linkFlags>
+        <li>Wall</li>
+        <li>Rock</li>
+      </linkFlags>
+    </graphicData>
+
   </ThingDef>
 
   <ThingDef ParentName="WindowBase">

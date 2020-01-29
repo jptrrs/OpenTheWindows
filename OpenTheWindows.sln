@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0C7A5886-1A0C-40AC-9160-46C32C9C1CE6}"
 	ProjectSection(SolutionItems) = preProject
 		About\About.xml = About\About.xml
+		About\Manifest.xml = About\Manifest.xml
 		Patches\Patches.xml = Patches\Patches.xml
 		Patches\Patches_DubsSkylights.xml = Patches\Patches_DubsSkylights.xml
 		Patches\Patches_Expanded Roofing.xml = Patches\Patches_Expanded Roofing.xml

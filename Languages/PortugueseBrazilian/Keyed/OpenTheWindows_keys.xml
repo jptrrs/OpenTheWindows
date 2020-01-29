@@ -20,5 +20,10 @@
   <IndoorsNoNaturalLightPenaltyDesc>Multiplica o decaimento do nível da necessidade de exterior quando o peão está em ambientes fechados sem janelas</IndoorsNoNaturalLightPenaltyDesc>
   <BeautySensitivityReduction>Redução da sensitividade à beleza</BeautySensitivityReduction>
   <BeautySensitivityReductionDesc>Reduz a sensibilidade à beleza para compensar o acréscimo de "Nature is Beautiful" mais aquela capturada pelas janelas.</BeautySensitivityReductionDesc>
-  
+  <LinkOptionsLabel>Interferir nos gráficos das paredes</LinkOptionsLabel>
+  <RequiresRestart>requer reinicialização</RequiresRestart>
+  <LinkWindowsAndWalls>Conectar com as janelas</LinkWindowsAndWalls>
+  <LinkVentsAndWalls>Conectar com saídas de ventilação e refrigeradores</LinkVentsAndWalls>
+  <LinkFridgesAndWalls>Conectar com saídas de ventilação e refrigeradores</LinkFridgesAndWalls>
+
 </LanguageData>

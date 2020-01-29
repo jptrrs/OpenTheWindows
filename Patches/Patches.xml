@@ -20,4 +20,15 @@
     </match>
   </Operation>
 
+  <Operation Class="PatchOperationAdd">
+    <xpath>/Defs/ThingDef[defName = "Vent" or defName = "Cooler"]/graphicData</xpath>
+    <value>
+      <linkFlags>
+        <li>Wall</li>
+        <li>Rock</li>
+      </linkFlags>
+    </value>
+
+  </Operation>
+
 </Patch>
