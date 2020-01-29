@@ -239,26 +239,23 @@ namespace OpenTheWindows
                 float vent = ventRate * leakVentFactor;
                 GenTemperature.EqualizeTemperaturesThroughBuilding(this, vent, true);
             }
-            if (!isFacingSet || NeedExternalFacingUpdate(adjacentRoofCount))
-            {
-                WindowUtility.FindWindowExternalFacing(this);
-                CastLight();
-                Map.GetComponent<MapComp_Windows>().RegenGrid();
-                Map.glowGrid.MarkGlowGridDirty(Position);
-                updateRequest = false;
-            }
         }
 
-        private bool NeedExternalFacingUpdate(int previousCount)
+        public bool NeedExternalFacingUpdate()
         {
-            int count = new int();
-            foreach (IntVec3 c in GenAdj.CellsAdjacentCardinal(this))
+            if (isFacingSet)
             {
-                if (Map.roofGrid.Roofed(c) && c.Walkable(Map)) count++;
+                int previousCount = adjacentRoofCount;
+                int count = new int();
+                foreach (IntVec3 c in GenAdj.CellsAdjacentCardinal(this))
+                {
+                    if (Map.roofGrid.Roofed(c) && c.Walkable(Map)) count++;
+                }
+                adjacentRoofCount = count;
+                if (count != previousCount) return true;
+                else return false;
             }
-            adjacentRoofCount = count;
-            if (count != previousCount) return true;
-            else return false;
+            return true;
         }
 
         public bool NeedLightUpdate()
@@ -270,7 +267,6 @@ namespace OpenTheWindows
                 CastLight();
                 if (illuminated.Count() != areacheck)
                 {
-                    Log.Message("LightUpdate on " + this + ", area count: "+areacheck+"/" + illuminated.Count());
                     return true;
                 }
                 return false;

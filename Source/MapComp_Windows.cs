@@ -10,6 +10,7 @@ namespace OpenTheWindows
     {
         public List<Building_Window> cachedWindows = new List<Building_Window>();
         public bool updateRequest = false;
+        public bool roofUpdateRequest = false;
         public bool[] WindowGrid;
         public int[] WindowScanGrid;
         public MapComp_Windows(Map map) : base(map)
@@ -22,12 +23,24 @@ namespace OpenTheWindows
         {
             foreach (Building_Window window in cachedWindows)
             {
-                if (window.NeedLightUpdate())
+                bool doRegen = false;
+                if (roofUpdateRequest && window.NeedExternalFacingUpdate())
                 {
+                    WindowUtility.FindWindowExternalFacing(window);
+                    window.CastLight();
+                    doRegen = true;
+                }
+                if (!doRegen && window.NeedLightUpdate())
+                {
+                    doRegen = true;
+                }
+                if (doRegen)
+                { 
                     RegenGrid();
                     map.glowGrid.MarkGlowGridDirty(window.Position);
                 }
             }
+            updateRequest = (roofUpdateRequest = false);
         }
 
         public void DeRegisterWindow(Building_Window window)
@@ -42,10 +55,9 @@ namespace OpenTheWindows
         public override void MapComponentTick()
         {
             base.MapComponentTick();
-            if (updateRequest)
+            if (updateRequest || roofUpdateRequest)
             {
                 CastNaturalLightOnDemand();
-                updateRequest = false;
             }
         }
 
