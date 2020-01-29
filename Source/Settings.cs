@@ -88,6 +88,8 @@ namespace OpenTheWindows
         {
             Scribe_Values.Look(ref IndoorsNoNaturalLightPenalty, "IndoorsNoNaturalLightPenalty", indoorsNoNaturalLightPenaltyDefault);
             Scribe_Values.Look(ref BeautySensitivityReduction, "ModifiedBeautyImpactFactor", beautySensitivityReductionDefault);
+            Scribe_Values.Look(ref LinkWindows, "LinkWindows", true);
+            Scribe_Values.Look(ref LinkVents, "LinkVents", true);
             base.ExposeData();
         }
     }
