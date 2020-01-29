@@ -75,7 +75,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NaturalLightOverlay.cs" />
     <Compile Include="CompWindow.cs" />
     <Compile Include="CompProperties_Window.cs" />
     <Compile Include="HarmonyPatch.cs" />

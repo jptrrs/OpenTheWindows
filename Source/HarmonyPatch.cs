@@ -50,11 +50,11 @@ namespace OpenTheWindows
             harmonyInstance.Patch(AccessTools.Method(typeof(ThingDef), "SpecialDisplayStats"),
                 null, new HarmonyMethod(patchType, nameof(SpecialDisplayStats_Postfix)), null);
 
-            harmonyInstance.Patch(AccessTools.Method(typeof(MapInterface), "MapInterfaceUpdate"),
-                null, new HarmonyMethod(patchType, nameof(MapInterfaceUpdate_Postfix)), null);
+            //harmonyInstance.Patch(AccessTools.Method(typeof(MapInterface), "MapInterfaceUpdate"),
+            //    null, new HarmonyMethod(patchType, nameof(MapInterfaceUpdate_Postfix)), null);
 
-            harmonyInstance.Patch(AccessTools.Method(typeof(PlaySettings), "DoPlaySettingsGlobalControls"),
-                null, new HarmonyMethod(patchType, nameof(DoPlaySettingsGlobalControls_Postfix)), null);
+            //harmonyInstance.Patch(AccessTools.Method(typeof(PlaySettings), "DoPlaySettingsGlobalControls"),
+            //    null, new HarmonyMethod(patchType, nameof(DoPlaySettingsGlobalControls_Postfix)), null);
 
             harmonyInstance.Patch(AccessTools.Method(typeof(ThingGrid), "RegisterInCell"),
                 new HarmonyMethod(patchType, nameof(RegisterInCell_postfix)), null, null);
@@ -339,28 +339,28 @@ namespace OpenTheWindows
             }
         }
 
-        public static void MapInterfaceUpdate_Postfix()
-        {
-            if (Find.CurrentMap == null || WorldRendererUtility.WorldRenderedNow)
-            {
-                return;
-            }
-            NaturalLightOverlay naturalLightMap = new NaturalLightOverlay();
-            naturalLightMap.Update();
-        }
+        //public static void MapInterfaceUpdate_Postfix()
+        //{
+        //    if (Find.CurrentMap == null || WorldRendererUtility.WorldRenderedNow)
+        //    {
+        //        return;
+        //    }
+        //    NaturalLightOverlay naturalLightMap = new NaturalLightOverlay();
+        //    naturalLightMap.Update();
+        //}
 
-        public static void DoPlaySettingsGlobalControls_Postfix(WidgetRow row, bool worldView)
-        {
-            if (worldView)
-            {
-                return;
-            }
-            if (row == null || NaturalLightOverlay.Icon() == null)
-            {
-                return;
-            }
-            row.ToggleableIcon(ref NaturalLightOverlay.toggleShow, NaturalLightOverlay.Icon(), NaturalLightOverlay.IconTip(), null, null);
-        }
+        //public static void DoPlaySettingsGlobalControls_Postfix(WidgetRow row, bool worldView)
+        //{
+        //    if (worldView)
+        //    {
+        //        return;
+        //    }
+        //    if (row == null || NaturalLightOverlay.Icon() == null)
+        //    {
+        //        return;
+        //    }
+        //    row.ToggleableIcon(ref NaturalLightOverlay.toggleShow, NaturalLightOverlay.Icon(), NaturalLightOverlay.IconTip(), null, null);
+        //}
 
         public static void RegenGrid_Postfix()
         {
