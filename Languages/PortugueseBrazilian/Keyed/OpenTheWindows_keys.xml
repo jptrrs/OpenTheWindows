@@ -18,6 +18,9 @@
   <OpenTheWindows>Open The Windows!</OpenTheWindows>
   <IndoorsNoNaturalLightPenalty>Aceleração da necessidade de ar livre</IndoorsNoNaturalLightPenalty>
   <IndoorsNoNaturalLightPenaltyDesc>Multiplica o decaimento do nível da necessidade de exterior quando o peão está em ambientes fechados sem janelas</IndoorsNoNaturalLightPenaltyDesc>
+  <LightTransmission>Luz transmitida pelas janelas</LightTransmission>
+  <LightTransmissionIncludesRoofs>incluindo dispositivos no teto</LightTransmissionIncludesRoofs>
+  <LightTransmissionDesc>Quantidade de luz externa que consegue atravessar vidro e esquadrias. No mundo real, esse valor fica ao redor de 90%.</LightTransmissionDesc>
   <BeautySensitivityReduction>Redução da sensitividade à beleza</BeautySensitivityReduction>
   <BeautySensitivityReductionDesc>Reduz a sensibilidade à beleza para compensar o acréscimo de "Nature is Beautiful" mais aquela capturada pelas janelas.</BeautySensitivityReductionDesc>
   <LinkOptionsLabel>Interferir nos gráficos das paredes</LinkOptionsLabel>

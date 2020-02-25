@@ -13,6 +13,7 @@ namespace OpenTheWindows
         public bool roofUpdateRequest = false;
         public bool[] WindowGrid;
         public int[] WindowScanGrid;
+
         public MapComp_Windows(Map map) : base(map)
         {
             WindowGrid = new bool[map.cellIndices.NumGridCells];
@@ -21,23 +22,29 @@ namespace OpenTheWindows
 
         public void CastNaturalLightOnDemand()
         {
+            bool doRegen = false;
+            List<IntVec3> affected = new List<IntVec3>();
             foreach (Building_Window window in cachedWindows)
             {
-                bool doRegen = false;
                 if (roofUpdateRequest && window.NeedExternalFacingUpdate())
                 {
                     WindowUtility.FindWindowExternalFacing(window);
                     window.CastLight();
                     doRegen = true;
+                    affected.Add(window.Position);
                 }
                 if (!doRegen && window.NeedLightUpdate())
                 {
                     doRegen = true;
+                    affected.Add(window.Position);
                 }
-                if (doRegen)
-                { 
-                    RegenGrid();
-                    map.glowGrid.MarkGlowGridDirty(window.Position);
+            }
+            if (doRegen)
+            {
+                RegenGrid();
+                foreach (IntVec3 c in affected)
+                {
+                    map.glowGrid.MarkGlowGridDirty(c);
                 }
             }
             updateRequest = (roofUpdateRequest = false);

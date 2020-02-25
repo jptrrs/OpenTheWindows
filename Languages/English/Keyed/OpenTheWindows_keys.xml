@@ -18,6 +18,9 @@
   <OpenTheWindows>Open The Windows!</OpenTheWindows>
   <IndoorsNoNaturalLightPenalty>Outdoors need acceleration</IndoorsNoNaturalLightPenalty>
   <IndoorsNoNaturalLightPenaltyDesc>Multiplies the outdoors level degradation when the pawn is indoors but not under a window.</IndoorsNoNaturalLightPenaltyDesc>
+  <LightTransmission>Light transmission through windows</LightTransmission>
+  <LightTransmissionIncludesRoofs>including devices on the ceiling</LightTransmissionIncludesRoofs>
+  <LightTransmissionDesc>Amount of exterior light that manages to cross glass and framings. Real world values are around 90%.</LightTransmissionDesc>
   <BeautySensitivityReduction>Beauty sensitivity reduction</BeautySensitivityReduction>
   <BeautySensitivityReductionDesc>Numbs the pawns' sensitivity to beauty to compensate for the amount added by "Nature is Beautiful" and captured by the windows.</BeautySensitivityReductionDesc>
   <LinkOptionsLabel>Tweak the walls graphics</LinkOptionsLabel>

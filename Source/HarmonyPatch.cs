@@ -118,7 +118,7 @@ namespace OpenTheWindows
             return false;
         }
 
-        public static float WindowFiltering = 0.1f;
+        private static float WindowFiltering() => OpenTheWindowsSettings.LightTransmission;
 
         public static void GameGlowAt_Postfix(IntVec3 c, ref float __result)
         {
@@ -127,7 +127,7 @@ namespace OpenTheWindows
             { 
                 if (__result < 1f && map.GetComponent<MapComp_Windows>().WindowGrid[map.cellIndices.CellToIndex(c)])
                 {
-                    float x = Mathf.Max(0f, map.skyManager.CurSkyGlow - WindowFiltering);
+                    float x = Mathf.Max(0f, map.skyManager.CurSkyGlow * WindowFiltering());
                     __result = Mathf.Max(__result, x);
                 }
             }

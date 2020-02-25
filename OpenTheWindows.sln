@@ -5,17 +5,108 @@ VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTheWindows", "Source\OpenTheWindows.csproj", "{AB5742EF-36E9-436A-9BE4-46330E1A33B0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0C7A5886-1A0C-40AC-9160-46C32C9C1CE6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "About", "About", "{16927B3F-E6DF-4922-9A17-400386B3CC15}"
 	ProjectSection(SolutionItems) = preProject
 		About\About.xml = About\About.xml
 		About\Manifest.xml = About\Manifest.xml
+		About\Preview.png = About\Preview.png
+		About\PublishedFileId.txt = About\PublishedFileId.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Defs", "Defs", "{F4747257-DA26-4AB1-8368-C13026D10387}"
+	ProjectSection(SolutionItems) = preProject
+		Defs\ResearchProjects.xml = Defs\ResearchProjects.xml
+		Defs\Things.xml = Defs\Things.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Languages", "Languages", "{600AD10D-819F-46B5-B346-16042A06AA80}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "English", "English", "{43F58234-BBEC-49D3-B3AE-47611EFB8A65}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{88DAA8EE-F675-435A-AFB2-C8C7152FABEA}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\English\Keyed\OpenTheWindows_keys.xml = Languages\English\Keyed\OpenTheWindows_keys.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PortugueseBrazilian", "PortugueseBrazilian", "{24A5618A-1994-4641-A4A6-2EDBDC11569B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DefInjected", "DefInjected", "{100C0654-8B34-4A5E-8EA7-6223687537C7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThingDef", "ThingDef", "{72FAD482-B0E9-4AF0-9224-08DC0A748BA6}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\PortugueseBrazilian\DefInjected\ThingDef\TranslateThings.xml = Languages\PortugueseBrazilian\DefInjected\ThingDef\TranslateThings.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{D7A68A0D-1FCA-4380-8339-2B0EC9F44D80}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\PortugueseBrazilian\Keyed\OpenTheWindows_keys.xml = Languages\PortugueseBrazilian\Keyed\OpenTheWindows_keys.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patches", "Patches", "{98F96FC2-3F35-4FE8-B661-1ABC089B4B16}"
+	ProjectSection(SolutionItems) = preProject
 		Patches\Patches.xml = Patches\Patches.xml
 		Patches\Patches_DubsSkylights.xml = Patches\Patches_DubsSkylights.xml
 		Patches\Patches_Expanded Roofing.xml = Patches\Patches_Expanded Roofing.xml
 		Patches\Patches_Glass+Lights.xml = Patches\Patches_Glass+Lights.xml
-		About\Preview.png = About\Preview.png
-		Defs\ResearchProjects.xml = Defs\ResearchProjects.xml
-		Defs\Things.xml = Defs\Things.xml
+		Patches\Patches_RimFridge.xml = Patches\Patches_RimFridge.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Textures", "Textures", "{8114C043-1A94-4248-927F-36E71DA53641}"
+	ProjectSection(SolutionItems) = preProject
+		Textures\NaturalLightMap.png = Textures\NaturalLightMap.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Things", "Things", "{071B7E40-F926-4602-92B7-55150D236FDD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Building", "Building", "{54E9F884-DD50-4D50-A7C2-ECF58C541093}"
+	ProjectSection(SolutionItems) = preProject
+		Textures\Things\Building\LargeReinforcedWindow_east.png = Textures\Things\Building\LargeReinforcedWindow_east.png
+		Textures\Things\Building\LargeReinforcedWindow_eastm.png = Textures\Things\Building\LargeReinforcedWindow_eastm.png
+		Textures\Things\Building\LargeReinforcedWindow_north.png = Textures\Things\Building\LargeReinforcedWindow_north.png
+		Textures\Things\Building\LargeReinforcedWindow_northm.png = Textures\Things\Building\LargeReinforcedWindow_northm.png
+		Textures\Things\Building\LargeReinforcedWindow_Off_east.png = Textures\Things\Building\LargeReinforcedWindow_Off_east.png
+		Textures\Things\Building\LargeReinforcedWindow_Off_eastm.png = Textures\Things\Building\LargeReinforcedWindow_Off_eastm.png
+		Textures\Things\Building\LargeReinforcedWindow_Off_north.png = Textures\Things\Building\LargeReinforcedWindow_Off_north.png
+		Textures\Things\Building\LargeReinforcedWindow_Off_northm.png = Textures\Things\Building\LargeReinforcedWindow_Off_northm.png
+		Textures\Things\Building\LargeWindow_east.png = Textures\Things\Building\LargeWindow_east.png
+		Textures\Things\Building\LargeWindow_eastm.png = Textures\Things\Building\LargeWindow_eastm.png
+		Textures\Things\Building\LargeWindow_north.png = Textures\Things\Building\LargeWindow_north.png
+		Textures\Things\Building\LargeWindow_northm.png = Textures\Things\Building\LargeWindow_northm.png
+		Textures\Things\Building\LargeWindow_Off_east.png = Textures\Things\Building\LargeWindow_Off_east.png
+		Textures\Things\Building\LargeWindow_Off_eastm.png = Textures\Things\Building\LargeWindow_Off_eastm.png
+		Textures\Things\Building\LargeWindow_Off_north.png = Textures\Things\Building\LargeWindow_Off_north.png
+		Textures\Things\Building\LargeWindow_Off_northm.png = Textures\Things\Building\LargeWindow_Off_northm.png
+		Textures\Things\Building\ReinforcedWindow_east.png = Textures\Things\Building\ReinforcedWindow_east.png
+		Textures\Things\Building\ReinforcedWindow_eastm.png = Textures\Things\Building\ReinforcedWindow_eastm.png
+		Textures\Things\Building\ReinforcedWindow_north.png = Textures\Things\Building\ReinforcedWindow_north.png
+		Textures\Things\Building\ReinforcedWindow_northm.png = Textures\Things\Building\ReinforcedWindow_northm.png
+		Textures\Things\Building\ReinforcedWindow_Off_east.png = Textures\Things\Building\ReinforcedWindow_Off_east.png
+		Textures\Things\Building\ReinforcedWindow_Off_eastm.png = Textures\Things\Building\ReinforcedWindow_Off_eastm.png
+		Textures\Things\Building\ReinforcedWindow_Off_north.png = Textures\Things\Building\ReinforcedWindow_Off_north.png
+		Textures\Things\Building\ReinforcedWindow_Off_northm.png = Textures\Things\Building\ReinforcedWindow_Off_northm.png
+		Textures\Things\Building\SimpleWindow_east.png = Textures\Things\Building\SimpleWindow_east.png
+		Textures\Things\Building\SimpleWindow_eastm.png = Textures\Things\Building\SimpleWindow_eastm.png
+		Textures\Things\Building\SimpleWindow_north.png = Textures\Things\Building\SimpleWindow_north.png
+		Textures\Things\Building\SimpleWindow_northm.png = Textures\Things\Building\SimpleWindow_northm.png
+		Textures\Things\Building\SimpleWindow_Off_east.png = Textures\Things\Building\SimpleWindow_Off_east.png
+		Textures\Things\Building\SimpleWindow_Off_eastm.png = Textures\Things\Building\SimpleWindow_Off_eastm.png
+		Textures\Things\Building\SimpleWindow_Off_north.png = Textures\Things\Building\SimpleWindow_Off_north.png
+		Textures\Things\Building\SimpleWindow_Off_northm.png = Textures\Things\Building\SimpleWindow_Off_northm.png
+		Textures\Things\Building\Window_east.png = Textures\Things\Building\Window_east.png
+		Textures\Things\Building\Window_eastm.png = Textures\Things\Building\Window_eastm.png
+		Textures\Things\Building\Window_north.png = Textures\Things\Building\Window_north.png
+		Textures\Things\Building\Window_northm.png = Textures\Things\Building\Window_northm.png
+		Textures\Things\Building\Window_Off_east.png = Textures\Things\Building\Window_Off_east.png
+		Textures\Things\Building\Window_Off_eastm.png = Textures\Things\Building\Window_Off_eastm.png
+		Textures\Things\Building\Window_Off_north.png = Textures\Things\Building\Window_Off_north.png
+		Textures\Things\Building\Window_Off_northm.png = Textures\Things\Building\Window_Off_northm.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{44B639C0-085C-448A-BF22-C510212D9BF4}"
+	ProjectSection(SolutionItems) = preProject
+		Textures\UI\AirVentIcon.png = Textures\UI\AirVentIcon.png
+		Textures\UI\LightIcon.png = Textures\UI\LightIcon.png
+		Textures\UI\OpenWindows.png = Textures\UI\OpenWindows.png
 	EndProjectSection
 EndProject
 Global
@@ -31,6 +122,17 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{43F58234-BBEC-49D3-B3AE-47611EFB8A65} = {600AD10D-819F-46B5-B346-16042A06AA80}
+		{88DAA8EE-F675-435A-AFB2-C8C7152FABEA} = {43F58234-BBEC-49D3-B3AE-47611EFB8A65}
+		{24A5618A-1994-4641-A4A6-2EDBDC11569B} = {600AD10D-819F-46B5-B346-16042A06AA80}
+		{100C0654-8B34-4A5E-8EA7-6223687537C7} = {24A5618A-1994-4641-A4A6-2EDBDC11569B}
+		{72FAD482-B0E9-4AF0-9224-08DC0A748BA6} = {100C0654-8B34-4A5E-8EA7-6223687537C7}
+		{D7A68A0D-1FCA-4380-8339-2B0EC9F44D80} = {24A5618A-1994-4641-A4A6-2EDBDC11569B}
+		{071B7E40-F926-4602-92B7-55150D236FDD} = {8114C043-1A94-4248-927F-36E71DA53641}
+		{54E9F884-DD50-4D50-A7C2-ECF58C541093} = {071B7E40-F926-4602-92B7-55150D236FDD}
+		{44B639C0-085C-448A-BF22-C510212D9BF4} = {8114C043-1A94-4248-927F-36E71DA53641}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AE23F93A-4E76-4877-B2E2-7CED627DB416}
