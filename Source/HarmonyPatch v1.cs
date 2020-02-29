@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+﻿using Harmony;
 using RimWorld;
 using RimWorld.Planet;
 using System;
@@ -22,7 +22,7 @@ namespace OpenTheWindows
         static HarmonyPatches()
         {
             //HarmonyInstance.DEBUG = true;
-            var harmonyInstance = new Harmony("JPT_OpenTheWindows");
+            HarmonyInstance harmonyInstance = HarmonyInstance.Create("JPT_OpenTheWindows");
 
             //template:
             //harmonyInstance.Patch(original: AccessTools.Method(type: typeof(?), name: "?"),
@@ -330,7 +330,10 @@ namespace OpenTheWindows
         {
             if (typeof(Building_Window).IsAssignableFrom(__instance.thingClass))
             {
-                StatDrawEntry x = new StatDrawEntry(StatCategoryDefOf.Basics, "CoverEffectiveness".Translate(), WindowBaseFillPercent.ToStringPercent(), "CoverEffectivenessExplanation".Translate(), 0);
+                StatDrawEntry x = new StatDrawEntry(StatCategoryDefOf.Basics, "CoverEffectiveness".Translate(), WindowBaseFillPercent.ToStringPercent(), 0, string.Empty)
+                {
+                    overrideReportText = "CoverEffectivenessExplanation".Translate()
+                };
                 StatDrawEntry[] y = new StatDrawEntry[] { x };
                 __result = y;
             }

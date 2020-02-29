@@ -4,8 +4,23 @@
 	<author>jptrrs</author>
   <supportedVersions>
     <li>1.0</li>
+    <li>1.1</li>
   </supportedVersions>
-	<description>
+  <packageId>JPT.OpenTheWindows</packageId>
+  <modDependencies>
+    <li>
+      <packageId>UnlimitedHugs.HugsLib</packageId>
+      <displayName>HugsLib</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/818773962</steamWorkshopUrl>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>UnlimitedHugs.HugsLib</li>
+  </loadAfter>
+  <incompatibleWith>
+    <!--<li>Star Wars - Fully Functional Lightsabers</li>-->
+  </incompatibleWith>
+  <description>
 Introducing a revolutionary device to light, ventilate and defend your base: the WINDOW! Your base designs are never going to be same.
 
 Let NATURAL LIGHT in! Once your pawns realize they've been cut off from nature's light cycles, they're going to crave it! The outdoors need levels are going to decay 3x faster* if they are stuck indoors without windows. You are going to need them all over the place! But you better plan well. Be prepared to set aside some land, because the windows can only pump light in if they have acess to wide open areas. So say goodbye to the infinite hallways of rooms glued to one another in unhealty bunkers and welcome to the real-world architecture needs! Also, if you are playing with "Dub's Skylights", all light coming from your skylights count as natural light.

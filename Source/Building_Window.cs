@@ -135,10 +135,10 @@ namespace OpenTheWindows
             }
             map.GetComponent<MapComp_Windows>().RegisterWindow(this);
             WindowUtility.FindEnds(this);
+            if (!isFacingSet) WindowUtility.FindWindowExternalFacing(this);
             CastLight();
             Map.GetComponent<MapComp_Windows>().RegenGrid();
             Map.glowGrid.MarkGlowGridDirty(Position);
-            if (!isFacingSet) WindowUtility.FindWindowExternalFacing(this);
             //just link it!
             if (OpenTheWindowsSettings.LinkWindows)
             {
