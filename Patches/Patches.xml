@@ -6,6 +6,7 @@
     <mods>
       <li>Nature is Beautiful [1.0]</li>
       <li>Nature is Beautiful [rebalanced]</li>
+      <li>Beautiful Outdoors</li>
     </mods>
     <match Class="PatchOperationSequence">
       <success>Always</success>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Manifest>
     <identifier>OpenTheWindows</identifier>
-    <version>1.4</version>
+    <version>1.5</version>
     <incompatibleWith>
       <li>SW-Lightsabers</li>
     </incompatibleWith>
