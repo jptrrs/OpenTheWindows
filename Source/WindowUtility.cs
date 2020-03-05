@@ -144,7 +144,7 @@ namespace OpenTheWindows
                         }
                     }
                     //clean cell itself
-                    area.Remove(c);
+                    //area.Remove(c);
                 }
             }
             return area;
