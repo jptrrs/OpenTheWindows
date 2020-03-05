@@ -2,7 +2,8 @@
 
 # [JPT] Open The Windows!
 Natural Light for RimWorld
-[***DOWNLOAD IT HERE***](https://github.com/jptrrs/OpenTheWindows/releases/latest)
+
+[**>>> DOWNLOAD IT HERE <<<**](https://github.com/jptrrs/OpenTheWindows/releases/latest)
 
 _Introducing a revolutionary device to illuminate, ventilate and defend your base: the **WINDOW**! Your base designs are never going to be same._
 
