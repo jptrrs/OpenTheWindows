@@ -20,7 +20,9 @@ Who needs embrasures when you can use a window that opens and closes? That's rig
 
 ## Enjoy **beautiful** landscapes!
 
-If you're playing with [Nature is Beautiful](https://steamcommunity.com/sharedfiles/filedetails/?id=1530259312), its [rebalanced version](https://steamcommunity.com/sharedfiles/filedetails/?id=1551147619) or [Beautiful Outdoors](https://steamcommunity.com/sharedfiles/filedetails/?id=2011794898), the windows will calculate their own beauty stat by summing up all the beauty on their outside field of view. This means your rooms will actually benefit from having a garden next door! For balancing reasons, we've inculded a "beauty sensitivity reduction" factor*. * These adjustments are customizable on the mod's options panel, so you can totally have it your way! [![](https://i.imgur.com/EEgQ2Ss.png)](http://ko-fi.com/jptrrs)
+If you're playing with [Nature is Beautiful](https://steamcommunity.com/sharedfiles/filedetails/?id=1530259312), its [rebalanced version](https://steamcommunity.com/sharedfiles/filedetails/?id=1551147619) or [Beautiful Outdoors](https://steamcommunity.com/sharedfiles/filedetails/?id=2011794898), the windows will calculate their own beauty stat by summing up all the beauty on their outside field of view. This means your rooms will actually benefit from having a garden next door! For balancing reasons, we've inculded a "beauty sensitivity reduction" factor*. * These adjustments are customizable on the mod's options panel, so you can totally have it your way!
+
+[![](https://i.imgur.com/EEgQ2Ss.png)](http://ko-fi.com/jptrrs)
 
 ## **Warning:** not suited for conservative players.
 
