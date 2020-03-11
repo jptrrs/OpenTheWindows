@@ -21,15 +21,31 @@
     </match>
   </Operation>
 
-  <Operation Class="PatchOperationAdd">
-    <xpath>/Defs/ThingDef[defName = "Vent" or defName = "Cooler"]/graphicData</xpath>
-    <value>
-      <linkFlags>
-        <li>Wall</li>
-        <li>Rock</li>
-      </linkFlags>
-    </value>
-
+  <Operation Class="PatchOperationSequence">
+    <success>Always</success>
+    <operations>
+      <li Class="PatchOperationAdd">
+        <xpath>/Defs/ThingDef[defName = "Vent" or defName = "Cooler"]/graphicData</xpath>
+        <value>
+          <linkFlags>
+            <li>Wall</li>
+            <li>Rock</li>
+          </linkFlags>
+        </value>
+      </li>
+      <li Class="PatchOperationAdd">
+        <xpath>/Defs/ThingDef[defName = "Vent"]</xpath>
+        <value>
+          <uiIconPath>Things/Building/Misc/TempControl/Vent_north</uiIconPath>
+        </value>
+      </li>
+      <li Class="PatchOperationAdd">
+        <xpath>/Defs/ThingDef[defName = "Cooler"]</xpath>
+        <value>
+          <uiIconPath>Things/Building/Misc/TempControl/Cooler_north</uiIconPath>
+        </value>
+      </li>
+</operations>
   </Operation>
 
 </Patch>

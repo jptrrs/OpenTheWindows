@@ -55,6 +55,7 @@
         <cornerBR>Damage/Corner</cornerBR>
       </damageData>
     </graphicData>
+    <uiIconPath>Things/Building/SimpleWindow_north</uiIconPath>
     <stuffCategories>
       <li>Woody</li>
     </stuffCategories>
@@ -88,6 +89,7 @@
         <cornerBR>Damage/Corner</cornerBR>
       </damageData>
     </graphicData>
+    <uiIconPath>Things/Building/Window_north</uiIconPath>
     <stuffCategories>
       <li>Metallic</li>
       <li>Woody</li>
@@ -135,6 +137,7 @@
         <cornerBR>Damage/Corner</cornerBR>
       </damageData>
     </graphicData>
+    <uiIconPath>Things/Building/LargeWindow_north</uiIconPath>
     <stuffCategories>
       <li>Metallic</li>
       <li>Woody</li>
@@ -181,6 +184,7 @@
         <cornerBR>Damage/Corner</cornerBR>
       </damageData>
     </graphicData>
+    <uiIconPath>Things/Building/ReinforcedWindow_north</uiIconPath>
     <stuffCategories>
       <li>Metallic</li>
     </stuffCategories>
@@ -224,6 +228,7 @@
         <cornerBR>Damage/Corner</cornerBR>
       </damageData>
     </graphicData>
+    <uiIconPath>Things/Building/LargeReinforcedWindow_north</uiIconPath>
     <stuffCategories>
       <li>Metallic</li>
     </stuffCategories>
