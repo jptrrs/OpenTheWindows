@@ -166,7 +166,7 @@ namespace OpenTheWindows
         public static bool NeedInterval_Prefix(object __instance)
         {
             NeedInterval(__instance);
-            return true;
+            return false;
         }
 
         public static void NeedInterval(object __instance)
