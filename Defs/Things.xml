@@ -138,6 +138,7 @@
       </damageData>
     </graphicData>
     <uiIconPath>Things/Building/LargeWindow_north</uiIconPath>
+    <uiIconScale>1.33</uiIconScale>
     <stuffCategories>
       <li>Metallic</li>
       <li>Woody</li>
@@ -229,6 +230,7 @@
       </damageData>
     </graphicData>
     <uiIconPath>Things/Building/LargeReinforcedWindow_north</uiIconPath>
+    <uiIconScale>1.33</uiIconScale>
     <stuffCategories>
       <li>Metallic</li>
     </stuffCategories>
