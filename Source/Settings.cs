@@ -42,26 +42,37 @@ namespace OpenTheWindows
         
         public static float LightTransmission = LightTransmissionDefault;
 
+        //public const float UpdateIntervalDefault = 1.0f; // affects tick functions on overlays.       
+        
+        //public static float UpdateInterval = UpdateIntervalDefault;
+
         public static bool IsBeautyOn = false;
 
         public static bool LinkWindows = true;
 
         public static bool LinkVents = true;
 
+
         public static void DoWindowContents(Rect inRect)
         {
             Listing_Standard listing = new Listing_Standard();
             listing.Begin(inRect);
+
+            //Outdoors need acceleration
             string label = "IndoorsNoNaturalLightPenalty".Translate() + ": " + IndoorsNoNaturalLightPenalty.ToStringDecimalIfSmall() + "x";
             string desc = ("IndoorsNoNaturalLightPenaltyDesc").Translate();
             listing.Label(label, -1f, desc);
             IndoorsNoNaturalLightPenalty = listing.Slider(IndoorsNoNaturalLightPenalty, 1f, 10f);
             listing.Gap(12f);
+
+            //Light transmission through windows
             string labelNoteOnSkylights = (HarmonyPatches.DubsSkylights || HarmonyPatches.ExpandedRoofing)? " ("+"LightTransmissionIncludesRoofs".Translate()+")" : null;
             string label2 = "LightTransmission".Translate() + labelNoteOnSkylights + ": " + LightTransmission.ToStringPercent();
             string desc2 = ("LightTransmissionDesc").Translate() ;
             listing.Label(label2, -1f, desc2);
             LightTransmission = listing.Slider(LightTransmission, 0f, 1f);
+
+            //Beauty sensitivity reduction
             if (IsBeautyOn)
             {
                 listing.Gap(12f);
@@ -70,6 +81,14 @@ namespace OpenTheWindows
                 listing.Label(label3, -1f, desc3);
                 BeautySensitivityReduction = listing.Slider(BeautySensitivityReduction, 0f, 1f);
             }
+
+            ////Performance adjust
+            //listing.Gap(12f);
+            //string label4 = " ".Translate() + ": " + UpdateInterval.ToStringDecimalIfSmall() + "s";
+            //string desc4 = ("UpdateIntervalDesc").Translate();
+            //listing.Label(label4, -1f, desc4);
+            //UpdateInterval = listing.Slider(UpdateInterval, 1f, 10f);
+
             listing.Gap(12f);
             listing.Label(("LinkOptionsLabel").Translate()+" (" + ("RequiresRestart").Translate() + "):");
             listing.GapLine();
@@ -90,6 +109,7 @@ namespace OpenTheWindows
                 LightTransmission = LightTransmissionDefault;
                 LinkWindows = true;
                 LinkVents = true;
+                //UpdateInterval = UpdateIntervalDefault;
             }
             listing.End();
         }

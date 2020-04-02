@@ -74,7 +74,7 @@ namespace OpenTheWindows
                     new HarmonyMethod(patchType, nameof(Linking_DeSpawn_prefix)), null, null);
             }
 
-            if (LoadedModManager.RunningModsListForReading.Any(x => x.Name.Contains("Nature is Beautiful") || x.Name.Contains("Beautiful Outdoors")))
+            if (LoadedModManager.RunningModsListForReading.Any(x => x.Name.Contains("Nature is Beautiful") || x.Name.Contains("Beautiful Outdoors") || x.Name.Contains("Custom Natural Beauty")))
             {
                 Log.Message("[OpenTheWindows] Landscape beautification mod detected! Integrating...");
 

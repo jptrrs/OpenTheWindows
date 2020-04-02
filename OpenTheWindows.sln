@@ -109,6 +109,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{44B639C0-085C-
 		Textures\UI\OpenWindows.png = Textures\UI\OpenWindows.png
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "News", "News", "{4B8CDE98-B209-4499-B836-CA7E5EA41859}"
+	ProjectSection(SolutionItems) = preProject
+		..\BurnItForFuel\News\OpenTheWindows_UpdateFeatures.xml = ..\BurnItForFuel\News\OpenTheWindows_UpdateFeatures.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		1.0|Any CPU = 1.0|Any CPU

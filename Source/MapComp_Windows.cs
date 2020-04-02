@@ -13,6 +13,9 @@ namespace OpenTheWindows
         public bool roofUpdateRequest = false;
         public bool[] WindowGrid;
         public int[] WindowScanGrid;
+        //private Map lastSeenMap;
+        //private int nextUpdateTick;
+        //private int updateDelay = (int)OpenTheWindowsSettings.UpdateInterval;
 
         public MapComp_Windows(Map map) : base(map)
         {

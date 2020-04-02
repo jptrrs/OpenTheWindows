@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using Verse;
 
 namespace OpenTheWindows
@@ -16,7 +17,7 @@ namespace OpenTheWindows
 
         private int nextUpdateTick;
 
-        private int updateDelay = 60;
+        private int updateDelay = 60; //(int)Math.Round( 60 * OpenTheWindowsSettings.UpdateInterval, 0);
 
         public Color Color
         {
