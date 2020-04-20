@@ -11,16 +11,21 @@ namespace OpenTheWindows
         public List<Building_Window> cachedWindows = new List<Building_Window>();
         public bool updateRequest = false;
         public bool roofUpdateRequest = false;
-        public bool[] WindowGrid;
+
+        // We want a list of all active CELLS (in vector coord (perf) ) to reference when updating roof grid.
+        public HashSet<IntVec3> WindowCells;
+
+        // because this is de-duped, we need to take extra care while removing (we don't want to accidentally remove a cell with crossover!)
+
+        // dubs mods state tracker
+        private Building[] skyLightGrid = null;
+
         public int[] WindowScanGrid;
-        //private Map lastSeenMap;
-        //private int nextUpdateTick;
-        //private int updateDelay = (int)OpenTheWindowsSettings.UpdateInterval;
 
         public MapComp_Windows(Map map) : base(map)
         {
-            WindowGrid = new bool[map.cellIndices.NumGridCells];
             WindowScanGrid = new int[map.cellIndices.NumGridCells];
+            WindowCells = new HashSet<IntVec3>();
         }
 
         public void CastNaturalLightOnDemand()
@@ -71,9 +76,15 @@ namespace OpenTheWindows
             }
         }
 
+        // Issue. This function sucks.
         public void RegenGrid()
         {
-            WindowGrid = new bool[map.cellIndices.NumGridCells];
+            /*
+             * Why on earth do we need to reset here? We can very easily tell which window has been changed, WE IMPLEMENT THE WINDOW CLASS !!!
+             * You can quite easily implement this and make this function mostly neglible performance wise.
+             */
+            WindowCells = new HashSet<IntVec3>();
+
             foreach (Building_Window window in cachedWindows)
             {
                 if (window.open && window.isFacingSet)
@@ -102,13 +113,20 @@ namespace OpenTheWindows
                             case LinkDirections.None:
                                 break;
                         }
-                        if (interior && map.roofGrid.Roofed(c))
+                        if (interior)
                         {
-                            WindowGrid[map.cellIndices.CellToIndex(c)] = true;
+                            WindowCells.Add(c);
                         }
                     }
                 }
             }
+
+            /*
+             * These are awful, you iterate over huge ranges for pretty much nothing.
+             *  This is easily fixable by:
+             *  A. Cache your reflection!
+             *  B. Instead of hacking past these functions, let them run, and use yours as additionals, why make yourself do more work?
+             */
             if (HarmonyPatches.DubsSkylights)
             {
                 Type type = AccessTools.TypeByName("Dubs_Skylight.MapComp_Skylights");
@@ -119,10 +137,11 @@ namespace OpenTheWindows
                 {
                     if (skyLightGrid[i] == true)
                     {
-                        WindowGrid[i] = true;
+                        WindowCells.Add(map.cellIndices.IndexToCell(i));
                     }
                 }
             }
+
             if (HarmonyPatches.ExpandedRoofing)
             {
                 Type type = AccessTools.TypeByName("ExpandedRoofing.RoofDefOf");
@@ -132,7 +151,7 @@ namespace OpenTheWindows
                 {
                     if (map.roofGrid.RoofAt(i) == roofTransparent)
                     {
-                        WindowGrid[i] = true;
+                        WindowCells.Add(map.cellIndices.IndexToCell(i));
                     }
                 }
             }
@@ -152,7 +171,7 @@ namespace OpenTheWindows
             Map map = window.Map;
             int deep = WindowUtility.deep;
             int reach = Math.Max(window.def.size.x, window.def.size.z) / 2 + 1;
-            int delta = register ? +1 : -1;
+            int delta = register ? 1 : -1;
 
             //front and back
             foreach (IntVec3 c in GenAdj.OccupiedRect(window.Position, window.Rotation, window.def.size))

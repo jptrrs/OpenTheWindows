@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Windows", "Windows.csproj", "{AB5742EF-36E9-436A-9BE4-46330E1A33B0}"
+EndProject
+Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "RimWorldWin64", "..\..\..\RimWorldWin64.exe", "{A01103CE-B115-4092-9728-E29C8423CCED}"
+	ProjectSection(DebuggerProjectSystem) = preProject
+		PortSupplier = 00000000-0000-0000-0000-000000000000
+		Executable = C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64.exe
+		RemoteMachine = LAPTOP-DENLR4NE
+		StartingDirectory = C:\Program Files (x86)\Steam\steamapps\common\RimWorld
+		Environment = dnspy_unity_dbg2=--debugger-agent=transport=dt_socket,server=y,address=127.0.0.1:56000,suspend=y,no-hide-debugger	
+		LaunchingEngine = 00000000-0000-0000-0000-000000000000
+		UseLegacyDebugEngines = No
+		LaunchSQLEngine = No
+		AttachLaunchAction = No
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		1.0|Any CPU = 1.0|Any CPU
+		1.0|x64 = 1.0|x64
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AB5742EF-36E9-436A-9BE4-46330E1A33B0}.1.0|Any CPU.ActiveCfg = 1.0|Any CPU
+		{AB5742EF-36E9-436A-9BE4-46330E1A33B0}.1.0|Any CPU.Build.0 = 1.0|Any CPU
+		{AB5742EF-36E9-436A-9BE4-46330E1A33B0}.1.0|x64.ActiveCfg = 1.0|Any CPU
+		{AB5742EF-36E9-436A-9BE4-46330E1A33B0}.1.0|x64.Build.0 = 1.0|Any CPU
+		{AB5742EF-36E9-436A-9BE4-46330E1A33B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB5742EF-36E9-436A-9BE4-46330E1A33B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB5742EF-36E9-436A-9BE4-46330E1A33B0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AB5742EF-36E9-436A-9BE4-46330E1A33B0}.Debug|x64.Build.0 = Debug|Any CPU
+		{AB5742EF-36E9-436A-9BE4-46330E1A33B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB5742EF-36E9-436A-9BE4-46330E1A33B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB5742EF-36E9-436A-9BE4-46330E1A33B0}.Release|x64.ActiveCfg = Release|Any CPU
+		{AB5742EF-36E9-436A-9BE4-46330E1A33B0}.Release|x64.Build.0 = Release|Any CPU
+		{A01103CE-B115-4092-9728-E29C8423CCED}.1.0|Any CPU.ActiveCfg = Release|x64
+		{A01103CE-B115-4092-9728-E29C8423CCED}.1.0|x64.ActiveCfg = Release|x64
+		{A01103CE-B115-4092-9728-E29C8423CCED}.Debug|Any CPU.ActiveCfg = Release|x64
+		{A01103CE-B115-4092-9728-E29C8423CCED}.Debug|x64.ActiveCfg = Release|x64
+		{A01103CE-B115-4092-9728-E29C8423CCED}.Release|Any CPU.ActiveCfg = Release|x64
+		{A01103CE-B115-4092-9728-E29C8423CCED}.Release|x64.ActiveCfg = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {64785B46-2BF2-4157-80EB-C459A0C4C91C}
+	EndGlobalSection
+EndGlobal

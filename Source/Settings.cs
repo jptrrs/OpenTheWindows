@@ -38,12 +38,12 @@ namespace OpenTheWindows
 
         public static float BeautySensitivityReduction = beautySensitivityReductionDefault;
 
-        public const float LightTransmissionDefault = 0.9f; // light actually transmitted through windows       
-        
+        public const float LightTransmissionDefault = 0.9f; // light actually transmitted through windows
+
         public static float LightTransmission = LightTransmissionDefault;
 
-        //public const float UpdateIntervalDefault = 1.0f; // affects tick functions on overlays.       
-        
+        //public const float UpdateIntervalDefault = 1.0f; // affects tick functions on overlays.
+
         //public static float UpdateInterval = UpdateIntervalDefault;
 
         public static bool IsBeautyOn = false;
@@ -51,7 +51,6 @@ namespace OpenTheWindows
         public static bool LinkWindows = true;
 
         public static bool LinkVents = true;
-
 
         public static void DoWindowContents(Rect inRect)
         {
@@ -66,9 +65,9 @@ namespace OpenTheWindows
             listing.Gap(12f);
 
             //Light transmission through windows
-            string labelNoteOnSkylights = (HarmonyPatches.DubsSkylights || HarmonyPatches.ExpandedRoofing)? " ("+"LightTransmissionIncludesRoofs".Translate()+")" : null;
+            string labelNoteOnSkylights = (HarmonyPatches.DubsSkylights || HarmonyPatches.ExpandedRoofing) ? " (" + "LightTransmissionIncludesRoofs".Translate() + ")" : null;
             string label2 = "LightTransmission".Translate() + labelNoteOnSkylights + ": " + LightTransmission.ToStringPercent();
-            string desc2 = ("LightTransmissionDesc").Translate() ;
+            string desc2 = ("LightTransmissionDesc").Translate();
             listing.Label(label2, -1f, desc2);
             LightTransmission = listing.Slider(LightTransmission, 0f, 1f);
 
@@ -90,12 +89,12 @@ namespace OpenTheWindows
             //UpdateInterval = listing.Slider(UpdateInterval, 1f, 10f);
 
             listing.Gap(12f);
-            listing.Label(("LinkOptionsLabel").Translate()+" (" + ("RequiresRestart").Translate() + "):");
+            listing.Label(("LinkOptionsLabel").Translate() + " (" + ("RequiresRestart").Translate() + "):");
             listing.GapLine();
             listing.CheckboxLabeled(("LinkWindowsAndWalls").Translate(), ref LinkWindows);
             if (LoadedModManager.RunningModsListForReading.Any(x => x.Name.Contains("RimFridge")))
             {
-                    listing.CheckboxLabeled(("LinkFridgesAndWalls").Translate(), ref LinkVents);
+                listing.CheckboxLabeled(("LinkFridgesAndWalls").Translate(), ref LinkVents);
             }
             else
             {

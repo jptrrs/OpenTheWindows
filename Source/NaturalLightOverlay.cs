@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
 
 namespace OpenTheWindows
@@ -17,7 +16,7 @@ namespace OpenTheWindows
 
         private int nextUpdateTick;
 
-        private int updateDelay = 60; //(int)Math.Round( 60 * OpenTheWindowsSettings.UpdateInterval, 0);
+        private int updateDelay = 60;
 
         public Color Color
         {
@@ -54,7 +53,7 @@ namespace OpenTheWindows
 
         public bool ShowCell(int index)
         {
-            return Find.CurrentMap.GetComponent<MapComp_Windows>().WindowGrid[index] || !Find.CurrentMap.roofGrid.Roofed(index);
+            return Find.CurrentMap.GetComponent<MapComp_Windows>().WindowCells.Contains(Find.CurrentMap.cellIndices.IndexToCell(index)) || !Find.CurrentMap.roofGrid.Roofed(index);
         }
 
         public void Update()
