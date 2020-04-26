@@ -64,10 +64,23 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Harmony\Building.cs" />
+    <Compile Include="Harmony\CompFlickable.cs" />
+    <Compile Include="Harmony\CoverUtility_BaseBlockChance.cs" />
+    <Compile Include="Harmony\GenGrid_CanBeSeenOvercs.cs" />
+    <Compile Include="Harmony\GlowGrid_GameGlowAt.cs" />
+    <Compile Include="Harmony\HarmonyPatches.cs" />
+    <Compile Include="Harmony\LightingOverlay_Regenerate.cs" />
+    <Compile Include="Harmony\MapInterface_MapInterfaceUpdate.cs" />
+    <Compile Include="Harmony\NeedBeauty_LevelFromBeauty.cs" />
+    <Compile Include="Harmony\NeedOutdoors_NeedInterval.cs" />
+    <Compile Include="Harmony\PlaySettings_DoPlaySettingsGlobalControls.cs" />
+    <Compile Include="Harmony\RoofGrid_SetRoof.cs" />
+    <Compile Include="Harmony\ThingDef_SpecialDisplayStats.cs" />
+    <Compile Include="Harmony\ThingGrid.cs" />
     <Compile Include="NaturalLightOverlay.cs" />
     <Compile Include="CompWindow.cs" />
     <Compile Include="CompProperties_Window.cs" />
-    <Compile Include="HarmonyPatch.cs" />
     <Compile Include="MapComp_Windows.cs" />
     <Compile Include="Building_Window.cs" />
     <Compile Include="PlaceWorker_Window.cs" />
@@ -108,8 +121,8 @@
       <HintPath>..\packages\Lib.Harmony.2.0.0.8\lib\net472\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+    <Reference Include="Assembly-CSharp_publicized">
+      <HintPath>..\..\..\RimWorldWin64_Data\Managed\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
