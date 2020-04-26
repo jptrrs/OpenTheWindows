@@ -11,15 +11,8 @@ namespace OpenTheWindows
         public List<Building_Window> cachedWindows = new List<Building_Window>();
         public bool updateRequest = false;
         public bool roofUpdateRequest = false;
-
-        // We want a list of all active CELLS (in vector coord (perf) ) to reference when updating roof grid.
         public HashSet<IntVec3> WindowCells;
-
-        // because this is de-duped, we need to take extra care while removing (we don't want to accidentally remove a cell with crossover!)
-
-        // dubs mods state tracker
         private Building[] skyLightGrid = null;
-
         public int[] WindowScanGrid;
 
         public MapComp_Windows(Map map) : base(map)

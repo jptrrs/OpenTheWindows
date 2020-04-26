@@ -67,10 +67,9 @@
     <Compile Include="Harmony\Building.cs" />
     <Compile Include="Harmony\CompFlickable.cs" />
     <Compile Include="Harmony\CoverUtility_BaseBlockChance.cs" />
-    <Compile Include="Harmony\Dubs Skylights\Destroy_DubsFunctions.cs" />
     <Compile Include="Harmony\GenGrid_CanBeSeenOvercs.cs" />
     <Compile Include="Harmony\GlowGrid_GameGlowAt.cs" />
-    <Compile Include="Harmony\Landscape Beautification\NeedBeauty_LevelFromBeauty.cs" />
+    <Compile Include="Harmony\NeedBeauty_LevelFromBeauty.cs" />
     <Compile Include="Harmony\LightingOverlay_Regenerate.cs" />
     <Compile Include="Harmony\MapInterface_MapInterfaceUpdate.cs" />
     <Compile Include="Harmony\NeedOutdoors_NeedInterval.cs" />
@@ -81,7 +80,7 @@
     <Compile Include="NaturalLightOverlay.cs" />
     <Compile Include="CompWindow.cs" />
     <Compile Include="CompProperties_Window.cs" />
-    <Compile Include="Harmony\HarmonyPatch.cs" />
+    <Compile Include="Harmony\HarmonyPatches.cs" />
     <Compile Include="MapComp_Windows.cs" />
     <Compile Include="Building_Window.cs" />
     <Compile Include="PlaceWorker_Window.cs" />
