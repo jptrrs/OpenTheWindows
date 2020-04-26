@@ -17,10 +17,10 @@
   </modDependencies>
   <loadAfter>
     <li>brrainz.harmony</li>
+    <li>Dubwise.DubsSkylights</li>
+    <li>Meltup.BeautifulOutdoors</li>
   </loadAfter>
-  <!--<incompatibleWith>
-    <li>projectjedi.lightsabers</li>
-  </incompatibleWith>-->
+
   <description>
 Introducing a revolutionary device to light, ventilate and defend your base: the WINDOW! Your base designs are never going to be same.
 
