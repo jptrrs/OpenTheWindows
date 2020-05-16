@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <!--ui-->
+  <ClosedWindow>关闭</ClosedWindow>
+  <butVenting>，但保持通风。</butVenting>
+  <notVenting>不通风</notVenting>
+  <LandscapeToThe>视野可延伸到</LandscapeToThe>
+  <cantDetermineSides>无法确定哪一侧为外部。</cantDetermineSides>
+  <CommandDesignateOpenCloseWindowLabel>设定打开/关闭</CommandDesignateOpenCloseWindowLabel>
+  <CommandDesignateOpenCloseWindowDesc>将此窗口设定为打开或关闭。不久就会有一个殖民者来执行这项任务。</CommandDesignateOpenCloseWindowDesc>
+  <CommandOpenCloseWindowLightLabel>采光</CommandOpenCloseWindowLightLabel>
+  <CommandOpenCloseWindowLightDesc>设定是否采光。不久就会有一个殖民者来执行这项任务。</CommandOpenCloseWindowLightDesc>
+  <CommandOpenCloseWindowVentLabel>通风</CommandOpenCloseWindowVentLabel>
+  <CommandOpenCloseWindowVentDesc>设定是否通风。不久就会有一个殖民者来执行这项任务。</CommandOpenCloseWindowVentDesc>
+  <NaturalLightMap>显示自然光</NaturalLightMap>
+
+  <!--settings-->
+  <OpenTheWindows>开窗！</OpenTheWindows>
+  <IndoorsNoNaturalLightPenalty>户外需求</IndoorsNoNaturalLightPenalty>
+  <IndoorsNoNaturalLightPenaltyDesc>当小人在室内但不在窗旁时，将会降低的户外值。</IndoorsNoNaturalLightPenaltyDesc>
+  <LightTransmission>透光率</LightTransmission>
+  <LightTransmissionIncludesRoofs>包括天窗</LightTransmissionIncludesRoofs>
+  <LightTransmissionDesc>外部光线能够穿过玻璃和百叶的比例。现实中大约是90%。</LightTransmissionDesc>
+  <BeautySensitivityReduction>美观需求</BeautySensitivityReduction>
+  <BeautySensitivityReductionDesc>小人对窗外景观的敏感度，以平衡「美丽的大自然」Mod中的相关设定。</BeautySensitivityReductionDesc>
+  <LinkOptionsLabel>调整墙的贴图</LinkOptionsLabel>
+  <RequiresRestart>需要重新启动游戏</RequiresRestart>
+  <LinkWindowsAndWalls>与窗相连</LinkWindowsAndWalls>
+  <LinkVentsAndWalls>与通风孔相连&amp;颜色</LinkVentsAndWalls>
+  <LinkFridgesAndWalls>与通风孔相连，颜色&amp;「冰箱」Mod</LinkFridgesAndWalls>
+
+</LanguageData>
