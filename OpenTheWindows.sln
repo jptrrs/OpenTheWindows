@@ -114,6 +114,44 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "News", "News", "{4B8CDE98-B
 		..\BurnItForFuel\News\OpenTheWindows_UpdateFeatures.xml = ..\BurnItForFuel\News\OpenTheWindows_UpdateFeatures.xml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ChineseSimplified", "ChineseSimplified", "{7DB77850-11C4-44F6-A0FB-B506265AA073}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DefInjected", "DefInjected", "{27B6F47B-6307-4FDC-B988-DC92082BC4C3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ResearchProjectDef", "ResearchProjectDef", "{E5B9F933-1248-46E3-82BC-E5B0DC097641}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\ChineseSimplified\DefInjected\ResearchProjectDef\ResearchProjects.xml = Languages\ChineseSimplified\DefInjected\ResearchProjectDef\ResearchProjects.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThingDef", "ThingDef", "{B7423F59-CDD7-4679-BC8E-D26EFF3FA19D}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\ChineseSimplified\DefInjected\ThingDef\Things.xml = Languages\ChineseSimplified\DefInjected\ThingDef\Things.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{94147D7A-05F7-4BBD-A540-335D3C0354D8}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\ChineseSimplified\Keyed\OpenTheWindows_keys.xml = Languages\ChineseSimplified\Keyed\OpenTheWindows_keys.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ChineseTraditional", "ChineseTraditional", "{3579EA0D-0D63-494E-A2BA-0BC733F98976}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DefInjected", "DefInjected", "{86D29D1A-3911-467F-8064-9BE56307E611}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ResearchProjectDef", "ResearchProjectDef", "{C3E2CD03-C10D-4A4E-9717-F750BB177509}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\ChineseTraditional\DefInjected\ResearchProjectDef\ResearchProjects.xml = Languages\ChineseTraditional\DefInjected\ResearchProjectDef\ResearchProjects.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThingDef", "ThingDef", "{13A49224-D732-486A-B8A6-5AB7AFB57DB4}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\ChineseTraditional\DefInjected\ThingDef\Things.xml = Languages\ChineseTraditional\DefInjected\ThingDef\Things.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{CDDE7936-0B7E-47AF-A316-111FB7481C3A}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\ChineseTraditional\Keyed\OpenTheWindows_keys.xml = Languages\ChineseTraditional\Keyed\OpenTheWindows_keys.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		1.0|Any CPU = 1.0|Any CPU
@@ -141,6 +179,16 @@ Global
 		{071B7E40-F926-4602-92B7-55150D236FDD} = {8114C043-1A94-4248-927F-36E71DA53641}
 		{54E9F884-DD50-4D50-A7C2-ECF58C541093} = {071B7E40-F926-4602-92B7-55150D236FDD}
 		{44B639C0-085C-448A-BF22-C510212D9BF4} = {8114C043-1A94-4248-927F-36E71DA53641}
+		{7DB77850-11C4-44F6-A0FB-B506265AA073} = {600AD10D-819F-46B5-B346-16042A06AA80}
+		{27B6F47B-6307-4FDC-B988-DC92082BC4C3} = {7DB77850-11C4-44F6-A0FB-B506265AA073}
+		{E5B9F933-1248-46E3-82BC-E5B0DC097641} = {27B6F47B-6307-4FDC-B988-DC92082BC4C3}
+		{B7423F59-CDD7-4679-BC8E-D26EFF3FA19D} = {27B6F47B-6307-4FDC-B988-DC92082BC4C3}
+		{94147D7A-05F7-4BBD-A540-335D3C0354D8} = {7DB77850-11C4-44F6-A0FB-B506265AA073}
+		{3579EA0D-0D63-494E-A2BA-0BC733F98976} = {600AD10D-819F-46B5-B346-16042A06AA80}
+		{86D29D1A-3911-467F-8064-9BE56307E611} = {3579EA0D-0D63-494E-A2BA-0BC733F98976}
+		{C3E2CD03-C10D-4A4E-9717-F750BB177509} = {86D29D1A-3911-467F-8064-9BE56307E611}
+		{13A49224-D732-486A-B8A6-5AB7AFB57DB4} = {86D29D1A-3911-467F-8064-9BE56307E611}
+		{CDDE7936-0B7E-47AF-A316-111FB7481C3A} = {3579EA0D-0D63-494E-A2BA-0BC733F98976}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AE23F93A-4E76-4877-B2E2-7CED627DB416}
