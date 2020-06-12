@@ -152,6 +152,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{CDDE7936
 		Languages\ChineseTraditional\Keyed\OpenTheWindows_keys.xml = Languages\ChineseTraditional\Keyed\OpenTheWindows_keys.xml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Italian", "Italian", "{DD1A11FF-A297-4389-BE33-87BDBFFAF41A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DefInjected", "DefInjected", "{9203D821-CDC3-449B-AEE9-B98E44656717}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThingDef", "ThingDef", "{1E48C701-5CE2-45E8-B621-43AC4B8EF408}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\Italian\DefInjected\ThingDef\TranslateThings.xml = Languages\Italian\DefInjected\ThingDef\TranslateThings.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{2B22D7F3-D67D-419B-987F-7EC1A9ED8C36}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\Italian\Keyed\OpenTheWindows_keys.xml = Languages\Italian\Keyed\OpenTheWindows_keys.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		1.0|Any CPU = 1.0|Any CPU
@@ -189,6 +203,10 @@ Global
 		{C3E2CD03-C10D-4A4E-9717-F750BB177509} = {86D29D1A-3911-467F-8064-9BE56307E611}
 		{13A49224-D732-486A-B8A6-5AB7AFB57DB4} = {86D29D1A-3911-467F-8064-9BE56307E611}
 		{CDDE7936-0B7E-47AF-A316-111FB7481C3A} = {3579EA0D-0D63-494E-A2BA-0BC733F98976}
+		{DD1A11FF-A297-4389-BE33-87BDBFFAF41A} = {600AD10D-819F-46B5-B346-16042A06AA80}
+		{9203D821-CDC3-449B-AEE9-B98E44656717} = {DD1A11FF-A297-4389-BE33-87BDBFFAF41A}
+		{1E48C701-5CE2-45E8-B621-43AC4B8EF408} = {9203D821-CDC3-449B-AEE9-B98E44656717}
+		{2B22D7F3-D67D-419B-987F-7EC1A9ED8C36} = {DD1A11FF-A297-4389-BE33-87BDBFFAF41A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AE23F93A-4E76-4877-B2E2-7CED627DB416}

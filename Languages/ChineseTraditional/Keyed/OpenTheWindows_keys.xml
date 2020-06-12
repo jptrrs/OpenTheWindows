@@ -4,6 +4,7 @@
   <ClosedWindow>關閉</ClosedWindow>
   <butVenting>，但保持通風。</butVenting>
   <notVenting>不通風</notVenting>
+  <Facing>朝{0}。</Facing>
   <LandscapeToThe>視野可延伸到</LandscapeToThe>
   <cantDetermineSides>無法確定哪一側為外部。</cantDetermineSides>
   <CommandDesignateOpenCloseWindowLabel>設定打開/關閉</CommandDesignateOpenCloseWindowLabel>

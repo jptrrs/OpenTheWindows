@@ -4,7 +4,8 @@
   <ClosedWindow>Fechada</ClosedWindow>
   <butVenting>, mas ventilando.</butVenting>
   <notVenting>Vedada</notVenting>
-  <LandscapeToThe>Vista para o</LandscapeToThe>
+  <Facing>Voltada para {0}.</Facing>
+  <LandscapeToThe>Vista para o {0}</LandscapeToThe>
   <cantDetermineSides>Não é possível determinar qual o lado de fora.</cantDetermineSides>
   <CommandDesignateOpenCloseWindowLabel>Designar aberto/fechado</CommandDesignateOpenCloseWindowLabel>
   <CommandDesignateOpenCloseWindowDesc>Designe esta janela para ser aberta ou fechada. Um colono virá em breve para realizar a tarefa.</CommandDesignateOpenCloseWindowDesc>

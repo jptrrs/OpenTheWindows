@@ -4,7 +4,8 @@
   <ClosedWindow>Closed</ClosedWindow>
   <butVenting>, but venting.</butVenting>
   <notVenting>Sealed</notVenting>
-  <LandscapeToThe>Landscape to the</LandscapeToThe>
+  <Facing>Facing {0}.</Facing>
+  <LandscapeToThe>Landscape to the {0}</LandscapeToThe>
   <cantDetermineSides>Cannot determine which side is exterior.</cantDetermineSides>
   <CommandDesignateOpenCloseWindowLabel>Designate Open/Close</CommandDesignateOpenCloseWindowLabel>
   <CommandDesignateOpenCloseWindowDesc>Designate this window to be open or closed. A colonist will come soon to perform the task.</CommandDesignateOpenCloseWindowDesc>

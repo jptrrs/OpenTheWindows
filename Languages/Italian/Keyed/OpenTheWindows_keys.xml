@@ -4,7 +4,8 @@
   <ClosedWindow>Chiusa</ClosedWindow>
   <butVenting>, ma con passaggio d'aria.</butVenting>
   <notVenting>Senza passaggio d'aria</notVenting>
-  <LandscapeToThe>Affaccia a</LandscapeToThe>
+  <Facing>Affaccia a {0}.</Facing>
+  <LandscapeToThe>Paesaggio a {0}</LandscapeToThe>
   <cantDetermineSides>Non è possibile determinare il lato esterno.</cantDetermineSides>
   <CommandDesignateOpenCloseWindowLabel>Imposta come aperta/chiusa</CommandDesignateOpenCloseWindowLabel>
   <CommandDesignateOpenCloseWindowDesc>Imposta questa finestra per essere aperta o chiusa. A breve un colono verrà a impostare la finestra.</CommandDesignateOpenCloseWindowDesc>

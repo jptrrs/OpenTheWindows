@@ -13,7 +13,7 @@ namespace OpenTheWindows
             if (req.HasThing && window != null)
             {
                 StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.AppendLine("LandscapeToThe".Translate() + " " + window.FacingCardinal().ToString().ToLower() + ": " + WindowViewBeauty(window));
+                stringBuilder.AppendLine("LandscapeToThe".Translate(window.FacingCardinal().ToString().Translate().ToLower()) + ": " + WindowViewBeauty(window));
                 return stringBuilder.ToString().TrimEndNewlines();
             }
             return null;
