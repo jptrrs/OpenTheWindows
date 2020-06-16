@@ -12,7 +12,7 @@ namespace OpenTheWindows
         {
             if (typeof(Building_Window).IsAssignableFrom(__instance.thingClass))
             {
-                StatDrawEntry x = new StatDrawEntry(StatCategoryDefOf.Basics, "CoverEffectiveness".Translate(), CoverUtility_BaseBlockChance.WindowBaseFillPercent.ToStringPercent(), "CoverEffectivenessExplanation".Translate(), 0);
+                StatDrawEntry x = new StatDrawEntry(StatCategoryDefOf.Basics, "CoverEffectiveness".Translate(), CoverUtility_BaseBlockChance.WindowBaseFillPercent.ToStringPercent()/*__instance.fillPercent.ToStringPercent()*/, "CoverEffectivenessExplanation".Translate(), 0);
                 __result = new StatDrawEntry[] { x };
             }
         }

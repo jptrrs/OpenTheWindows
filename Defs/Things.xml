@@ -5,6 +5,7 @@
     <category>Building</category>
     <altitudeLayer>Building</altitudeLayer>
     <fillPercent>1</fillPercent>
+    <!--<fillPercent>0.65</fillPercent>-->
     <useHitPoints>true</useHitPoints>
     <statBases>
       <Flammability>1.0</Flammability>

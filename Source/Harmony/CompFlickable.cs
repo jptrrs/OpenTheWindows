@@ -7,7 +7,7 @@ namespace OpenTheWindows
     [HarmonyPatch(typeof(CompFlickable), nameof(CompFlickable.DoFlick))]
     public static class CompFlickable_DoFlick
     {
-        public static void PostFix(CompFlickable __instance)
+        public static void Postfix(CompFlickable __instance)
         {
             if (__instance is CompWindow compWindow)
                 compWindow.SwitchIsOn = !compWindow.SwitchIsOn;
