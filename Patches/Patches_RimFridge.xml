@@ -2,6 +2,7 @@
 <Patch>
   <Operation Class="PatchOperationFindMod">
     <mods>
+      <li>[KV] RimFridge</li>
       <li>[KV] RimFridge - 1.0</li>
       <li>[KV] RimFridge - 1.1</li>
     </mods>
