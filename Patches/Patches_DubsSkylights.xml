@@ -8,6 +8,7 @@
     <match Class="PatchOperationFindMod">
       <mods>
         <li>Glass+Lights</li>
+        <li>Just Glass</li>
       </mods>
       
       <nomatch Class="PatchOperationSequence">
@@ -66,7 +67,42 @@
               </value>
           </li>
 
+            <li Class="PatchOperationAdd">
+              <xpath>/Defs/ThingDef[defName = "SkyLightA"]/costList</xpath>
+              <value>
+                <costList>
+                  <Steel>10</Steel>
+                </costList>
+              </value>
+            </li>
+            <li Class="PatchOperationAdd">
+              <xpath>/Defs/ThingDef[defName = "SkyLightB"]/costList</xpath>
+              <value>
+                <costList>
+                  <Steel>80</Steel>
+                </costList>
+              </value>
+            </li>
+            <li Class="PatchOperationAdd">
+              <xpath>/Defs/ThingDef[defName = "SkyLightC"]/costList</xpath>
+              <value>
+                <costList>
+                  <Steel>40</Steel>
+                </costList>
+              </value>
+            </li>
+            <li Class="PatchOperationAdd">
+              <xpath>/Defs/ThingDef[defName = "SkyLightD"]/costList</xpath>
+              <value>
+                <costList>
+                  <Steel>40</Steel>
+                </costList>
+              </value>
+            </li>
+
+        
         </operations>
+      
       </nomatch>
 
       <match Class="PatchOperationFindMod">
@@ -86,6 +122,7 @@
               <value>
                 <costList>
                   <Glass>1</Glass>
+                  <Steel>10</Steel>
                 </costList>
               </value>
             </li>
@@ -94,6 +131,7 @@
               <value>
                 <costList>
                   <Glass>8</Glass>
+                  <Steel>80</Steel>
                 </costList>
               </value>
             </li>
@@ -102,6 +140,7 @@
               <value>
                 <costList>
                   <Glass>4</Glass>
+                  <Steel>40</Steel>
                 </costList>
               </value>
             </li>
@@ -110,6 +149,7 @@
               <value>
                 <costList>
                   <Glass>4</Glass>
+                  <Steel>40</Steel>
                 </costList>
               </value>
             </li>

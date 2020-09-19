@@ -171,7 +171,55 @@
       <li>Glassworks</li>
     </researchPrerequisites>
   </ThingDef>
-  
+
+  <ThingDef ParentName="WindowBase">
+    <defName>HugeOpenWindow</defName>
+    <label>Huge Window</label>
+    <description>A tall, huge window, equipped with rotating brise-soleil. Allows in a massive volume of light.</description>
+    <graphicData>
+      <texPath>Things/Building/HugeWindow</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <drawSize>(8,8)</drawSize>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+      </damageData>
+    </graphicData>
+    <uiIconPath>Things/Building/HugeWindow</uiIconPath>
+    <uiIconScale>1.6</uiIconScale>
+    <stuffCategories>
+      <li>Metallic</li>
+    </stuffCategories>
+    <statBases>
+      <WorkToBuild>2400</WorkToBuild>
+      <MaxHitPoints>500</MaxHitPoints>
+    </statBases>
+    <size>(5,1)</size>
+    <costStuffCount>135</costStuffCount>
+    <costList>
+      <Steel>10</Steel>
+    </costList>
+    <comps>
+      <li Class="OpenTheWindows.CompProperties_Window">
+        <commandTexture>UI/LightIcon</commandTexture>
+        <commandLabelKey>CommandOpenCloseWindowLightLabel</commandLabelKey>
+        <commandDescKey>CommandOpenCloseWindowLightDesc</commandDescKey>
+        <signal>light</signal>
+      </li>
+      <li Class="OpenTheWindows.CompProperties_Window">
+        <commandTexture>UI/AirVentIcon</commandTexture>
+        <commandLabelKey>CommandOpenCloseWindowVentLabel</commandLabelKey>
+        <commandDescKey>CommandOpenCloseWindowVentDesc</commandDescKey>
+        <signal>air</signal>
+      </li>
+    </comps>
+    <researchPrerequisites>
+      <li>Glassworks</li>
+    </researchPrerequisites>
+  </ThingDef>
+
   <ThingDef ParentName="WindowBase">
     <defName>ReinforcedOpenWindow</defName>
     <label>Reinforced Window</label>
@@ -195,7 +243,7 @@
       <MaxHitPoints>240</MaxHitPoints>
     </statBases>
     <size>(1,1)</size>
-    <costStuffCount>45</costStuffCount>
+    <costStuffCount>270</costStuffCount>
     <comps>
       <li Class="OpenTheWindows.CompProperties_Window">
         <commandTexture>UI/LightIcon</commandTexture>

@@ -18,6 +18,7 @@
         <li Class="PatchOperationFindMod">
           <mods>
             <li>Glass+Lights</li>
+            <li>Just Glass</li>
           </mods>
           <match Class="PatchOperationAdd">
             <xpath>Defs/ResearchProjectDef[defName = "TransparentRoofProduction"]/prerequisites</xpath>
