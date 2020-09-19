@@ -197,10 +197,7 @@
       <MaxHitPoints>500</MaxHitPoints>
     </statBases>
     <size>(5,1)</size>
-    <costStuffCount>135</costStuffCount>
-    <costList>
-      <Steel>10</Steel>
-    </costList>
+    <costStuffCount>200</costStuffCount>
     <comps>
       <li Class="OpenTheWindows.CompProperties_Window">
         <commandTexture>UI/LightIcon</commandTexture>
@@ -243,7 +240,7 @@
       <MaxHitPoints>240</MaxHitPoints>
     </statBases>
     <size>(1,1)</size>
-    <costStuffCount>270</costStuffCount>
+    <costStuffCount>45</costStuffCount>
     <comps>
       <li Class="OpenTheWindows.CompProperties_Window">
         <commandTexture>UI/LightIcon</commandTexture>

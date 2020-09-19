@@ -30,6 +30,15 @@
 					</value>				
 				</li>
         
+				<li Class="PatchOperationReplace">
+					<xpath>Defs/ThingDef[defName = "HugeOpenWindow"]/costList</xpath>
+					<value>
+						<costList>
+							<Glass>5</Glass>
+						</costList>
+					</value>				
+				</li>
+        
         <li Class="PatchOperationAdd">
           <xpath>Defs/ThingDef[defName = "ReinforcedOpenWindow"]</xpath>
           <value>

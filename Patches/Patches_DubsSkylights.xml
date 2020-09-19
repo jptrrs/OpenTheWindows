@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Patch>
-	<Operation Class="PatchOperationFindMod">
-		<mods>
-			<li>Dubs Skylights</li>
-		</mods>
-    
+  <Operation Class="PatchOperationFindMod">
+    <mods>
+      <li>Dubs Skylights</li>
+    </mods>
+
     <match Class="PatchOperationFindMod">
       <mods>
         <li>Glass+Lights</li>
         <li>Just Glass</li>
       </mods>
-      
+
       <nomatch Class="PatchOperationSequence">
         <success>Normal</success>
         <operations>
@@ -52,6 +52,15 @@
           </li>
 
           <li Class="PatchOperationAdd">
+            <xpath>Defs/ThingDef[defName = "HugeOpenWindow"]</xpath>
+            <value>
+              <costList>
+                <GlassPane>5</GlassPane>
+              </costList>
+            </value>
+          </li>
+          
+          <li Class="PatchOperationAdd">
             <xpath>Defs/ThingDef[@Name="BasedSkyLight"]</xpath>
             <value>
               <researchPrerequisites>
@@ -63,46 +72,36 @@
           <li Class="PatchOperationAdd">
             <xpath>Defs/RecipeDef[defName = "SmeltGlass"]</xpath>
             <value>
-            <researchPrerequisite>Glassworks</researchPrerequisite>
-              </value>
+              <researchPrerequisite>Glassworks</researchPrerequisite>
+            </value>
           </li>
 
-            <li Class="PatchOperationAdd">
-              <xpath>/Defs/ThingDef[defName = "SkyLightA"]/costList</xpath>
-              <value>
-                <costList>
-                  <Steel>10</Steel>
-                </costList>
-              </value>
-            </li>
-            <li Class="PatchOperationAdd">
-              <xpath>/Defs/ThingDef[defName = "SkyLightB"]/costList</xpath>
-              <value>
-                <costList>
-                  <Steel>80</Steel>
-                </costList>
-              </value>
-            </li>
-            <li Class="PatchOperationAdd">
-              <xpath>/Defs/ThingDef[defName = "SkyLightC"]/costList</xpath>
-              <value>
-                <costList>
-                  <Steel>40</Steel>
-                </costList>
-              </value>
-            </li>
-            <li Class="PatchOperationAdd">
-              <xpath>/Defs/ThingDef[defName = "SkyLightD"]/costList</xpath>
-              <value>
-                <costList>
-                  <Steel>40</Steel>
-                </costList>
-              </value>
-            </li>
-
-        
+          <!--Adding cost in steel to balance with windows-->
+          <li Class="PatchOperationAdd">
+            <xpath>/Defs/ThingDef[defName = "SkyLightA"]/costList</xpath>
+            <value>
+              <Steel>25</Steel>
+            </value>
+          </li>
+          <li Class="PatchOperationAdd">
+            <xpath>/Defs/ThingDef[defName = "SkyLightB"]/costList</xpath>
+            <value>
+              <Steel>90</Steel>
+            </value>
+          </li>
+          <li Class="PatchOperationAdd">
+            <xpath>/Defs/ThingDef[defName = "SkyLightC"]/costList</xpath>
+            <value>
+              <Steel>60</Steel>
+            </value>
+          </li>
+          <li Class="PatchOperationAdd">
+            <xpath>/Defs/ThingDef[defName = "SkyLightD"]/costList</xpath>
+            <value>
+              <Steel>60</Steel>
+            </value>
+          </li>
         </operations>
-      
       </nomatch>
 
       <match Class="PatchOperationFindMod">
@@ -122,7 +121,7 @@
               <value>
                 <costList>
                   <Glass>1</Glass>
-                  <Steel>10</Steel>
+                  <Steel>25</Steel>
                 </costList>
               </value>
             </li>
@@ -131,7 +130,7 @@
               <value>
                 <costList>
                   <Glass>8</Glass>
-                  <Steel>80</Steel>
+                  <Steel>90</Steel>
                 </costList>
               </value>
             </li>
@@ -140,7 +139,7 @@
               <value>
                 <costList>
                   <Glass>4</Glass>
-                  <Steel>40</Steel>
+                  <Steel>60</Steel>
                 </costList>
               </value>
             </li>
@@ -149,7 +148,7 @@
               <value>
                 <costList>
                   <Glass>4</Glass>
-                  <Steel>40</Steel>
+                  <Steel>60</Steel>
                 </costList>
               </value>
             </li>
@@ -163,19 +162,16 @@
             <!--My own-->
             <li Class="PatchOperationAdd">
               <xpath>Defs/ThingDef[@ParentName="BasedSkyLight"]</xpath>
-                <value>
-                  <researchPrerequisites>
-                    <li>GlassworksResearch</li>
-                  </researchPrerequisites>
-                </value>
+              <value>
+                <researchPrerequisites>
+                  <li>GlassworksResearch</li>
+                </researchPrerequisites>
+              </value>
             </li>
-
+            
           </operations>
         </nomatch>
       </match>
-
     </match>
-	</Operation>
-
+  </Operation>
 </Patch>
-
