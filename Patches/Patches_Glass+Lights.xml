@@ -11,8 +11,8 @@
 				<!--<li Class="PatchOperationRemove">
 					<xpath>/Defs/ThingDef[defName = "Window"]/designationCategory</xpath>
 				</li>-->
-				
-				<li Class="PatchOperationReplace">
+
+        <li Class="PatchOperationReplace">
 					<xpath>Defs/ThingDef[defName = "OpenWindow"]/costList</xpath>
 					<value>
 						<costList>
@@ -30,8 +30,8 @@
 					</value>				
 				</li>
         
-				<li Class="PatchOperationReplace">
-					<xpath>Defs/ThingDef[defName = "HugeOpenWindow"]/costList</xpath>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName = "HugeOpenWindow"]</xpath>
 					<value>
 						<costList>
 							<Glass>5</Glass>
