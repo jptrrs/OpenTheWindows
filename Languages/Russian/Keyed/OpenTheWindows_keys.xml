@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+  <!--ui-->
+  <ClosedWindow>Закрыто</ClosedWindow>
+  <butVenting>, но вентилирует.</butVenting>
+  <notVenting>Герметично</notVenting>
+  <Facing>Направленно на {0}.</Facing>
+  <LandscapeToThe>Пейзаж на {0}</LandscapeToThe>
+  <cantDetermineSides>Невозможно определить, какая сторона внешняя.</cantDetermineSides>
+  <CommandDesignateOpenCloseWindowLabel>Открыть/Закрыть</CommandDesignateOpenCloseWindowLabel>
+  <CommandDesignateOpenCloseWindowDesc>Назначить это окно на открытие или закрытие. Скоро для выполнения этого задания придёт колонист.</CommandDesignateOpenCloseWindowDesc>
+  <CommandOpenCloseWindowLightLabel>Разрешить освещение</CommandOpenCloseWindowLightLabel>
+  <CommandOpenCloseWindowLightDesc>Разрешить или заблокировать прохождение света через окно. Скоро для выполнения этого задания придёт колонист.</CommandOpenCloseWindowLightDesc>
+  <CommandOpenCloseWindowVentLabel>Разрешить вентиляцию</CommandOpenCloseWindowVentLabel>
+  <CommandOpenCloseWindowVentDesc>Разрешить или заблокировать прохождение воздуха через окно. Скоро для выполнения этого задания придёт колонист.</CommandOpenCloseWindowVentDesc>
+  <NaturalLightMap>Показать естественный свет.</NaturalLightMap>
+  
+  <!--settings-->
+  <OpenTheWindows>Open The Windows!</OpenTheWindows>
+  <IndoorsNoNaturalLightPenalty>Усиление нужды быть на открытом воздухе</IndoorsNoNaturalLightPenalty>
+  <IndoorsNoNaturalLightPenaltyDesc>Умножает снижение уровня "на открытом воздухе", когда пешка находится в помещении, но не под окном.</IndoorsNoNaturalLightPenaltyDesc>
+  <LightTransmission>Пропускание света через окна</LightTransmission>
+  <LightTransmissionIncludesRoofs>включая устройства на потолке</LightTransmissionIncludesRoofs>
+  <LightTransmissionDesc>Количество внешнего света, проникающего сквозь стекло и рамы. (Real world values are around 90%).</LightTransmissionDesc>
+  <BeautySensitivityReduction>Снижение чувствительности красоты окружения</BeautySensitivityReduction>
+  <BeautySensitivityReductionDesc>Подавление чувствительности пешек к красоте, чтобы скомпенсировать количество красоты окружения, добавленной модом "Nature is Beautiful", и захваченной окнами.</BeautySensitivityReductionDesc>
+  <LinkOptionsLabel>Настройка графики стен</LinkOptionsLabel>
+  <RequiresRestart>требуется перезагрузка игры</RequiresRestart>
+  <LinkWindowsAndWalls>Связывать с окнами</LinkWindowsAndWalls>
+  <LinkVentsAndWalls>Связывать с вентиляцией &amp; кондиционерами</LinkVentsAndWalls>
+  <LinkFridgesAndWalls>Связывать с вентиляцией, кондиционерами &amp; холодильниками</LinkFridgesAndWalls>
+  
+</LanguageData>

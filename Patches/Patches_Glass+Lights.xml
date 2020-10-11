@@ -3,7 +3,7 @@
 	<Operation Class="PatchOperationFindMod">
 		<mods>
 			<li>Glass+Lights</li>
-		</mods>
+    </mods>
 		<match Class="PatchOperationSequence">
 			<success>Normal</success>
 			<operations>
