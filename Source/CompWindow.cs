@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using RimWorld;
+using System.Collections.Generic;
 using System.Reflection;
 using Verse;
 
@@ -10,7 +11,7 @@ namespace OpenTheWindows
         private FieldInfo baseWantSwitchInfo = AccessTools.Field(typeof(CompFlickable), "wantSwitchOn");
         private FieldInfo baseSwitchOnIntInfo = AccessTools.Field(typeof(CompFlickable), "switchOnInt");
 
-        public CompProperties_Window Props
+        public new CompProperties_Window Props
         {
             get
             {
@@ -18,7 +19,7 @@ namespace OpenTheWindows
             }
         }
 
-        public bool switchOnInt
+        public new bool switchOnInt
         {
             get
             {
@@ -27,6 +28,18 @@ namespace OpenTheWindows
             set
             {
                 baseSwitchOnIntInfo.SetValue(this, value);
+            }
+        }
+
+        public new bool wantSwitchOn
+        {
+            get
+            {
+                return (bool)baseWantSwitchInfo.GetValue(this);
+            }
+            set
+            {
+                baseWantSwitchInfo.SetValue(this, value);
             }
         }
 
@@ -78,6 +91,12 @@ namespace OpenTheWindows
             baseWantSwitchInfo.SetValue(this, state);
             baseSwitchOnIntInfo.SetValue(this, state);
             SwitchIsOn = state;
+        }
+
+        public void ForceFlick()
+        {
+            wantSwitchOn = !wantSwitchOn;
+            FlickUtility.UpdateFlickDesignation(parent);
         }
     }
 }

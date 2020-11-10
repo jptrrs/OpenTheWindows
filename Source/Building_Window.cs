@@ -9,21 +9,76 @@ namespace OpenTheWindows
 {
     public class Building_Window : Building
     {
-        public IntVec3 end;
-        public IntVec3 start;
+        public IntVec3 start, end;
         public LinkDirections Facing;
         public List<IntVec3> illuminated = new List<IntVec3>();
-        public bool isFacingSet = false;
-        private CompWindow mainComp;
-        public bool open = true;
-        public bool venting = false;
-        public bool leaks = false;
+        private CompWindow mainComp, ventComp;
+        public bool 
+            isFacingSet = false,
+            open = true,
+            venting = false,
+            leaks = false,
+            updateRequest = false;
         public int size => Math.Max(def.size.x, def.size.z);
         public float ventRate => size * 14f;
-        public float closedVentFactor = 0.5f;
-        public float leakVentFactor = 0.1f;
-        public int adjacentRoofCount;
-        public bool updateRequest = false;
+        public float 
+            closedVentFactor = 0.5f,
+            leakVentFactor = 0.1f;
+        public int 
+            adjacentRoofCount,
+            nextToleranceCheckTick,
+            ToleranceCheckInterval = 1000;
+        public FloatRange targetTemp = new FloatRange(ThingDefOf.Human.GetStatValueAbstract(StatDefOf.ComfyTemperatureMin), ThingDefOf.Human.GetStatValueAbstract(StatDefOf.ComfyTemperatureMax));
+
+        public IntVec3 inside
+        {
+            get
+            {
+                switch (Facing)
+                {
+                    case LinkDirections.Up:
+                        return Position + IntVec3.North;
+
+                    case LinkDirections.Right:
+                        return Position + IntVec3.East;
+
+                    case LinkDirections.Down:
+                        return Position + IntVec3.South;
+
+                    case LinkDirections.Left:
+                        return Position + IntVec3.West;
+
+                    case LinkDirections.None:
+                        return IntVec3.Zero;
+                }
+                return IntVec3.Zero;
+            }
+        }
+
+        public IntVec3 outside
+        {
+            get
+            {
+                switch (Facing)
+                {
+                    case LinkDirections.Up:
+                        return Position + IntVec3.South;
+
+                    case LinkDirections.Right:
+                        return Position + IntVec3.West;
+
+                    case LinkDirections.Down:
+                        return Position + IntVec3.North;
+
+                    case LinkDirections.Left:
+                        return Position + IntVec3.East;
+
+                    case LinkDirections.None:
+                        return IntVec3.Zero;
+                }
+                return IntVec3.Zero;
+            }
+        }
 
         public override Graphic Graphic
         {
@@ -53,7 +108,9 @@ namespace OpenTheWindows
             {
                 if (!respawningAfterLoad) venting = true;
                 leaks = true;
+                ventComp = mainComp;
             }
+            else ventComp = GetComps<CompWindow>().Where(x => x.Props.signal == "air").FirstOrDefault();
             map.GetComponent<MapComp_Windows>().RegisterWindow(this);
             WindowUtility.FindEnds(this);
             if (!isFacingSet) WindowUtility.FindWindowExternalFacing(this);
@@ -160,6 +217,33 @@ namespace OpenTheWindows
                 float vent = ventRate * leakVentFactor;
                 GenTemperature.EqualizeTemperaturesThroughBuilding(this, vent, true);
             }
+            //test
+            if (isFacingSet && inside.GetRoomGroup(Map) != null)
+            {
+                float insideTemp = GenTemperature.GetTemperatureForCell(inside, Map);
+                if (!targetTemp.Includes(insideTemp))
+                {
+                    int ticksGame = Find.TickManager.TicksGame;
+                    if (nextToleranceCheckTick == 0 || ticksGame >= nextToleranceCheckTick)
+                    {
+                        float outsideTemp = GenTemperature.GetTemperatureForCell(outside, Map);
+                        bool doFlick = false;
+                        if (!venting) //open if...
+                        {
+                            doFlick =   /*...too hot inside*/ (insideTemp > targetTemp.max && insideTemp > outsideTemp) ||
+                                        /*...too cold inside*/ (insideTemp < targetTemp.min && insideTemp < outsideTemp);
+                        } 
+                        else //close if...
+                        {
+                            doFlick =   /*...too hot inside*/ insideTemp > targetTemp.max ||
+                                        /*...too cold inside*/ insideTemp < targetTemp.min;
+                        }
+                        if (doFlick) ventComp.ForceFlick();
+                        nextToleranceCheckTick = ticksGame + ToleranceCheckInterval;
+                    }
+                }
+            }
+            base.TickRare();
         }
 
         public bool NeedExternalFacingUpdate()
@@ -217,5 +301,28 @@ namespace OpenTheWindows
             if (signal == "airOn" || signal == "bothOn") venting = true;
             if (signal == "airOff" || signal == "bothOff") venting = false;
         }
+
+        //public override IEnumerable<Gizmo> GetGizmos()
+        //{
+        //    foreach (Gizmo gizmo in base.GetGizmos())
+        //    {
+        //        yield return gizmo;
+        //    }
+        //    Command_Action unmake = new Command_Action
+        //    {
+        //        defaultLabel = "AutoTemp",//Props.commandLabelKey.Translate(),
+        //        defaultDesc = "test",//Props.commandDescKey.Translate(),
+        //                             //icon = LoadedBedding.uiIcon,
+        //                             //iconAngle = LoadedBedding.uiIconAngle,
+        //                             //iconOffset = LoadedBedding.uiIconOffset,
+        //                             //iconDrawScale = GenUI.IconDrawScale(LoadedBedding),
+        //        action = delegate ()
+        //        {
+        //            wantSwitchOn = !wantSwitchOn;
+        //            FlickUtility.UpdateFlickDesignation(parent);
+        //        }
+        //    };
+        //    yield return unmake;
+
+        }
     }
-}
