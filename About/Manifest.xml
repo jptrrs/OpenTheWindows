@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Manifest>
+    <identifier>OpenTheWindows</identifier>
+    <version>1.7.8</version>
+    <suggests>
+      <li>Dubs-Skylights</li>
+      <li>ExpandedRoofing</li>
+      <li>Glass+Lights</li>
+    </suggests>
+    <showCrossPromotions>true</showCrossPromotions>
+    <downloadUri>https://github.com/jptrrs/OpenTheWindows/releases/latest</downloadUri>
+</Manifest>
