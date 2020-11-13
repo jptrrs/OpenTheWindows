@@ -12,13 +12,29 @@ namespace OpenTheWindows
         public bool updateRequest = false;
         public bool roofUpdateRequest = false;
         public HashSet<IntVec3> WindowCells;
-        private Building[] skyLightGrid = null;
+        //private Building[] skyLightGrid = null;
         public int[] WindowScanGrid;
+
+        private Type DubsSkylights_type;
+        private FieldInfo DubsSkylights_skylightGridinfo;
+        private MethodInfo MapCompInfo = AccessTools.Method(typeof(Map), "GetComponent", new[] { typeof(Type) });
+        private Type ExpandedRoofing_type;
+        private FieldInfo ExpandedRoofing_roofTransparentInfo;
 
         public MapComp_Windows(Map map) : base(map)
         {
             WindowScanGrid = new int[map.cellIndices.NumGridCells];
             WindowCells = new HashSet<IntVec3>();
+            if (HarmonyPatches.DubsSkylights)
+            {
+                DubsSkylights_type = AccessTools.TypeByName("Dubs_Skylight.MapComp_Skylights");
+                DubsSkylights_skylightGridinfo = AccessTools.Field(DubsSkylights_type, "SkylightGrid");
+            }
+            if (HarmonyPatches.ExpandedRoofing)
+            {
+                ExpandedRoofing_type = AccessTools.TypeByName("ExpandedRoofing.RoofDefOf");
+                ExpandedRoofing_roofTransparentInfo = AccessTools.Field(ExpandedRoofing_type, "RoofTransparent");
+            }
         }
 
         public void CastNaturalLightOnDemand()
@@ -117,18 +133,15 @@ namespace OpenTheWindows
             /*
              * These are awful, you iterate over huge ranges for pretty much nothing.
              *  This is easily fixable by:
-             *  A. Cache your reflection!
+             *  A. Cache your reflection! - DONE!
              *  B. Instead of hacking past these functions, let them run, and use yours as additionals, why make yourself do more work?
              */
             if (HarmonyPatches.DubsSkylights)
             {
-                Type type = AccessTools.TypeByName("Dubs_Skylight.MapComp_Skylights");
-                FieldInfo skylightGridinfo = AccessTools.Field(type, "SkylightGrid");
-                MethodInfo compInfo = AccessTools.Method(typeof(Map), "GetComponent", new[] { typeof(Type) });
-                bool[] skyLightGrid = (bool[])skylightGridinfo.GetValue(compInfo.Invoke(map, new[] { type }));
-                for (int i = 0; i < skyLightGrid.Length; i++)
+                bool[] DubsSkylights_skyLightGrid = (bool[])DubsSkylights_skylightGridinfo.GetValue(MapCompInfo.Invoke(map, new[] { DubsSkylights_type }));
+                for (int i = 0; i < DubsSkylights_skyLightGrid.Length; i++)
                 {
-                    if (skyLightGrid[i] == true)
+                    if (DubsSkylights_skyLightGrid[i] == true)
                     {
                         WindowCells.Add(map.cellIndices.IndexToCell(i));
                     }
@@ -137,9 +150,7 @@ namespace OpenTheWindows
 
             if (HarmonyPatches.ExpandedRoofing)
             {
-                Type type = AccessTools.TypeByName("ExpandedRoofing.RoofDefOf");
-                FieldInfo roofTransparentInfo = AccessTools.Field(type, "RoofTransparent");
-                RoofDef roofTransparent = (RoofDef)roofTransparentInfo.GetValue(Find.CurrentMap.roofGrid);
+                RoofDef roofTransparent = (RoofDef)ExpandedRoofing_roofTransparentInfo.GetValue(Find.CurrentMap.roofGrid);
                 for (int i = 0; i < map.cellIndices.NumGridCells; i++)
                 {
                     if (map.roofGrid.RoofAt(i) == roofTransparent)
