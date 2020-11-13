@@ -93,10 +93,27 @@ namespace OpenTheWindows
             SwitchIsOn = state;
         }
 
-        public void ForceFlick()
+        public void AutoFlickRequest()
         {
-            wantSwitchOn = !wantSwitchOn;
-            FlickUtility.UpdateFlickDesignation(parent);
+            if (!WantsFlick())
+            {
+                wantSwitchOn = !wantSwitchOn;
+                FlickUtility.UpdateFlickDesignation(parent);
+            }
+        }
+
+        public override IEnumerable<Gizmo> CompGetGizmosExtra()
+        {
+            foreach (Gizmo gizmo in base.CompGetGizmosExtra())
+            {
+                Command_Toggle toggle = gizmo as Command_Toggle;
+                if (toggle != null && toggle.Label == "CommandOpenCloseWindowVentLabel".Translate())
+                {
+                    Building_Window window = parent as Building_Window;
+                    toggle.disabled = window.autoVent;
+                }
+                yield return gizmo;
+            }
         }
     }
 }
