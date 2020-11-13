@@ -8,7 +8,7 @@ namespace OpenTheWindows
     [HarmonyPatch(typeof(GlowGrid), nameof(GlowGrid.GameGlowAt))]
     public static class GlowGrid_GameGlowAt
     {
-        private static float WindowFiltering() => OpenTheWindowsSettings.LightTransmission;
+        //private static float WindowFiltering() => OpenTheWindowsSettings.LightTransmission;
 
         public static void Postfix(IntVec3 c, ref float __result)
         {
@@ -20,7 +20,7 @@ namespace OpenTheWindows
             {
                 if (__result < 1f && comp.WindowCells.Contains(c))
                 {
-                    float x = Mathf.Max(0f, map.skyManager.CurSkyGlow * WindowFiltering());
+                    float x = Mathf.Max(0f, map.skyManager.CurSkyGlow * OpenTheWindowsSettings.LightTransmission/*WindowFiltering()*/);
                     __result = Mathf.Max(__result, x);
                 }
             }

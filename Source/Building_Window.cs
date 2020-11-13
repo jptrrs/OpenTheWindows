@@ -3,36 +3,84 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 using Verse;
 
 namespace OpenTheWindows
 {
     public class Building_Window : Building
     {
-        public IntVec3 start, end;
         public LinkDirections Facing;
+        public List<IntVec3> effectArea = new List<IntVec3>();
         public List<IntVec3> illuminated = new List<IntVec3>();
-        private CompWindow mainComp, ventComp;
         public bool
             isFacingSet = false,
             open = true,
             venting = false,
             updateRequest = false,
             autoVent = true;
-        private bool
-            leaks = false,
-            recentlyOperated = false;
-        private int size => Math.Max(def.size.x, def.size.z);
-        private float ventRate => size * 14f;
-        private float
-            closedVentFactor = 0.5f,
-            leakVentFactor = 0.1f;
+
+        public IntVec3 start, end;
         private int
             adjacentRoofCount,
             nextToleranceCheckTick,
             toleranceCheckInterval = 1000,
             intervalMultiplierAfterAttempts = 4;
+        private float
+            closedVentFactor = 0.5f,
+            leakVentFactor = 0.1f;
+        private static float maxNeighborDistance = 20f; //Radius to search for other windows overlapping areas. Should change if we're using windows that reach more than 6 cells deep.
+        private bool
+            leaks = false,
+            recentlyOperated = false;
+
+        private CompWindow mainComp, ventComp;
         private FloatRange targetTemp = new FloatRange(ThingDefOf.Human.GetStatValueAbstract(StatDefOf.ComfyTemperatureMin), ThingDefOf.Human.GetStatValueAbstract(StatDefOf.ComfyTemperatureMax));
+        public Room attachedRoom
+        {
+            get
+            {
+                if (isFacingSet & inside != IntVec3.Zero)
+                {
+                    return inside.GetRoom(Map);
+                }
+                return null;
+            }
+        }
+
+        public override Graphic Graphic
+        {
+            get
+            {
+                return mainComp.CurrentGraphic;
+            }
+        }
+
+        private int size => Math.Max(def.size.x, def.size.z);
+        private IntVec3 inside
+        {
+            get
+            {
+                switch (Facing)
+                {
+                    case LinkDirections.Up:
+                        return Position + IntVec3.South;
+
+                    case LinkDirections.Right:
+                        return Position + IntVec3.West;
+
+                    case LinkDirections.Down:
+                        return Position + IntVec3.North;
+
+                    case LinkDirections.Left:
+                        return Position + IntVec3.East;
+
+                    case LinkDirections.None:
+                        return IntVec3.Zero;
+                }
+                return IntVec3.Zero;
+            }
+        }
 
         private IntVec3 outside
         {
@@ -59,94 +107,79 @@ namespace OpenTheWindows
             }
         }
 
-        private IntVec3 inside
-        {
-            get
-            {
-                switch (Facing)
-                {
-                    case LinkDirections.Up:
-                        return Position + IntVec3.South;
-
-                    case LinkDirections.Right:
-                        return Position + IntVec3.West;
-
-                    case LinkDirections.Down:
-                        return Position + IntVec3.North;
-
-                    case LinkDirections.Left:
-                        return Position + IntVec3.East;
-
-                    case LinkDirections.None:
-                        return IntVec3.Zero;
-                }
-                return IntVec3.Zero;
-            }
-        }
-
-        public Room attachedRoom
-        {
-            get
-            {
-                if (isFacingSet & inside != IntVec3.Zero)
-                {
-                    return inside.GetRoom(Map);
-                }
-                return null;
-            }
-        }
-
-        public override Graphic Graphic
-        {
-            get
-            {
-                return mainComp.CurrentGraphic;
-            }
-        }
-
+        private float ventRate => size * 14f;
         public void CastLight()
         {
+            DarkenCellsCarefully();
             if (open)
             {
-                illuminated = WindowUtility.CalculateWindowLightCells(this).ToList();
+                effectArea = WindowUtility.CalculateWindowLightCells(this).ToList();
+                foreach (IntVec3 c in effectArea)
+                {
+                    bool interior = false;
+                    switch (Facing)
+                    {
+                        case LinkDirections.Up:
+                            if (c.z < Position.z) interior = true;
+                            break;
+                        case LinkDirections.Right:
+                            if (c.x < Position.x) interior = true;
+                            break;
+
+                        case LinkDirections.Down:
+                            if (c.z > Position.z) interior = true;
+                            break;
+
+                        case LinkDirections.Left:
+                            if (c.x > Position.x) interior = true;
+                            break;
+
+                        case LinkDirections.None:
+                            break;
+                    }
+                    if (interior)
+                    {
+                        illuminated.Add(c);
+                        Map.GetComponent<MapComp_Windows>().IncludeTile(c);
+                    }
+                }
             }
-            else if (illuminated != null)
+            else
             {
-                illuminated.Clear();
+                effectArea.Clear();
             }
         }
 
-        public override void SpawnSetup(Map map, bool respawningAfterLoad)
+        public void DarkenCellsCarefully()
         {
-            base.SpawnSetup(map, respawningAfterLoad);
-            mainComp = GetComps<CompWindow>().FirstOrDefault();
-            if (mainComp.Props.signal == "both")
+            if (!illuminated.EnumerableNullOrEmpty())
             {
-                if (!respawningAfterLoad) venting = true;
-                leaks = true;
-                ventComp = mainComp;
-            }
-            else ventComp = GetComps<CompWindow>().Where(x => x.Props.signal == "air").FirstOrDefault();
-            map.GetComponent<MapComp_Windows>().RegisterWindow(this);
-            WindowUtility.FindEnds(this);
-            if (!isFacingSet) WindowUtility.FindWindowExternalFacing(this);
-            CastLight();
-            Map.GetComponent<MapComp_Windows>().RegenGrid();
-            Map.glowGrid.MarkGlowGridDirty(Position);
-
-            //just link it!
-            if (OpenTheWindowsSettings.LinkWindows)
-            {
-                map.linkGrid.Notify_LinkerCreatedOrDestroyed(this);
-                map.mapDrawer.MapMeshDirty(Position, MapMeshFlag.Things, true, false);
+                //Log.Message("Darkening cells for " + this + ", illuminated:" + illuminated.Count()+"...");
+                IEnumerable<Building_Window> neighbors = GenRadial.RadialDistinctThingsAround(Position, Map, maxNeighborDistance, false).Where(x => x is Building_Window && x != this).Cast<Building_Window>().Where(x => x.open && !x.illuminated.EnumerableNullOrEmpty());
+                //string testNeighbors = neighbors.EnumerableNullOrEmpty() ? "empty" : neighbors.Count().ToString();
+                //Log.Message("...neighbors: " + testNeighbors);
+                IEnumerable<IntVec3> overlap = neighbors.EnumerableNullOrEmpty() ? null : neighbors.Select(x => x.illuminated).Aggregate((l, r) => l.Union(r).ToList());
+                //string testoverlap = overlap.EnumerableNullOrEmpty() ? "empty" : overlap.Count().ToString();
+                //Log.Message("...overlap: " + testoverlap);
+                List<IntVec3> affected = overlap.EnumerableNullOrEmpty() ? illuminated : illuminated.Except(overlap).ToList();
+                //Log.Message("...affected: "+affected.Count());
+                int count = 0;
+                foreach (IntVec3 c in affected)
+                {
+                    Map.GetComponent<MapComp_Windows>().ExcludeTile(c);
+                    count++;
+                }
+                illuminated.Clear();
+                //Log.Message("..."+count + " cells darkened for " + this+", illuminated:"+illuminated.Count());
             }
         }
 
         public override void DeSpawn(DestroyMode mode = DestroyMode.Vanish)
         {
             Map.GetComponent<MapComp_Windows>().DeRegisterWindow(this);
-            Map.GetComponent<MapComp_Windows>().RegenGrid();
-            Map.glowGrid.MarkGlowGridDirty(Position);
+            DarkenCellsCarefully();
+            //Map.GetComponent<MapComp_Windows>().RegenGrid();
+            //Map.glowGrid.MarkGlowGridDirty(Position);
             //just link it!
             if (OpenTheWindowsSettings.LinkWindows)
             {
@@ -193,6 +226,25 @@ namespace OpenTheWindows
             return dir;
         }
 
+        public override IEnumerable<Gizmo> GetGizmos()
+        {
+            foreach (Gizmo gizmo in base.GetGizmos())
+            {
+                yield return gizmo;
+            }
+            yield return new Command_Toggle
+            {
+                icon = ContentFinder<Texture2D>.Get("UI/AutoVentIcon_"+ventComp.Props.signal, true),
+                defaultLabel = "AutoVentilation".Translate(),
+                defaultDesc = "AutoVentilationDesc".Translate(),
+                isActive = (() => autoVent),
+                toggleAction = delegate ()
+                {
+                    autoVent = !autoVent;
+                }
+            };
+        }
+
         public override string GetInspectString()
         {
             StringBuilder stringBuilder = new StringBuilder();
@@ -230,6 +282,95 @@ namespace OpenTheWindows
                 stringBuilder.Append("cantDetermineSides".Translate());
             }
             return stringBuilder.ToString();
+        }
+
+        public bool NeedExternalFacingUpdate()
+        {
+            if (isFacingSet)
+            {
+                int previousCount = adjacentRoofCount;
+                int count = new int();
+                foreach (IntVec3 c in GenAdj.CellsAdjacentCardinal(this))
+                {
+                    if (Map.roofGrid.Roofed(c) && c.Walkable(Map)) count++;
+                }
+                adjacentRoofCount = count;
+                if (count != previousCount) return true;
+                else return false;
+            }
+            return true;
+        }
+
+        public bool NeedLightUpdate()
+        {
+            if (open && isFacingSet)
+            {
+                int areacheck = 0;
+                if (effectArea != null) areacheck = effectArea.Count();
+                CastLight();
+                if (effectArea.Count() != areacheck)
+                {
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        }
+
+        public override void ReceiveCompSignal(string signal)
+        {
+            bool needsupdate = false;
+            if (signal == "lightOff" || signal == "bothOff")
+            {
+                def.blockLight = true;
+                open = false;
+                needsupdate = true;
+            }
+            if (signal == "lightOn" || signal == "bothOn")
+            {
+                open = true;
+                def.blockLight = false;
+                needsupdate = true;
+            }
+            if (needsupdate)
+            {
+                if (!isFacingSet) WindowUtility.FindWindowExternalFacing(this);
+                CastLight();
+            }
+            if (signal == "airOn" || signal == "bothOn")
+            {
+                venting = true;
+                recentlyOperated = true;
+            }
+            if (signal == "airOff" || signal == "bothOff")
+            {
+                venting = false;
+                recentlyOperated = true;
+            }
+        }
+
+        public override void SpawnSetup(Map map, bool respawningAfterLoad)
+        {
+            base.SpawnSetup(map, respawningAfterLoad);
+            mainComp = GetComps<CompWindow>().FirstOrDefault();
+            if (mainComp.Props.signal == "both")
+            {
+                if (!respawningAfterLoad) venting = true;
+                leaks = true;
+                ventComp = mainComp;
+            }
+            else ventComp = GetComps<CompWindow>().Where(x => x.Props.signal == "air").FirstOrDefault();
+            map.GetComponent<MapComp_Windows>().RegisterWindow(this);
+            WindowUtility.FindEnds(this);
+            if (!isFacingSet) WindowUtility.FindWindowExternalFacing(this);
+            CastLight();
+
+            //just link it!
+            if (OpenTheWindowsSettings.LinkWindows)
+            {
+                map.linkGrid.Notify_LinkerCreatedOrDestroyed(this);
+                map.mapDrawer.MapMeshDirty(Position, MapMeshFlag.Things, true, false);
+            }
         }
 
         public override void TickRare()
@@ -286,92 +427,6 @@ namespace OpenTheWindows
                 }
             }
             base.TickRare();
-        }
-
-        public bool NeedExternalFacingUpdate()
-        {
-            if (isFacingSet)
-            {
-                int previousCount = adjacentRoofCount;
-                int count = new int();
-                foreach (IntVec3 c in GenAdj.CellsAdjacentCardinal(this))
-                {
-                    if (Map.roofGrid.Roofed(c) && c.Walkable(Map)) count++;
-                }
-                adjacentRoofCount = count;
-                if (count != previousCount) return true;
-                else return false;
-            }
-            return true;
-        }
-
-        public bool NeedLightUpdate()
-        {
-            if (open && isFacingSet)
-            {
-                int areacheck = 0;
-                if (illuminated != null) areacheck = illuminated.Count();
-                CastLight();
-                if (illuminated.Count() != areacheck)
-                {
-                    return true;
-                }
-                return false;
-            }
-            return false;
-        }
-
-        public override void ReceiveCompSignal(string signal)
-        {
-            bool needsupdate = false;
-            if (signal == "lightOff" || signal == "bothOff")
-            {
-                def.blockLight = true;
-                open = false;
-                needsupdate = true;
-            }
-            if (signal == "lightOn" || signal == "bothOn")
-            {
-                open = true;
-                def.blockLight = false;
-                needsupdate = true;
-            }
-            if (needsupdate)
-            {
-                if (!isFacingSet) WindowUtility.FindWindowExternalFacing(this);
-                CastLight();
-                Map.GetComponent<MapComp_Windows>().RegenGrid();
-                Map.glowGrid.MarkGlowGridDirty(Position);
-            }
-            if (signal == "airOn" || signal == "bothOn")
-            {
-                venting = true;
-                recentlyOperated = true;
-            }
-            if (signal == "airOff" || signal == "bothOff")
-            {
-                venting = false;
-                recentlyOperated = true;
-            }
-        }
-
-        public override IEnumerable<Gizmo> GetGizmos()
-        {
-            foreach (Gizmo gizmo in base.GetGizmos())
-            {
-                yield return gizmo;
-            }
-            yield return new Command_Toggle
-            {
-                //icon = this.CommandTex,
-                defaultLabel = "AutoTemp",//this.Props.commandLabelKey.Translate(),
-                defaultDesc = "test",//this.Props.commandDescKey.Translate(),
-                isActive = (() => autoVent),
-                toggleAction = delegate ()
-                {
-                    autoVent = !autoVent;
-                }
-            };
         }
     }
 }

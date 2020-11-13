@@ -12,14 +12,31 @@ namespace OpenTheWindows
         public bool updateRequest = false;
         public bool roofUpdateRequest = false;
         public HashSet<IntVec3> WindowCells;
-        //private Building[] skyLightGrid = null;
         public int[] WindowScanGrid;
 
         private Type DubsSkylights_type;
         private FieldInfo DubsSkylights_skylightGridinfo;
-        private MethodInfo MapCompInfo = AccessTools.Method(typeof(Map), "GetComponent", new[] { typeof(Type) });
+        private MethodInfo MapCompInfo;
         private Type ExpandedRoofing_type;
         private FieldInfo ExpandedRoofing_roofTransparentInfo;
+
+        public void IncludeTile(IntVec3 tile)
+        {
+            if (!WindowCells.Contains(tile))
+            {
+                WindowCells.Add(tile);
+                map.glowGrid.MarkGlowGridDirty(tile);
+            }
+        }
+
+        public void ExcludeTile(IntVec3 tile)
+        {
+            if (WindowCells.Contains(tile))
+            {
+                WindowCells.Remove(tile);
+                map.glowGrid.MarkGlowGridDirty(tile);
+            }
+        }
 
         public MapComp_Windows(Map map) : base(map)
         {
@@ -29,6 +46,7 @@ namespace OpenTheWindows
             {
                 DubsSkylights_type = AccessTools.TypeByName("Dubs_Skylight.MapComp_Skylights");
                 DubsSkylights_skylightGridinfo = AccessTools.Field(DubsSkylights_type, "SkylightGrid");
+                MapCompInfo = AccessTools.Method(typeof(Map), "GetComponent", new[] { typeof(Type) });
             }
             if (HarmonyPatches.ExpandedRoofing)
             {
@@ -39,30 +57,13 @@ namespace OpenTheWindows
 
         public void CastNaturalLightOnDemand()
         {
-            bool doRegen = false;
-            List<IntVec3> affected = new List<IntVec3>();
             foreach (Building_Window window in cachedWindows)
             {
                 if (roofUpdateRequest && window.NeedExternalFacingUpdate())
                 {
                     WindowUtility.FindWindowExternalFacing(window);
-                    window.CastLight();
-                    doRegen = true;
-                    affected.Add(window.Position);
                 }
-                if (!doRegen && window.NeedLightUpdate())
-                {
-                    doRegen = true;
-                    affected.Add(window.Position);
-                }
-            }
-            if (doRegen)
-            {
-                RegenGrid();
-                foreach (IntVec3 c in affected)
-                {
-                    map.glowGrid.MarkGlowGridDirty(c);
-                }
+                window.CastLight();
             }
             updateRequest = (roofUpdateRequest = false);
         }
@@ -92,50 +93,44 @@ namespace OpenTheWindows
              * Why on earth do we need to reset here? We can very easily tell which window has been changed, WE IMPLEMENT THE WINDOW CLASS !!!
              * You can quite easily implement this and make this function mostly neglible performance wise.
              */
-            WindowCells = new HashSet<IntVec3>();
+            //WindowCells = new HashSet<IntVec3>();
 
-            foreach (Building_Window window in cachedWindows)
-            {
-                if (window.open && window.isFacingSet)
-                {
-                    foreach (IntVec3 c in window.illuminated)
-                    {
-                        bool interior = false;
-                        switch (window.Facing)
-                        {
-                            case LinkDirections.Up:
-                                if (c.z < window.Position.z) interior = true;
-                                break;
+            //foreach (Building_Window window in cachedWindows)
+            //{
+            //    if (window.open && window.isFacingSet)
+            //    {
+            //        foreach (IntVec3 c in window.effectArea)
+            //        {
+            //            bool interior = false;
+            //            switch (window.Facing)
+            //            {
+            //                case LinkDirections.Up:
+            //                    if (c.z < window.Position.z) interior = true;
+            //                    break;
 
-                            case LinkDirections.Right:
-                                if (c.x < window.Position.x) interior = true;
-                                break;
+            //                case LinkDirections.Right:
+            //                    if (c.x < window.Position.x) interior = true;
+            //                    break;
 
-                            case LinkDirections.Down:
-                                if (c.z > window.Position.z) interior = true;
-                                break;
+            //                case LinkDirections.Down:
+            //                    if (c.z > window.Position.z) interior = true;
+            //                    break;
 
-                            case LinkDirections.Left:
-                                if (c.x > window.Position.x) interior = true;
-                                break;
+            //                case LinkDirections.Left:
+            //                    if (c.x > window.Position.x) interior = true;
+            //                    break;
 
-                            case LinkDirections.None:
-                                break;
-                        }
-                        if (interior)
-                        {
-                            WindowCells.Add(c);
-                        }
-                    }
-                }
-            }
+            //                case LinkDirections.None:
+            //                    break;
+            //            }
+            //            if (interior)
+            //            {
+            //                WindowCells.Add(c);
+            //            }
+            //        }
+            //    }
+            //}
 
-            /*
-             * These are awful, you iterate over huge ranges for pretty much nothing.
-             *  This is easily fixable by:
-             *  A. Cache your reflection! - DONE!
-             *  B. Instead of hacking past these functions, let them run, and use yours as additionals, why make yourself do more work?
-             */
             if (HarmonyPatches.DubsSkylights)
             {
                 bool[] DubsSkylights_skyLightGrid = (bool[])DubsSkylights_skylightGridinfo.GetValue(MapCompInfo.Invoke(map, new[] { DubsSkylights_type }));

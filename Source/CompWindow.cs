@@ -2,6 +2,7 @@
 using RimWorld;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEngine;
 using Verse;
 
 namespace OpenTheWindows
@@ -104,16 +105,26 @@ namespace OpenTheWindows
 
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {
-            foreach (Gizmo gizmo in base.CompGetGizmosExtra())
+            if (parent.Faction == Faction.OfPlayer)
             {
-                Command_Toggle toggle = gizmo as Command_Toggle;
-                if (toggle != null && toggle.Label == "CommandOpenCloseWindowVentLabel".Translate())
+                Building_Window window = parent as Building_Window;
+                yield return new Command_Toggle()
                 {
-                    Building_Window window = parent as Building_Window;
-                    toggle.disabled = window.autoVent;
-                }
-                yield return gizmo;
+                    hotKey = KeyBindingDefOf.Command_TogglePower,
+                    icon = (Texture2D)AccessTools.Property(typeof(CompFlickable), "CommandTex").GetValue(this),
+                    defaultLabel = Props.commandLabelKey.Translate(),
+                    defaultDesc = Props.commandDescKey.Translate(),
+                    isActive = (() => wantSwitchOn),
+                    disabled = (Props.signal == "air" || Props.signal == "both") && window.autoVent,
+                    disabledReason = "DisabledForAutoVentilation".Translate(),
+                    toggleAction = delegate ()
+                    {
+                        wantSwitchOn = !wantSwitchOn;
+                        FlickUtility.UpdateFlickDesignation(parent);
+                    }
+                };
             }
+            yield break;
         }
     }
 }
