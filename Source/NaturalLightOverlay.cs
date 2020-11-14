@@ -53,7 +53,7 @@ namespace OpenTheWindows
 
         public bool ShowCell(int index)
         {
-            return Find.CurrentMap.GetComponent<MapComp_Windows>().WindowCells.Contains(Find.CurrentMap.cellIndices.IndexToCell(index)) || !Find.CurrentMap.roofGrid.Roofed(index);
+            return Find.CurrentMap.GetComponent<MapComp_Windows>().WindowCells.ContainsKey(Find.CurrentMap.cellIndices.IndexToCell(index)) || !Find.CurrentMap.roofGrid.Roofed(index);
         }
 
         public void Update()

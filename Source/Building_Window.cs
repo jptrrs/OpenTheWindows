@@ -10,32 +10,28 @@ namespace OpenTheWindows
 {
     public class Building_Window : Building
     {
-        public LinkDirections Facing;
+        public bool autoVent = true;
         public List<IntVec3> effectArea = new List<IntVec3>();
+        public LinkDirections Facing;
         public List<IntVec3> illuminated = new List<IntVec3>();
-        public bool
-            isFacingSet = false,
-            open = true,
-            venting = false,
-            updateRequest = false,
-            autoVent = true;
-
+        public bool isFacingSet = false;
+        public bool open = true;
         public IntVec3 start, end;
-        private int
-            adjacentRoofCount,
-            nextToleranceCheckTick,
-            toleranceCheckInterval = 1000,
-            intervalMultiplierAfterAttempts = 4;
-        private float
-            closedVentFactor = 0.5f,
-            leakVentFactor = 0.1f;
+        public bool updateRequest = false;
+        public bool venting = false;
         private static float maxNeighborDistance = 20f; //Radius to search for other windows overlapping areas. Should change if we're using windows that reach more than 6 cells deep.
-        private bool
-            leaks = false,
-            recentlyOperated = false;
-
+        private int adjacentRoofCount;
+        private float closedVentFactor = 0.5f;
+        private int intervalMultiplierAfterAttempts = 4;
+        private bool leaks = false;
+        private float leakVentFactor = 0.1f;
         private CompWindow mainComp, ventComp;
+        private int nextToleranceCheckTick;
+        private int reach;
+        private bool recentlyOperated = false;
         private FloatRange targetTemp = new FloatRange(ThingDefOf.Human.GetStatValueAbstract(StatDefOf.ComfyTemperatureMin), ThingDefOf.Human.GetStatValueAbstract(StatDefOf.ComfyTemperatureMax));
+        private int toleranceCheckInterval = 1000;
+
         public Room attachedRoom
         {
             get
@@ -56,6 +52,14 @@ namespace OpenTheWindows
             }
         }
 
+        public int Reach
+        {
+            get
+            {
+                if (reach == 0) reach = WindowUtility.CalculateWindowReach(def.Size);
+                return reach;
+            }
+        }
         private int size => Math.Max(def.size.x, def.size.z);
         private IntVec3 inside
         {
@@ -113,7 +117,8 @@ namespace OpenTheWindows
             DarkenCellsCarefully();
             if (open)
             {
-                effectArea = WindowUtility.CalculateWindowLightCells(this).ToList();
+                var lightCells = WindowUtility.CalculateWindowLightCells(this);
+                effectArea = lightCells.Keys.ToList();
                 foreach (IntVec3 c in effectArea)
                 {
                     bool interior = false;
@@ -140,7 +145,7 @@ namespace OpenTheWindows
                     if (interior)
                     {
                         illuminated.Add(c);
-                        Map.GetComponent<MapComp_Windows>().IncludeTile(c);
+                        Map.GetComponent<MapComp_Windows>().IncludeTile(c, LightLevelFallOff(lightCells[c]));
                     }
                 }
             }
@@ -154,15 +159,10 @@ namespace OpenTheWindows
         {
             if (!illuminated.EnumerableNullOrEmpty())
             {
-                //Log.Message("Darkening cells for " + this + ", illuminated:" + illuminated.Count()+"...");
                 IEnumerable<Building_Window> neighbors = GenRadial.RadialDistinctThingsAround(Position, Map, maxNeighborDistance, false).Where(x => x is Building_Window && x != this).Cast<Building_Window>().Where(x => x.open && !x.illuminated.EnumerableNullOrEmpty());
-                //string testNeighbors = neighbors.EnumerableNullOrEmpty() ? "empty" : neighbors.Count().ToString();
-                //Log.Message("...neighbors: " + testNeighbors);
-                IEnumerable<IntVec3> overlap = neighbors.EnumerableNullOrEmpty() ? null : neighbors.Select(x => x.illuminated).Aggregate((l, r) => l.Union(r).ToList());
-                //string testoverlap = overlap.EnumerableNullOrEmpty() ? "empty" : overlap.Count().ToString();
-                //Log.Message("...overlap: " + testoverlap);
-                List<IntVec3> affected = overlap.EnumerableNullOrEmpty() ? illuminated : illuminated.Except(overlap).ToList();
-                //Log.Message("...affected: "+affected.Count());
+                IEnumerable<IntVec3> overlap = neighbors.EnumerableNullOrEmpty() ? null : neighbors.SelectMany(x => x.illuminated);//   .Select(x => x.illuminated.Keys).Aggregate((l, r) => l.Union(r));
+                //IEnumerable<IntVec3> overlap = neighbors.EnumerableNullOrEmpty() ? null : neighbors.SelectMany(x => x.illuminated.Keys);
+                List<IntVec3> affected = overlap.EnumerableNullOrEmpty() ? illuminated : illuminated.Intersect(overlap).ToList();
                 int count = 0;
                 foreach (IntVec3 c in affected)
                 {
@@ -170,7 +170,6 @@ namespace OpenTheWindows
                     count++;
                 }
                 illuminated.Clear();
-                //Log.Message("..."+count + " cells darkened for " + this+", illuminated:"+illuminated.Count());
             }
         }
 
@@ -178,8 +177,6 @@ namespace OpenTheWindows
         {
             Map.GetComponent<MapComp_Windows>().DeRegisterWindow(this);
             DarkenCellsCarefully();
-            //Map.GetComponent<MapComp_Windows>().RegenGrid();
-            //Map.glowGrid.MarkGlowGridDirty(Position);
             //just link it!
             if (OpenTheWindowsSettings.LinkWindows)
             {
@@ -234,7 +231,7 @@ namespace OpenTheWindows
             }
             yield return new Command_Toggle
             {
-                icon = ContentFinder<Texture2D>.Get("UI/AutoVentIcon_"+ventComp.Props.signal, true),
+                icon = ContentFinder<Texture2D>.Get("UI/AutoVentIcon_" + ventComp.Props.signal, true),
                 defaultLabel = "AutoVentilation".Translate(),
                 defaultDesc = "AutoVentilationDesc".Translate(),
                 isActive = (() => autoVent),
@@ -427,6 +424,14 @@ namespace OpenTheWindows
                 }
             }
             base.TickRare();
+        }
+
+        private float LightLevelFallOff(int step)
+        {
+            int y = 12 / Reach;
+            double result = 1 / Math.Pow(y,step-1);
+            Log.Message("DEBUG falloff(" + step + ") for reach " + Reach + " = " + result);
+            return (float)result;
         }
     }
 }

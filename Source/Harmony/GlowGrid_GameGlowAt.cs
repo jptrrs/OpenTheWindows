@@ -18,10 +18,10 @@ namespace OpenTheWindows
 
             try
             {
-                if (__result < 1f && comp.WindowCells.Contains(c))
+                if (__result < 1f && comp.WindowCells.ContainsKey(c))
                 {
-                    float x = Mathf.Max(0f, map.skyManager.CurSkyGlow * OpenTheWindowsSettings.LightTransmission/*WindowFiltering()*/);
-                    __result = Mathf.Max(__result, x);
+                    float x = Mathf.Max(0f, map.skyManager.CurSkyGlow * comp.WindowCells[c]/*OpenTheWindowsSettings.LightTransmission*//*WindowFiltering()*/);
+                    __result = x;// Mathf.Max(__result, x);
                 }
             }
             catch (Exception e) // if you are catching err's you might as well explain them.

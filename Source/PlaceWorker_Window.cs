@@ -11,7 +11,8 @@ namespace OpenTheWindows
             Map currentMap = Find.CurrentMap;
             IntVec3 start = WindowUtility.FindEnd(center, rot, def.size, false);
             IntVec3 end = WindowUtility.FindEnd(center, rot, def.size, true);
-            GenDraw.DrawFieldEdges(WindowUtility.CalculateWindowLightCells(def.size, center, rot, currentMap, start, end).ToList());
+            int reach = WindowUtility.CalculateWindowReach(def.size);
+            GenDraw.DrawFieldEdges(WindowUtility.CalculateWindowLightCells(def.size, reach, center, rot, currentMap, start, end).Keys.ToList());
         }
     }
 }

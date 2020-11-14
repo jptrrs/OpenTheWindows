@@ -31,7 +31,7 @@ namespace OpenTheWindows
                 stateDirty = false;
             }
 
-            foreach (IntVec3 cell in windowComponent.WindowCells)
+            foreach (IntVec3 cell in windowComponent.WindowCells.Keys)
             {
                 var index = map.cellIndices.CellToIndex(cell);
                 changedRoofs.Add(cell, roofRef[index]);

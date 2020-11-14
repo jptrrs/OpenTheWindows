@@ -11,7 +11,8 @@ namespace OpenTheWindows
         public List<Building_Window> cachedWindows = new List<Building_Window>();
         public bool updateRequest = false;
         public bool roofUpdateRequest = false;
-        public HashSet<IntVec3> WindowCells;
+        //public HashSet<IntVec3> WindowCells;
+        public Dictionary<IntVec3,float> WindowCells;
         public int[] WindowScanGrid;
 
         private Type DubsSkylights_type;
@@ -20,18 +21,19 @@ namespace OpenTheWindows
         private Type ExpandedRoofing_type;
         private FieldInfo ExpandedRoofing_roofTransparentInfo;
 
-        public void IncludeTile(IntVec3 tile)
+        public void IncludeTile(IntVec3 tile, float falloff)
         {
-            if (!WindowCells.Contains(tile))
+            if (!WindowCells.ContainsKey(tile))
             {
-                WindowCells.Add(tile);
+                WindowCells.Add(tile, falloff);
                 map.glowGrid.MarkGlowGridDirty(tile);
             }
+            Log.Message("DEBUG added window cell " + tile + " with level " + falloff);
         }
 
         public void ExcludeTile(IntVec3 tile)
         {
-            if (WindowCells.Contains(tile))
+            if (WindowCells.ContainsKey(tile))
             {
                 WindowCells.Remove(tile);
                 map.glowGrid.MarkGlowGridDirty(tile);
@@ -41,7 +43,7 @@ namespace OpenTheWindows
         public MapComp_Windows(Map map) : base(map)
         {
             WindowScanGrid = new int[map.cellIndices.NumGridCells];
-            WindowCells = new HashSet<IntVec3>();
+            WindowCells = new Dictionary<IntVec3, float>();//HashSet<IntVec3>();
             if (HarmonyPatches.DubsSkylights)
             {
                 DubsSkylights_type = AccessTools.TypeByName("Dubs_Skylight.MapComp_Skylights");
@@ -138,7 +140,7 @@ namespace OpenTheWindows
                 {
                     if (DubsSkylights_skyLightGrid[i] == true)
                     {
-                        WindowCells.Add(map.cellIndices.IndexToCell(i));
+                        WindowCells.Add(map.cellIndices.IndexToCell(i), 0.9f);
                     }
                 }
             }
@@ -150,7 +152,7 @@ namespace OpenTheWindows
                 {
                     if (map.roofGrid.RoofAt(i) == roofTransparent)
                     {
-                        WindowCells.Add(map.cellIndices.IndexToCell(i));
+                        WindowCells.Add(map.cellIndices.IndexToCell(i), 0.9f);
                     }
                 }
             }
@@ -168,7 +170,6 @@ namespace OpenTheWindows
         private void SetWindowScanArea(Building_Window window, bool register)
         {
             Map map = window.Map;
-            int deep = WindowUtility.deep;
             int reach = Math.Max(window.def.size.x, window.def.size.z) / 2 + 1;
             int delta = register ? 1 : -1;
 
@@ -179,7 +180,7 @@ namespace OpenTheWindows
                 {
                     int cellx = c.x;
                     int cellz = c.z;
-                    for (int i = 1; i <= +reach + deep; i++)
+                    for (int i = 1; i <= + window.Reach; i++)
                     {
                         if (window.Rotation.IsHorizontal)
                         {
