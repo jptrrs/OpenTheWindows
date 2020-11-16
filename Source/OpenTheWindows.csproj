@@ -68,6 +68,8 @@
     <Compile Include="Harmony\CompFlickable.cs" />
     <Compile Include="Harmony\CoverUtility_BaseBlockChance.cs" />
     <Compile Include="Harmony\GenGrid_CanBeSeenOvercs.cs" />
+    <Compile Include="Harmony\RegionTypeUtility_GetExpectedRegionType.cs" />
+    <Compile Include="Harmony\Region_Allows.cs" />
     <Compile Include="Harmony\GlowGrid_GameGlowAt.cs" />
     <Compile Include="Harmony\HarmonyPatches.cs" />
     <Compile Include="Harmony\LightingOverlay_Regenerate.cs" />

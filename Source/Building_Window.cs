@@ -18,7 +18,7 @@ namespace OpenTheWindows
             open = true,
             venting = false,
             updateRequest = false,
-            autoVent = true;
+            autoVent = false;
 
         public IntVec3 start, end;
         private int
@@ -196,6 +196,7 @@ namespace OpenTheWindows
             Scribe_Values.Look<bool>(ref open, "open", true, false);
             Scribe_Values.Look<bool>(ref venting, "venting", false, false);
             Scribe_Values.Look<bool>(ref isFacingSet, "isFacingSet", true, false);
+            Scribe_Values.Look<bool>(ref autoVent, "autoVent", false, false);
             Scribe_Values.Look<LinkDirections>(ref Facing, "Facing", LinkDirections.None, false);
         }
 
