@@ -14,6 +14,7 @@ namespace OpenTheWindows
 
         public override void DoSettingsWindowContents(Rect inRect)
         {
+            //Rect compact = new Rect(inRect.position, inRect.size / 2);
             OpenTheWindowsSettings.DoWindowContents(inRect);
         }
 
@@ -48,37 +49,53 @@ namespace OpenTheWindows
 
         public static bool IsBeautyOn = false;
 
+        public static bool BeautyFromBuildings = false;
+
         public static bool LinkWindows = true;
 
         public static bool LinkVents = true;
 
         public static void DoWindowContents(Rect inRect)
         {
-            Listing_Standard listing = new Listing_Standard();
-            listing.Begin(inRect);
+            float padding = 15f;
+            //float vertLimit = 0.75f;
+            float footer = 60f;
+            Rect leftSide = new Rect(inRect.x, inRect.y, (inRect.width - padding) / 2, inRect.height - footer);
+            Vector2 rightStart = new Vector2(leftSide.max.x + padding, inRect.y);
+            Rect rigthSide = new Rect(rightStart, leftSide.size);
+
+            string resetBtnText = "Reset";
+            float resetBtnWidth = resetBtnText.GetWidthCached() * 2;
+            Vector2 resetBtnPos = new Vector2((inRect.max.x - resetBtnWidth) / 2, inRect.max.y - footer);
+            Vector2 resetBtnSize = new Vector2(resetBtnWidth, footer);
+            Rect resetButtonRect = new Rect(resetBtnPos,resetBtnSize);
+
+            Listing_Standard leftColumn = new Listing_Standard();
+            leftColumn.Begin(leftSide);
 
             //Outdoors need acceleration
             string label = "IndoorsNoNaturalLightPenalty".Translate() + ": " + IndoorsNoNaturalLightPenalty.ToStringDecimalIfSmall() + "x";
-            string desc = ("IndoorsNoNaturalLightPenaltyDesc").Translate();
-            listing.Label(label, -1f, desc);
-            IndoorsNoNaturalLightPenalty = listing.Slider(IndoorsNoNaturalLightPenalty, 1f, 10f);
-            listing.Gap(12f);
+            string desc = "IndoorsNoNaturalLightPenaltyDesc".Translate();
+            leftColumn.Label(label, -1f, desc);
+            IndoorsNoNaturalLightPenalty = leftColumn.Slider(IndoorsNoNaturalLightPenalty, 1f, 10f);
+            leftColumn.Gap(12f);
 
             //Light transmission through windows
             string labelNoteOnSkylights = (HarmonyPatches.DubsSkylights || HarmonyPatches.ExpandedRoofing) ? " (" + "LightTransmissionIncludesRoofs".Translate() + ")" : null;
             string label2 = "LightTransmission".Translate() + labelNoteOnSkylights + ": " + LightTransmission.ToStringPercent();
-            string desc2 = ("LightTransmissionDesc").Translate();
-            listing.Label(label2, -1f, desc2);
-            LightTransmission = listing.Slider(LightTransmission, 0f, 1f);
+            string desc2 = "LightTransmissionDesc".Translate();
+            leftColumn.Label(label2, -1f, desc2);
+            LightTransmission = leftColumn.Slider(LightTransmission, 0f, 1f);
 
             //Beauty sensitivity reduction
             if (IsBeautyOn)
             {
-                listing.Gap(12f);
+                leftColumn.Gap(12f);
                 string label3 = "BeautySensitivityReduction".Translate() + ": " + BeautySensitivityReduction.ToStringPercent();
-                string desc3 = ("BeautySensitivityReductionDesc").Translate();
-                listing.Label(label3, -1f, desc3);
-                BeautySensitivityReduction = listing.Slider(BeautySensitivityReduction, 0f, 1f);
+                string desc3 = "BeautySensitivityReductionDesc".Translate();
+                leftColumn.Label(label3, -1f, desc3);
+                BeautySensitivityReduction = leftColumn.Slider(BeautySensitivityReduction, 0f, 1f);
+                leftColumn.CheckboxLabeled("BeautyFromBuildings".Translate(), ref BeautyFromBuildings, "BeautyFromBuildingsDesc".Translate());
             }
 
             ////Performance adjust
@@ -87,21 +104,28 @@ namespace OpenTheWindows
             //string desc4 = ("UpdateIntervalDesc").Translate();
             //listing.Label(label4, -1f, desc4);
             //UpdateInterval = listing.Slider(UpdateInterval, 1f, 10f);
+            //leftColumn.Gap(12f);
+            leftColumn.End();
 
-            listing.Gap(12f);
-            listing.Label(("LinkOptionsLabel").Translate() + " (" + ("RequiresRestart").Translate() + "):");
-            listing.GapLine();
-            listing.CheckboxLabeled(("LinkWindowsAndWalls").Translate(), ref LinkWindows);
+            Listing_Standard rightColumn = new Listing_Standard();
+            rightColumn.Begin(rigthSide);
+            rightColumn.Label(("LinkOptionsLabel").Translate() + " (" + ("RequiresRestart").Translate() + "):");
+            rightColumn.GapLine();
+            rightColumn.CheckboxLabeled(("LinkWindowsAndWalls").Translate(), ref LinkWindows);
             if (LoadedModManager.RunningModsListForReading.Any(x => x.Name.Contains("RimFridge")))
             {
-                listing.CheckboxLabeled(("LinkFridgesAndWalls").Translate(), ref LinkVents);
+                rightColumn.CheckboxLabeled(("LinkFridgesAndWalls").Translate(), ref LinkVents);
             }
             else
             {
-                listing.CheckboxLabeled(("LinkVentsAndWalls").Translate(), ref LinkVents);
+                rightColumn.CheckboxLabeled(("LinkVentsAndWalls").Translate(), ref LinkVents);
             }
-            listing.Gap(24f);
-            if (listing.ButtonText("Reset", null))
+            rightColumn.End();
+
+            Listing_Standard bottomBar = new Listing_Standard();
+            bottomBar.Begin(resetButtonRect);
+            bottomBar.Gap(24f);
+            if (bottomBar.ButtonText(resetBtnText, null))
             {
                 IndoorsNoNaturalLightPenalty = indoorsNoNaturalLightPenaltyDefault;
                 BeautySensitivityReduction = beautySensitivityReductionDefault;
@@ -109,8 +133,9 @@ namespace OpenTheWindows
                 LinkWindows = true;
                 LinkVents = true;
                 //UpdateInterval = UpdateIntervalDefault;
+                BeautyFromBuildings = false;
             }
-            listing.End();
+            bottomBar.End();
         }
 
         public override void ExposeData()

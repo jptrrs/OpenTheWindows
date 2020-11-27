@@ -125,15 +125,12 @@ namespace OpenTheWindows
                         case LinkDirections.Right:
                             if (c.x < Position.x) interior = true;
                             break;
-
                         case LinkDirections.Down:
                             if (c.z > Position.z) interior = true;
                             break;
-
                         case LinkDirections.Left:
                             if (c.x > Position.x) interior = true;
                             break;
-
                         case LinkDirections.None:
                             break;
                     }
