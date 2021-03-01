@@ -39,6 +39,7 @@
         <li>Rock</li>
       </linkFlags>
     </graphicData>
+    <pathCost>50</pathCost>
 
   </ThingDef>
 

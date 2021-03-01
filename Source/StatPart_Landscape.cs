@@ -31,59 +31,32 @@ namespace OpenTheWindows
             return;
         }
 
-        public static float WindowViewBeauty(Building_Window window)
+        public float WindowViewBeauty(Building_Window window)
         {
             if (window != null && window.open && window.isFacingSet && window.effectArea.Count > 0)
             {
-                //List<IntVec3> view = new List<IntVec3>();
-                //foreach (IntVec3 c in window.effectArea)
-                //{
-                //    switch (window.Facing)
-                //    {
-                //        case LinkDirections.Up:
-                //            if (c.z > window.Position.z) view.Add(c);
-                //            break;
-
-                //        case LinkDirections.Right:
-                //            if (c.x > window.Position.x) view.Add(c);
-                //            break;
-
-                //        case LinkDirections.Down:
-                //            if (c.z < window.Position.z) view.Add(c);
-                //            break;
-
-                //        case LinkDirections.Left:
-                //            if (c.x < window.Position.x) view.Add(c);
-                //            break;
-
-                //        case LinkDirections.None:
-                //            break;
-                //    }
-                //}
                 IEnumerable<IntVec3> view = window.effectArea.Except(window.illuminated);
                 float result = 0;
+                List<Thing> counted = new List<Thing>();
                 foreach (IntVec3 c in view)
                 {
-                    List<Thing> viewed = window.Map.thingGrid.ThingsListAt(c).Where(BeautyFilter).ToList();
-                    result += BeautyUtility.CellBeauty(c, window.Map, viewed);
+                    var things = window.Map.thingGrid.ThingsListAt(c).Except(counted);
+                    var skipped = things.Where(FilterOut);
+                    result += BeautyUtility.CellBeauty(c, window.Map, skipped.Union(counted).ToList());
+                    counted.AddRange(things);
                 }
                 return result;
             }
             return 0f;
         }
 
-        private static Func<Thing, bool> BeautyFilter = (t) =>
+        private static Func<Thing, bool> FilterOut = (t) =>
         {
             if (t.def.category == ThingCategory.Building)
             {
-                return OpenTheWindowsSettings.BeautyFromBuildings && !(t is Building_Window);
+                return t is Building_Window || !OpenTheWindowsSettings.BeautyFromBuildings;
             }
-            else return true;
+            else return false;
         };
-
-        private static List<Thing> ThingsListAt()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
