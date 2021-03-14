@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <ThingDef ParentName="WindowBase">
+    <defName>TestWindow</defName>
+    <label>Test Window</label>
+    <description>A simple shutter that lets light and air in when open. But even closed it doesn't provide good insulation. Comes with a view.</description>
+    <graphicData>
+      <texPath>Things/Building/SimpleWindow</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+      </damageData>
+    </graphicData>
+    <uiIconPath>Things/Building/SimpleWindow_north</uiIconPath>
+    <stuffCategories>
+      <li>Woody</li>
+    </stuffCategories>
+    <statBases>
+      <WorkToBuild>850</WorkToBuild>
+      <MaxHitPoints>100</MaxHitPoints>
+    </statBases>
+    <size>(1,1)</size>
+    <costStuffCount>25</costStuffCount>
+    <comps>
+      <li Class="OpenTheWindows.CompProperties_Window">
+        <commandTexture>UI/OpenWindows</commandTexture>
+        <commandLabelKey>CommandDesignateOpenCloseWindowLabel</commandLabelKey>
+        <commandDescKey>CommandDesignateOpenCloseWindowDesc</commandDescKey>
+        <signal>both</signal>
+        <automated>true</automated>
+      </li>
+    </comps>
+  </ThingDef>
+
+</Defs>

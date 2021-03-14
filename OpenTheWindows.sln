@@ -13,12 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "About", "About", "{16927B3F
 		About\PublishedFileId.txt = About\PublishedFileId.txt
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Defs", "Defs", "{F4747257-DA26-4AB1-8368-C13026D10387}"
-	ProjectSection(SolutionItems) = preProject
-		Defs\ResearchProjects.xml = Defs\ResearchProjects.xml
-		Defs\Things.xml = Defs\Things.xml
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Textures", "Textures", "{8114C043-1A94-4248-927F-36E71DA53641}"
 	ProjectSection(SolutionItems) = preProject
 		Textures\NaturalLightMap.png = Textures\NaturalLightMap.png
@@ -184,6 +178,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patches", "Patches", "{4177
 		Patches\Patches_Glass+Lights.xml = Patches\Patches_Glass+Lights.xml
 		Patches\Patches_JustGlass.xml = Patches\Patches_JustGlass.xml
 		Patches\Patches_RimFridge.xml = Patches\Patches_RimFridge.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Defs", "Defs", "{F6777F35-8912-4D90-B6BB-B2CF2F898A18}"
+	ProjectSection(SolutionItems) = preProject
+		Defs\ResearchProjects.xml = Defs\ResearchProjects.xml
+		Defs\Things.xml = Defs\Things.xml
+		Defs\Things_Test.xml = Defs\Things_Test.xml
 	EndProjectSection
 EndProject
 Global

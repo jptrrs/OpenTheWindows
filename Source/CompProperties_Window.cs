@@ -10,6 +10,6 @@ namespace OpenTheWindows
         }
 
         public string signal = "";
-        public bool startsOn = true;
+        public bool automated = false;
     }
 }

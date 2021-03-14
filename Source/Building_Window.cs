@@ -104,6 +104,7 @@ namespace OpenTheWindows
             }
         }
         private float ventRate => size * 14f;
+        
         public void CastLight()
         {
             DarkenCellsCarefully();
@@ -304,6 +305,7 @@ namespace OpenTheWindows
 
         public override void ReceiveCompSignal(string signal)
         {
+            Log.Message($"{this} received a signal");
             bool needsupdate = false;
             if (signal == "lightOff" || signal == "bothOff")
             {
@@ -399,15 +401,21 @@ namespace OpenTheWindows
                         }
                         if (doFlick)
                         {
-                            recentlyOperated = true;
-                            ventComp.AutoFlickRequest();
+                            if (ventComp.Props.automated)
+                            {
+                                ventComp.DoFlick();
+                            }
+                            else
+                            {
+                                recentlyOperated = true;
+                                ventComp.AutoFlickRequest();
+                            }
                         }
                         nextToleranceCheckTick = ticksGame + toleranceCheckInterval;
                     }
                 }
                 else if (ticksGame >= nextToleranceCheckTick + (toleranceCheckInterval * intervalMultiplierAfterAttempts) || targetTemp.Includes(insideTemp))
                 {
-
                     if (recentlyOperated) recentlyOperated = false;
                 }
             }
