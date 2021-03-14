@@ -17,7 +17,7 @@ namespace OpenTheWindows
         }
     }
 
-    [HarmonyPatch(typeof(PathFinder), nameof(PathFinder.PfProfilerEndSample))]
+    //[HarmonyPatch(typeof(PathFinder), nameof(PathFinder.PfProfilerEndSample))]
     public static class PathFinder_PfProfilerEndSample
     {
         public static void Prefix(FastPriorityQueue<PathFinder.CostNode> ___openList)

@@ -8,7 +8,7 @@ using Verse;
 
 namespace OpenTheWindows
 {
-    public class Building_Window : Building
+    public class Building_Window : Building_Door
     {
         public LinkDirections Facing;
         public List<IntVec3> effectArea = new List<IntVec3>();
@@ -19,7 +19,6 @@ namespace OpenTheWindows
             venting = false,
             updateRequest = false,
             autoVent = false;
-
         public IntVec3 start, end;
         private int
             adjacentRoofCount,
@@ -33,8 +32,9 @@ namespace OpenTheWindows
         private bool
             leaks = false,
             recentlyOperated = false;
-
-        private CompWindow mainComp, ventComp;
+        private CompWindow 
+            mainComp, 
+            ventComp;
         private FloatRange targetTemp = new FloatRange(ThingDefOf.Human.GetStatValueAbstract(StatDefOf.ComfyTemperatureMin), ThingDefOf.Human.GetStatValueAbstract(StatDefOf.ComfyTemperatureMax));
         public Room attachedRoom
         {
@@ -47,7 +47,6 @@ namespace OpenTheWindows
                 return null;
             }
         }
-
         public override Graphic Graphic
         {
             get
@@ -55,7 +54,6 @@ namespace OpenTheWindows
                 return mainComp.CurrentGraphic;
             }
         }
-
         private int size => Math.Max(def.size.x, def.size.z);
         private IntVec3 inside
         {
@@ -81,7 +79,6 @@ namespace OpenTheWindows
                 return IntVec3.Zero;
             }
         }
-
         private IntVec3 outside
         {
             get
@@ -106,7 +103,6 @@ namespace OpenTheWindows
                 return IntVec3.Zero;
             }
         }
-
         private float ventRate => size * 14f;
         public void CastLight()
         {
@@ -151,15 +147,9 @@ namespace OpenTheWindows
         {
             if (!illuminated.EnumerableNullOrEmpty())
             {
-                //Log.Message("Darkening cells for " + this + ", illuminated:" + illuminated.Count()+"...");
                 IEnumerable<Building_Window> neighbors = GenRadial.RadialDistinctThingsAround(Position, Map, maxNeighborDistance, false).Where(x => x is Building_Window && x != this).Cast<Building_Window>().Where(x => x.open && !x.illuminated.EnumerableNullOrEmpty());
-                //string testNeighbors = neighbors.EnumerableNullOrEmpty() ? "empty" : neighbors.Count().ToString();
-                //Log.Message("...neighbors: " + testNeighbors);
                 IEnumerable<IntVec3> overlap = neighbors.EnumerableNullOrEmpty() ? null : neighbors.Select(x => x.illuminated).Aggregate((l, r) => l.Union(r).ToList());
-                //string testoverlap = overlap.EnumerableNullOrEmpty() ? "empty" : overlap.Count().ToString();
-                //Log.Message("...overlap: " + testoverlap);
                 List<IntVec3> affected = overlap.EnumerableNullOrEmpty() ? illuminated : illuminated.Except(overlap).ToList();
-                //Log.Message("...affected: "+affected.Count());
                 int count = 0;
                 foreach (IntVec3 c in affected)
                 {
@@ -167,7 +157,6 @@ namespace OpenTheWindows
                     count++;
                 }
                 illuminated.Clear();
-                //Log.Message("..."+count + " cells darkened for " + this+", illuminated:"+illuminated.Count());
             }
         }
 
@@ -175,8 +164,6 @@ namespace OpenTheWindows
         {
             Map.GetComponent<MapComp_Windows>().DeRegisterWindow(this);
             DarkenCellsCarefully();
-            //Map.GetComponent<MapComp_Windows>().RegenGrid();
-            //Map.glowGrid.MarkGlowGridDirty(Position);
             //just link it!
             if (OpenTheWindowsSettings.LinkWindows)
             {
@@ -196,7 +183,7 @@ namespace OpenTheWindows
             Scribe_Values.Look<bool>(ref autoVent, "autoVent", false, false);
             Scribe_Values.Look<LinkDirections>(ref Facing, "Facing", LinkDirections.None, false);
         }
-
+         
         public Direction8Way FacingCardinal()
         {
             Direction8Way dir = new Direction8Way() { };
@@ -228,11 +215,11 @@ namespace OpenTheWindows
         {
             foreach (Gizmo gizmo in base.GetGizmos())
             {
-                yield return gizmo;
+                if (!(gizmo is Command_Toggle toggle && toggle.icon == TexCommand.HoldOpen)) yield return gizmo;
             }
             yield return new Command_Toggle
             {
-                icon = ContentFinder<Texture2D>.Get("UI/AutoVentIcon_"+ventComp.Props.signal, true),
+                icon = ContentFinder<Texture2D>.Get("UI/AutoVentIcon_" + ventComp.Props.signal, true),
                 defaultLabel = "AutoVentilation".Translate(),
                 defaultDesc = "AutoVentilationDesc".Translate(),
                 isActive = (() => autoVent),
@@ -426,5 +413,13 @@ namespace OpenTheWindows
             }
             base.TickRare();
         }
+
+        #region adapting as door
+        public new bool openInt = false;
+        public override bool PawnCanOpen(Pawn p)
+        {
+            return false;
+        }
+        #endregion  x
     }
 }

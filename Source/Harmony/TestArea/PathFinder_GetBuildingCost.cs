@@ -5,7 +5,7 @@ using Verse.AI;
 
 namespace OpenTheWindows
 {
-    //[HarmonyPatch(typeof(PathFinder), nameof(PathFinder.GetBuildingCost))]
+    [HarmonyPatch(typeof(PathFinder), nameof(PathFinder.GetBuildingCost))]
     public static class PathFinder_GetBuildingCost
     {
         public static void Postfix(Building b, TraverseParms traverseParms, Pawn pawn, ref int __result)
@@ -27,6 +27,7 @@ namespace OpenTheWindows
                         {
                             __result = int.MaxValue;
                         }
+                        //__result = int.MaxValue;
                         break;
                     case TraverseMode.NoPassClosedDoors:
                     case TraverseMode.NoPassClosedDoorsOrWater:
@@ -43,7 +44,7 @@ namespace OpenTheWindows
             //testing
             if (b != null && (b as Building_Door != null || b as Building_Window != null))
             {
-                Log.Message("DEBUG PathFinder.GetBuildingCost: building cost for " + b + ": " + __result);
+                Log.Message($"DEBUG PathFinder.GetBuildingCost: building cost for {b} (on mode {traverseParms.mode}): {__result}");
             }
 
         }
