@@ -162,7 +162,7 @@ namespace OpenTheWindows
             {
                 Building_Window window = parent as Building_Window;
                 bool ifAutovent = (Props.signal == "air" || Props.signal == "both") && window.autoVent;
-                bool ifAlarm = window.alarmReact && AlertManagerProxy.OnAlert();
+                bool ifAlarm = window.alarmReact && AlertManagerProxy.onAlert;
                 return ifAutovent || ifAlarm;
             }
         }

@@ -184,11 +184,14 @@ namespace OpenTheWindows
             Scribe_Values.Look<bool>(ref venting, "venting", false, false);
             Scribe_Values.Look<bool>(ref isFacingSet, "isFacingSet", true, false);
             Scribe_Values.Look<bool>(ref autoVent, "autoVent", false, false);
-            Scribe_Values.Look<bool>(ref alarmReact, "alarmReact", true, false);
-            Scribe_Values.Look<bool>(ref emergencyShut, "emergencyShut", false, false);
             Scribe_Values.Look<LinkDirections>(ref Facing, "Facing", LinkDirections.None, false);
+            if (HarmonyPatcher.BetterPawnControl)
+            {
+                Scribe_Values.Look<bool>(ref emergencyShut, "emergencyShut", false, false);
+                Scribe_Values.Look<bool>(ref alarmReact, "alarmReact", true, false);
+            }
         }
-         
+
         public Direction8Way FacingCardinal()
         {
             Direction8Way dir = new Direction8Way() { };
@@ -245,7 +248,7 @@ namespace OpenTheWindows
                     toggleAction = delegate ()
                     {
                         alarmReact = !alarmReact;
-                        if (AlertManagerProxy.OnAlert())
+                        if (AlertManagerProxy.onAlert)
                         {
                             mainComp.FlickFor(!open);
                         }
