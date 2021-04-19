@@ -144,7 +144,7 @@ namespace OpenTheWindows
                     icon = (Texture2D)AccessTools.Property(typeof(CompFlickable), "CommandTex").GetValue(this),
                     defaultLabel = Props.commandLabelKey.Translate(),
                     defaultDesc = Props.commandDescKey.Translate() + ManualNote,
-                    isActive = (() => wantSwitchOn),
+                    isActive = () => wantSwitchOn,
                     disabled = GizmoDisable,
                     disabledReason = window.alarmReact ? "DisabledByEmergency".Translate() : "DisabledForAutoVentilation".Translate(),
                     toggleAction = delegate ()

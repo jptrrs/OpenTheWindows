@@ -230,7 +230,9 @@ namespace OpenTheWindows
                 icon = ContentFinder<Texture2D>.Get("UI/AutoVentIcon_" + ventComp.Props.signal, true),
                 defaultLabel = "AutoVentilation".Translate(),
                 defaultDesc = "AutoVentilationDesc".Translate(),
-                isActive = (() => autoVent),
+                isActive = () => autoVent,
+                disabled = alarmReact && AlertManagerProxy.onAlert,
+                disabledReason = "DisabledByEmergency".Translate(),
                 toggleAction = delegate ()
                 {
                     autoVent = !autoVent;
@@ -244,7 +246,7 @@ namespace OpenTheWindows
                     iconDrawScale = 0.75f,
                     defaultLabel = "CommandCloseOnEmergency".Translate(),
                     defaultDesc = "CommandCloseOnEmergencyDesc".Translate() + mainComp.ManualNote,
-                    isActive = (() => alarmReact),
+                    isActive = () => alarmReact,
                     toggleAction = delegate ()
                     {
                         alarmReact = !alarmReact;
@@ -407,7 +409,7 @@ namespace OpenTheWindows
                 GenTemperature.EqualizeTemperaturesThroughBuilding(this, vent, true);
             }
             //autoVent
-            if (autoVent && isFacingSet && attachedRoom != null && !attachedRoom.UsesOutdoorTemperature)
+            if (autoVent && !emergencyShut && isFacingSet && attachedRoom != null && !attachedRoom.UsesOutdoorTemperature)
             {
                 float insideTemp = attachedRoom.Temperature;
                 int ticksGame = Find.TickManager.TicksGame;
