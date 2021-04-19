@@ -19,7 +19,7 @@ namespace OpenTheWindows
             venting = false,
             updateRequest = false,
             autoVent = false,
-            alarmReact = false,
+            alarmReact = OpenTheWindowsSettings.AlarmReactDefault,
             emergencyShut = false;
         public IntVec3 start, end;
         private int
@@ -188,7 +188,7 @@ namespace OpenTheWindows
             if (HarmonyPatcher.BetterPawnControl)
             {
                 Scribe_Values.Look<bool>(ref emergencyShut, "emergencyShut", false, false);
-                Scribe_Values.Look<bool>(ref alarmReact, "alarmReact", true, false);
+                Scribe_Values.Look<bool>(ref alarmReact, "alarmReact", OpenTheWindowsSettings.AlarmReactDefault, false);
             }
         }
 

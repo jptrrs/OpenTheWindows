@@ -35,21 +35,18 @@ namespace OpenTheWindows
             IndoorsNoNaturalLightPenaltyDefault = 3f, //indoors accelerated degradation when not under windows
             BeautySensitivityReductionDefault = 0.25f, // zero for vanilla
             LightTransmissionDefault = 0.9f; // light actually transmitted through windows
-            //UpdateIntervalDefault = 1.0f; // affects tick functions on overlays.
 
         public static float 
             IndoorsNoNaturalLightPenalty = IndoorsNoNaturalLightPenaltyDefault,
             BeautySensitivityReduction = BeautySensitivityReductionDefault,
             LightTransmission = LightTransmissionDefault;
-            //UpdateInterval = UpdateIntervalDefault;
 
         public static bool 
             IsBeautyOn = false,
             BeautyFromBuildings = false,
             LinkWindows = true,
-            LinkVents = true;
-
-        //private static IntRange ComfortTempDefault;
+            LinkVents = true,
+            AlarmReactDefault = false;
 
         private static IntRange _comfortTemp;
 
@@ -122,7 +119,7 @@ namespace OpenTheWindows
             string desc = "IndoorsNoNaturalLightPenaltyDesc".Translate();
             leftColumn.Label(label, -1f, desc);
             IndoorsNoNaturalLightPenalty = leftColumn.Slider(IndoorsNoNaturalLightPenalty, 1f, 10f);
-            leftColumn.Gap(12f);
+            leftColumn.Gap();
 
             //Light transmission through windows
             string labelNoteOnSkylights = (HarmonyPatcher.DubsSkylights || HarmonyPatcher.ExpandedRoofing) ? $" ({"LightTransmissionIncludesRoofs".Translate()})" : null;
@@ -130,7 +127,7 @@ namespace OpenTheWindows
             string desc2 = "LightTransmissionDesc".Translate();
             leftColumn.Label(label2, -1f, desc2);
             LightTransmission = leftColumn.Slider(LightTransmission, 0f, 1f);
-            leftColumn.Gap(12f);
+            leftColumn.Gap();
 
             //Temperature comfort range for auto-ventilation
             string label3 = "ComfortableTemperature".Translate();
@@ -142,7 +139,7 @@ namespace OpenTheWindows
             //Beauty sensitivity reduction
             if (IsBeautyOn)
             {
-                leftColumn.Gap(12f);
+                leftColumn.Gap();
                 string label4 = $"{"BeautySensitivityReduction".Translate()}: {BeautySensitivityReduction.ToStringPercent()}";
                 string desc4 = "BeautySensitivityReductionDesc".Translate();
                 leftColumn.Label(label4, -1f, desc4);
@@ -150,28 +147,32 @@ namespace OpenTheWindows
                 leftColumn.CheckboxLabeled("BeautyFromBuildings".Translate(), ref BeautyFromBuildings, "BeautyFromBuildingsDesc".Translate());
             }
 
-            ////Performance adjust
-            //listing.Gap(12f);
-            //string label4 = " ".Translate() + ": " + UpdateInterval.ToStringDecimalIfSmall() + "s";
-            //string desc4 = ("UpdateIntervalDesc").Translate();
-            //listing.Label(label4, -1f, desc4);
-            //UpdateInterval = listing.Slider(UpdateInterval, 1f, 10f);
-            //leftColumn.Gap(12f);
             leftColumn.End();
-
             Listing_Standard rightColumn = new Listing_Standard();
+
+            //Wall link options
             rightColumn.Begin(rigthSide);
             rightColumn.Label($"{"LinkOptionsLabel".Translate()} ({"RequiresRestart".Translate()}):");
             rightColumn.GapLine();
             rightColumn.CheckboxLabeled("LinkWindowsAndWalls".Translate(), ref LinkWindows);
             if (LoadedModManager.RunningModsListForReading.Any(x => x.Name.Contains("RimFridge")))
             {
-                rightColumn.CheckboxLabeled(("LinkFridgesAndWalls").Translate(), ref LinkVents);
+                rightColumn.CheckboxLabeled("LinkFridgesAndWalls".Translate(), ref LinkVents);
             }
             else
             {
-                rightColumn.CheckboxLabeled(("LinkVentsAndWalls").Translate(), ref LinkVents);
+                rightColumn.CheckboxLabeled("LinkVentsAndWalls".Translate(), ref LinkVents);
             }
+
+            //Better Pawn Control Alarm options
+            if (HarmonyPatcher.BetterPawnControl)
+            {
+                rightColumn.Gap();
+                rightColumn.Label("AlarmOptionsLabel".Translate());
+                rightColumn.GapLine();
+                rightColumn.CheckboxLabeled("AlarmReactDefault".Translate(), ref AlarmReactDefault);
+            }
+
             rightColumn.End();
 
             Listing_Standard bottomBar = new Listing_Standard();
@@ -179,16 +180,21 @@ namespace OpenTheWindows
             bottomBar.Gap(24f);
             if (bottomBar.ButtonText(resetBtnText, null))
             {
-                IndoorsNoNaturalLightPenalty = IndoorsNoNaturalLightPenaltyDefault;
-                BeautySensitivityReduction = BeautySensitivityReductionDefault;
-                LightTransmission = LightTransmissionDefault;
-                LinkWindows = true;
-                LinkVents = true;
-                //UpdateInterval = UpdateIntervalDefault;
-                BeautyFromBuildings = false;
-                ComfortTemp = ComfortTempDefault;
+                Reset();
             }
             bottomBar.End();
+        }
+
+        private static void Reset()
+        {
+            IndoorsNoNaturalLightPenalty = IndoorsNoNaturalLightPenaltyDefault;
+            BeautySensitivityReduction = BeautySensitivityReductionDefault;
+            LightTransmission = LightTransmissionDefault;
+            LinkWindows = true;
+            LinkVents = true;
+            AlarmReactDefault = false;
+            BeautyFromBuildings = false;
+            ComfortTemp = ComfortTempDefault;
         }
 
         public override void ExposeData()

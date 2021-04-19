@@ -44,5 +44,7 @@
   <LinkWindowsAndWalls>Link with the windows</LinkWindowsAndWalls>
   <LinkVentsAndWalls>Link with vents &amp; coolers</LinkVentsAndWalls>
   <LinkFridgesAndWalls>Link with vents, coolers &amp; refrigerators</LinkFridgesAndWalls>
+  <!--New--><AlarmOptionsLabel>Better Pawn Control integration</AlarmOptionsLabel>
+  <!--New--><AlarmReactDefault>Windows close on emergency by default</AlarmReactDefault>
   
 </LanguageData>
