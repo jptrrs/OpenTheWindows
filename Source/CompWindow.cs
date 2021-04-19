@@ -131,6 +131,8 @@ namespace OpenTheWindows
             if (state != SwitchIsOn) AutoFlickRequest();
         }
 
+        public string ManualNote => Props.automated ? "" : $" {"ManualCommandNote".Translate()}";
+
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {
             if (parent.Faction == Faction.OfPlayer)
@@ -141,7 +143,7 @@ namespace OpenTheWindows
                     hotKey = KeyBindingDefOf.Command_TogglePower,
                     icon = (Texture2D)AccessTools.Property(typeof(CompFlickable), "CommandTex").GetValue(this),
                     defaultLabel = Props.commandLabelKey.Translate(),
-                    defaultDesc = Props.commandDescKey.Translate(),
+                    defaultDesc = Props.commandDescKey.Translate() + ManualNote,
                     isActive = (() => wantSwitchOn),
                     disabled = GizmoDisable,
                     disabledReason = window.alarmReact ? "DisabledByEmergency".Translate() : "DisabledForAutoVentilation".Translate(),

@@ -184,6 +184,8 @@ namespace OpenTheWindows
             Scribe_Values.Look<bool>(ref venting, "venting", false, false);
             Scribe_Values.Look<bool>(ref isFacingSet, "isFacingSet", true, false);
             Scribe_Values.Look<bool>(ref autoVent, "autoVent", false, false);
+            Scribe_Values.Look<bool>(ref alarmReact, "alarmReact", true, false);
+            Scribe_Values.Look<bool>(ref emergencyShut, "emergencyShut", false, false);
             Scribe_Values.Look<LinkDirections>(ref Facing, "Facing", LinkDirections.None, false);
         }
          
@@ -237,8 +239,8 @@ namespace OpenTheWindows
                 {
                     icon = ContentFinder<Texture2D>.Get("UI/Buttons/EmergencyOn", true),
                     iconDrawScale = 0.75f,
-                    defaultLabel = "CloseOnEmergency",
-                    defaultDesc = "CloseOnEmergencyDesc",
+                    defaultLabel = "CommandCloseOnEmergency".Translate(),
+                    defaultDesc = "CommandCloseOnEmergencyDesc".Translate() + mainComp.ManualNote,
                     isActive = (() => alarmReact),
                     toggleAction = delegate ()
                     {
@@ -265,7 +267,8 @@ namespace OpenTheWindows
                 if (!open)
                 {
                     if (stringBuilder.Length > 0) stringBuilder.AppendLine();
-                    stringBuilder.Append("ClosedWindow".Translate());
+                    string closeNote = emergencyShut ? "EmergencyClosed".Translate() : "ClosedWindow".Translate();
+                    stringBuilder.Append(closeNote);
                     if (venting) stringBuilder.Append("butVenting".Translate());
                 }
                 else if (!venting)
@@ -285,7 +288,7 @@ namespace OpenTheWindows
                     stringBuilder.Append(autoVentStatus);
                 }
                 if (stringBuilder.Length > 0) stringBuilder.AppendLine();
-                stringBuilder.Append("Facing " + FacingCardinal() + ".");
+                stringBuilder.Append($"Facing {FacingCardinal()}.");
             }
             else
             {
@@ -385,7 +388,6 @@ namespace OpenTheWindows
             }
 
             //alarm setup
-            //AlertManager_LoadState.AlarmLogic alarmInt = new AlertManager_LoadState.AlarmLogic();
             AlertManager_LoadState.Alarm += EmergencyShutOff; // register with an event, handler must match template signature
         }
 
@@ -401,7 +403,7 @@ namespace OpenTheWindows
                 float vent = ventRate * leakVentFactor;
                 GenTemperature.EqualizeTemperaturesThroughBuilding(this, vent, true);
             }
-            //test
+            //autoVent
             if (autoVent && isFacingSet && attachedRoom != null && !attachedRoom.UsesOutdoorTemperature)
             {
                 float insideTemp = attachedRoom.Temperature;
@@ -466,6 +468,7 @@ namespace OpenTheWindows
             if (mustclose || mustopen)
             {
                 mainComp.AutoFlickRequest();
+                ventComp.AutoFlickRequest();
                 emergencyShut = !emergencyShut;
             }
         }

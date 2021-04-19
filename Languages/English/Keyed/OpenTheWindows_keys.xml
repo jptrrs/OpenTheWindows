@@ -2,23 +2,28 @@
 <LanguageData>
   <!--ui-->
   <ClosedWindow>Closed</ClosedWindow>
+  <!--New--><EmergencyClosed>Closed by emergency</EmergencyClosed>
   <butVenting>, but venting.</butVenting>
   <notVenting>Sealed</notVenting>
   <Facing>Facing {0}.</Facing>
   <LandscapeToThe>Landscape to the {0}</LandscapeToThe>
   <cantDetermineSides>Cannot determine which side is exterior.</cantDetermineSides>
+  <!--New--><ManualCommandNote>A colonist will come to perform the task.</ManualCommandNote>
+  <CommandDesignateOpenCloseWindowLabel>Designate Open/Close</CommandDesignateOpenCloseWindowLabel>
+  <!--Changed--><CommandDesignateOpenCloseWindowDesc>Designate this window to be open or closed.</CommandDesignateOpenCloseWindowDesc>
+  <CommandOpenCloseWindowLightLabel>Allow Light</CommandOpenCloseWindowLightLabel>
+  <!--Changed--><CommandOpenCloseWindowLightDesc>Allow or block light to pass through the window.</CommandOpenCloseWindowLightDesc>
+  <CommandOpenCloseWindowVentLabel>Allow Air</CommandOpenCloseWindowVentLabel>
+  <!--Changed--><CommandOpenCloseWindowVentDesc>Allow or block air to pass through the window.</CommandOpenCloseWindowVentDesc>
+  <!--New--><CommandAutoVentilation>Automatic ventilation</CommandAutoVentilation>
+  <!--New--><CommandAutoVentilationDesc>Mark the window for opening or closing when room temperature becomes uncomfortable.</CommandAutoVentilationDesc>
+  <!--New--><DisabledForAutoVentilation>Following automatic ventilation parameters.</DisabledForAutoVentilation>
   <!--New--><TrackingTemperature>Tracking temperature.</TrackingTemperature>
   <!--New--><WaitingTemperatureNormalization>Waiting for temperature to equalize.</WaitingTemperatureNormalization>
   <!--New--><CantTrackTemperature>Adjacent room is unroofed, can't track temperature.</CantTrackTemperature>
-  <!--New--><AutoVentilation>Automatic ventilation</AutoVentilation>
-  <!--New--><AutoVentilationDesc>Mark the window for opening or closing when room temperature becomes uncomfortable.</AutoVentilationDesc>
-  <!--New--><DisabledForAutoVentilation>Following automatic ventilation parameters.</DisabledForAutoVentilation>
-  <CommandDesignateOpenCloseWindowLabel>Designate Open/Close</CommandDesignateOpenCloseWindowLabel>
-  <CommandDesignateOpenCloseWindowDesc>Designate this window to be open or closed. A colonist will come soon to perform the task.</CommandDesignateOpenCloseWindowDesc>
-  <CommandOpenCloseWindowLightLabel>Allow Light</CommandOpenCloseWindowLightLabel>
-  <CommandOpenCloseWindowLightDesc>Allow or block light to pass through the window. A colonist will come soon to perform the task.</CommandOpenCloseWindowLightDesc>
-  <CommandOpenCloseWindowVentLabel>Allow Air</CommandOpenCloseWindowVentLabel>
-  <CommandOpenCloseWindowVentDesc>Allow or block air to pass through the window. A colonist will come soon to perform the task.</CommandOpenCloseWindowVentDesc>
+  <!--New--><CommandCloseOnEmergency>Close on emergency</CommandCloseOnEmergency>
+  <!--New--><CommandCloseOnEmergencyDesc>Mark the window for closing when the emergency alarm is activated.</CommandCloseOnEmergencyDesc>
+  <!--New--><DisabledByEmergency>Normal operation disabled during emergency.</DisabledByEmergency>
   <NaturalLightMap>Show natural light.</NaturalLightMap>
   
   <!--settings-->
