@@ -184,7 +184,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Defs", "Defs", "{F6777F35-8
 	ProjectSection(SolutionItems) = preProject
 		Defs\ResearchProjects.xml = Defs\ResearchProjects.xml
 		Defs\Things.xml = Defs\Things.xml
-		Defs\Things_Test.xml = Defs\Things_Test.xml
 	EndProjectSection
 EndProject
 Global

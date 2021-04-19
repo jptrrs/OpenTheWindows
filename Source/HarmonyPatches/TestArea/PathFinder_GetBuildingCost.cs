@@ -42,10 +42,10 @@ namespace OpenTheWindows
             }
 
             //testing
-            if (b != null && (b as Building_Door != null || b as Building_Window != null))
-            {
-                Log.Message($"DEBUG PathFinder.GetBuildingCost: building cost for {b} (on mode {traverseParms.mode}): {__result}");
-            }
+            //if (b != null && (b as Building_Door != null || b as Building_Window != null))
+            //{
+            //    Log.Message($"DEBUG PathFinder.GetBuildingCost: building cost for {b} (on mode {traverseParms.mode}): {__result}");
+            //}
 
         }
 

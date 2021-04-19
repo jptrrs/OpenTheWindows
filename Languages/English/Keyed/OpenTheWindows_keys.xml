@@ -11,9 +11,8 @@
   <!--New--><WaitingTemperatureNormalization>Waiting for temperature to equalize.</WaitingTemperatureNormalization>
   <!--New--><CantTrackTemperature>Adjacent room is unroofed, can't track temperature.</CantTrackTemperature>
   <!--New--><AutoVentilation>Automatic ventilation</AutoVentilation>
-  <!--New--><AutoVentilationDesc>Open or close the window ventilation automatically when room temperature becomes uncomfortable.</AutoVentilationDesc>
+  <!--New--><AutoVentilationDesc>Mark the window for opening or closing when room temperature becomes uncomfortable.</AutoVentilationDesc>
   <!--New--><DisabledForAutoVentilation>Following automatic ventilation parameters.</DisabledForAutoVentilation>
-  
   <CommandDesignateOpenCloseWindowLabel>Designate Open/Close</CommandDesignateOpenCloseWindowLabel>
   <CommandDesignateOpenCloseWindowDesc>Designate this window to be open or closed. A colonist will come soon to perform the task.</CommandDesignateOpenCloseWindowDesc>
   <CommandOpenCloseWindowLightLabel>Allow Light</CommandOpenCloseWindowLightLabel>

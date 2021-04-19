@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -94,13 +95,40 @@ namespace OpenTheWindows
             SwitchIsOn = state;
         }
 
+        private CompPowerTrader PowerComp
+        {
+            get
+            {
+                Building_Window parentWindow = parent as Building_Window;
+                return parentWindow.powerComp;
+            }
+        }
+
+        private bool Powered
+        {
+            get
+            {
+                return Props.automated && PowerComp != null && PowerComp.PowerOn;
+            }
+        }
+
         public void AutoFlickRequest()
         {
+            if (Powered)
+            {
+                DoFlick();
+                return;
+            }
             if (!WantsFlick())
             {
                 wantSwitchOn = !wantSwitchOn;
                 FlickUtility.UpdateFlickDesignation(parent);
             }
+        }
+
+        public void FlickFor(bool state)
+        {
+            if (state != SwitchIsOn) AutoFlickRequest();
         }
 
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
@@ -115,16 +143,26 @@ namespace OpenTheWindows
                     defaultLabel = Props.commandLabelKey.Translate(),
                     defaultDesc = Props.commandDescKey.Translate(),
                     isActive = (() => wantSwitchOn),
-                    disabled = (Props.signal == "air" || Props.signal == "both") && window.autoVent,
-                    disabledReason = "DisabledForAutoVentilation".Translate(),
+                    disabled = GizmoDisable,
+                    disabledReason = window.alarmReact ? "DisabledByEmergency".Translate() : "DisabledForAutoVentilation".Translate(),
                     toggleAction = delegate ()
                     {
-                        wantSwitchOn = !wantSwitchOn;
-                        FlickUtility.UpdateFlickDesignation(parent);
+                        AutoFlickRequest();
                     }
                 };
             }
             yield break;
+        }
+
+        private bool GizmoDisable
+        {
+            get
+            {
+                Building_Window window = parent as Building_Window;
+                bool ifAutovent = (Props.signal == "air" || Props.signal == "both") && window.autoVent;
+                bool ifAlarm = window.alarmReact && AlertManagerProxy.OnAlert();
+                return ifAutovent || ifAlarm;
+            }
         }
     }
 }

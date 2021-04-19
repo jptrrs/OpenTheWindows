@@ -7,23 +7,25 @@ using Verse;
 namespace OpenTheWindows
 {
     [StaticConstructorOnStartup]
-    public static class HarmonyPatches
+    public static class HarmonyPatcher
     {
-        public static readonly Type patchType = typeof(HarmonyPatches);
-        public static bool ExpandedRoofing = false;
-        public static bool DubsSkylights = false;
-        public static Harmony instance = null;
+        public static readonly Type patchType = typeof(HarmonyPatcher);
+        public static bool
+            ExpandedRoofing = false,
+            DubsSkylights = false,
+            BetterPawnControl = false;
+        public static Harmony _instance = null;
         public static Harmony Instance
         {
             get
             {
-                if (instance == null)
-                    instance = new Harmony("JPT.OpenTheWindows");
-                return instance;
+                if (_instance == null)
+                    _instance = new Harmony("JPT.OpenTheWindows");
+                return _instance;
             }
         }
 
-        static HarmonyPatches()
+        static HarmonyPatcher()
         {
             Instance.PatchAll();
 
@@ -50,6 +52,15 @@ namespace OpenTheWindows
                 OpenTheWindowsSettings.IsBeautyOn = true;
                 Instance.Patch(AccessTools.Method(typeof(Need_Beauty), "LevelFromBeauty"), null, new HarmonyMethod(typeof(NeedBeauty_LevelFromBeauty), nameof(NeedBeauty_LevelFromBeauty.LevelFromBeauty)), null);
             }
+
+            if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("VouLT.BetterPawnControl")))
+            {
+                Log.Message("[OpenTheWindows] Better Pawn Control mod detected! Integrating...");
+                BetterPawnControl = true;
+                Type AlertManagerType = AccessTools.TypeByName("BetterPawnControl.AlertManager");
+                Instance.Patch(AccessTools.Method(AlertManagerType, "LoadState"), null, new HarmonyMethod(typeof(AlertManager_LoadState), nameof(AlertManager_LoadState.LoadState_Postfix)));
+                Instance.CreateReversePatcher(AccessTools.PropertyGetter(AlertManagerType, "OnAlert"), new HarmonyMethod(AccessTools.Method(typeof(AlertManagerProxy), nameof(AlertManagerProxy.OnAlert)))).Patch();
+            }
         }
 
         public static bool Patch_Inhibitor_Prefix()
@@ -61,6 +72,5 @@ namespace OpenTheWindows
         {
             Find.CurrentMap.GetComponent<MapComp_Windows>().RegenGrid();
         }
-
     }
 }

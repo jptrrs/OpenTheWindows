@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using Verse;
 using Verse.AI;
-using System.Diagnostics;
 
 namespace OpenTheWindows
 {
@@ -74,11 +73,11 @@ namespace OpenTheWindows
             }
 
             //testing
-            Building b = c.GetEdifice(___map);
-            if (b != null && (b as Building_Door != null || b as Building_Window != null))
-            {
-                Log.Message($"DEBUG PathGrid.CalculatedCostAt: calculated cost for {b}: {__result} ({perceivedStatic})");
-            }
+            //Building b = c.GetEdifice(___map);
+            //if (b != null && (b as Building_Door != null || b as Building_Window != null))
+            //{
+            //    Log.Message($"DEBUG PathGrid.CalculatedCostAt: calculated cost for {b}: {__result} ({perceivedStatic})");
+            //}
         }
     }
 }

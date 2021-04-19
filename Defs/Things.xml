@@ -12,7 +12,7 @@
     </statBases>
     <leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
     <selectable>true</selectable>
-    <rotatable>true</rotatable><!--doors are false!-->
+    <rotatable>true</rotatable>
     <terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
     <designationCategory>Structure</designationCategory>
     <designationHotKey>Misc3</designationHotKey>

@@ -18,7 +18,9 @@ namespace OpenTheWindows
             open = true,
             venting = false,
             updateRequest = false,
-            autoVent = false;
+            autoVent = false,
+            alarmReact = false,
+            emergencyShut = false;
         public IntVec3 start, end;
         private int
             adjacentRoofCount,
@@ -229,6 +231,29 @@ namespace OpenTheWindows
                     autoVent = !autoVent;
                 }
             };
+            if (HarmonyPatcher.BetterPawnControl)
+            {
+                yield return new Command_Toggle
+                {
+                    icon = ContentFinder<Texture2D>.Get("UI/Buttons/EmergencyOn", true),
+                    iconDrawScale = 0.75f,
+                    defaultLabel = "CloseOnEmergency",
+                    defaultDesc = "CloseOnEmergencyDesc",
+                    isActive = (() => alarmReact),
+                    toggleAction = delegate ()
+                    {
+                        alarmReact = !alarmReact;
+                        if (AlertManagerProxy.OnAlert())
+                        {
+                            mainComp.FlickFor(!open);
+                        }
+                        if (!alarmReact && emergencyShut)
+                        {
+                            emergencyShut = false;
+                        }
+                    }
+                };
+            }
         }
 
         public override string GetInspectString()
@@ -305,7 +330,7 @@ namespace OpenTheWindows
 
         public override void ReceiveCompSignal(string signal)
         {
-            Log.Message($"{this} received a signal");
+            //Log.Message($"{this} received a signal");
             bool needsupdate = false;
             if (signal == "lightOff" || signal == "bothOff")
             {
@@ -358,6 +383,10 @@ namespace OpenTheWindows
                 map.linkGrid.Notify_LinkerCreatedOrDestroyed(this);
                 map.mapDrawer.MapMeshDirty(Position, MapMeshFlag.Things, true, false);
             }
+
+            //alarm setup
+            //AlertManager_LoadState.AlarmLogic alarmInt = new AlertManager_LoadState.AlarmLogic();
+            AlertManager_LoadState.Alarm += EmergencyShutOff; // register with an event, handler must match template signature
         }
 
         public override void TickRare()
@@ -401,15 +430,8 @@ namespace OpenTheWindows
                         }
                         if (doFlick)
                         {
-                            if (ventComp.Props.automated)
-                            {
-                                ventComp.DoFlick();
-                            }
-                            else
-                            {
-                                recentlyOperated = true;
-                                ventComp.AutoFlickRequest();
-                            }
+                            recentlyOperated = true;
+                            ventComp.AutoFlickRequest();
                         }
                         nextToleranceCheckTick = ticksGame + toleranceCheckInterval;
                     }
@@ -428,6 +450,25 @@ namespace OpenTheWindows
         {
             return false;
         }
-        #endregion  x
+
+        public override void Draw()
+        {
+            if (size == 1) base.Draw();
+            else Comps_PostDraw();
+        }
+        #endregion
+
+        #region adapting to Better Pawn Control
+        public void EmergencyShutOff(object sender, bool active) // event handler
+        {
+            bool mustclose = active && alarmReact && open;
+            bool mustopen = !active && emergencyShut;
+            if (mustclose || mustopen)
+            {
+                mainComp.AutoFlickRequest();
+                emergencyShut = !emergencyShut;
+            }
+        }
+        #endregion
     }
 }

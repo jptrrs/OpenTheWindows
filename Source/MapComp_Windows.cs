@@ -42,13 +42,13 @@ namespace OpenTheWindows
         {
             WindowScanGrid = new int[map.cellIndices.NumGridCells];
             WindowCells = new HashSet<IntVec3>();
-            if (HarmonyPatches.DubsSkylights)
+            if (HarmonyPatcher.DubsSkylights)
             {
                 DubsSkylights_type = AccessTools.TypeByName("Dubs_Skylight.MapComp_Skylights");
                 DubsSkylights_skylightGridinfo = AccessTools.Field(DubsSkylights_type, "SkylightGrid");
                 MapCompInfo = AccessTools.Method(typeof(Map), "GetComponent", new[] { typeof(Type) });
             }
-            if (HarmonyPatches.ExpandedRoofing)
+            if (HarmonyPatcher.ExpandedRoofing)
             {
                 ExpandedRoofing_type = AccessTools.TypeByName("ExpandedRoofing.RoofDefOf");
                 ExpandedRoofing_roofTransparentInfo = AccessTools.Field(ExpandedRoofing_type, "RoofTransparent");
@@ -131,7 +131,7 @@ namespace OpenTheWindows
             //    }
             //}
 
-            if (HarmonyPatches.DubsSkylights)
+            if (HarmonyPatcher.DubsSkylights)
             {
                 bool[] DubsSkylights_skyLightGrid = (bool[])DubsSkylights_skylightGridinfo.GetValue(MapCompInfo.Invoke(map, new[] { DubsSkylights_type }));
                 for (int i = 0; i < DubsSkylights_skyLightGrid.Length; i++)
@@ -143,7 +143,7 @@ namespace OpenTheWindows
                 }
             }
 
-            if (HarmonyPatches.ExpandedRoofing)
+            if (HarmonyPatcher.ExpandedRoofing)
             {
                 RoofDef roofTransparent = (RoofDef)ExpandedRoofing_roofTransparentInfo.GetValue(Find.CurrentMap.roofGrid);
                 for (int i = 0; i < map.cellIndices.NumGridCells; i++)

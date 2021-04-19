@@ -81,7 +81,7 @@ namespace OpenTheWindows
             leftColumn.Gap(12f);
 
             //Light transmission through windows
-            string labelNoteOnSkylights = (HarmonyPatches.DubsSkylights || HarmonyPatches.ExpandedRoofing) ? " (" + "LightTransmissionIncludesRoofs".Translate() + ")" : null;
+            string labelNoteOnSkylights = (HarmonyPatcher.DubsSkylights || HarmonyPatcher.ExpandedRoofing) ? " (" + "LightTransmissionIncludesRoofs".Translate() + ")" : null;
             string label2 = "LightTransmission".Translate() + labelNoteOnSkylights + ": " + LightTransmission.ToStringPercent();
             string desc2 = "LightTransmissionDesc".Translate();
             leftColumn.Label(label2, -1f, desc2);
