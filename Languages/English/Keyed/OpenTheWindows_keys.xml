@@ -33,6 +33,8 @@
   <LightTransmission>Light transmission through windows</LightTransmission>
   <LightTransmissionIncludesRoofs>including devices on the ceiling</LightTransmissionIncludesRoofs>
   <LightTransmissionDesc>Amount of exterior light that manages to cross glass and framings. Real world values are around 90%.</LightTransmissionDesc>
+  <!--New--><ComfortableTemperature>Comfortable temperature range (°C)</ComfortableTemperature>
+  <!--New--><ComfortableTemperatureDesc>The desired temperature range for the auto-ventilation function. The default is what the game considers the human comfort zone.</ComfortableTemperatureDesc>
   <BeautySensitivityReduction>Beauty sensitivity reduction</BeautySensitivityReduction>
   <BeautySensitivityReductionDesc>Numbs the pawns' sensitivity to beauty to compensate for the amount added by "Nature is Beautiful" and captured by the windows.</BeautySensitivityReductionDesc>
   <!--New--><BeautyFromBuildings>Add beauty from buildings when calculating a window's view.</BeautyFromBuildings>

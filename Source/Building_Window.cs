@@ -37,7 +37,7 @@ namespace OpenTheWindows
         private CompWindow 
             mainComp, 
             ventComp;
-        private FloatRange targetTemp = new FloatRange(ThingDefOf.Human.GetStatValueAbstract(StatDefOf.ComfyTemperatureMin), ThingDefOf.Human.GetStatValueAbstract(StatDefOf.ComfyTemperatureMax));
+        private IntRange targetTemp => OpenTheWindowsSettings.ComfortTemp;
         public Room attachedRoom
         {
             get
