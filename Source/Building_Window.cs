@@ -111,7 +111,6 @@ namespace OpenTheWindows
 
         public void CastLight()
         {
-            Log.Message($"{this} casting light");
             DarkenCellsCarefully();
             if (open)
             {

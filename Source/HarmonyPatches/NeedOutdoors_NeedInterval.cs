@@ -6,18 +6,28 @@ using Verse;
 
 namespace OpenTheWindows
 {
-    //Tweaks the Outdoor need calculation (TODO: cache reflections)
+    //Tweaks the Outdoor need calculation
     [HarmonyPatch(typeof(Need_Outdoors), nameof(Need_Outdoors.NeedInterval))]
     public static class NeedOutdoors_NeedInterval
     {
-        private const float Delta_IndoorsThickRoof = -0.45f;
-        private const float Delta_OutdoorsThickRoof = -0.4f;
-        private const float Delta_IndoorsThinRoof = -0.32f;
-        private const float Minimum_IndoorsThinRoof = 0.2f;
-        private const float Delta_OutdoorsThinRoof = 1f;
-        private const float Delta_IndoorsNoRoof = 5f;
-        private const float Delta_OutdoorsNoRoof = 8f;
-        private const float DeltaFactor_InBed = 0.2f;
+        private const float 
+            Delta_IndoorsThickRoof = -0.45f,
+            Delta_OutdoorsThickRoof = -0.4f,
+            Delta_IndoorsThinRoof = -0.32f,
+            Minimum_IndoorsThinRoof = 0.2f,
+            Delta_OutdoorsThinRoof = 1f,
+            Delta_IndoorsNoRoof = 5f,
+            Delta_OutdoorsNoRoof = 8f,
+            DeltaFactor_InBed = 0.2f;
+
+        private static PropertyInfo
+            disabledInfo = AccessTools.Property(typeof(Need_Outdoors), "Disabled"),
+            curLevelInfo = AccessTools.Property(typeof(Need_Outdoors), "CurLevel"),
+            isFrozenInfo = AccessTools.Property(typeof(Need), "IsFrozen");
+
+        private static FieldInfo 
+            pawnInfo = AccessTools.Field(typeof(Need_Outdoors), "pawn"),
+            lastEffectiveDeltaInfo = AccessTools.Field(typeof(Need_Outdoors), "lastEffectiveDelta");
 
         private static float DeltaFactor_NoNaturalLight() => OpenTheWindowsSettings.IndoorsNoNaturalLightPenalty; //indoors accelerated degradation when not under windows
 
@@ -28,15 +38,10 @@ namespace OpenTheWindows
 
         public static void NeedInterval(object __instance)
         {
-            PropertyInfo disabledInfo = AccessTools.Property(__instance.GetType(), "Disabled");
             bool disabled = (bool)disabledInfo.GetValue(__instance, null);
-            PropertyInfo curLevelInfo = AccessTools.Property(__instance.GetType(), "CurLevel");
             float curLevel = (float)curLevelInfo.GetValue(__instance, null);
-            PropertyInfo isFrozenInfo = AccessTools.Property(__instance.GetType().BaseType, "IsFrozen");
             bool isFrozen = (bool)isFrozenInfo.GetValue(__instance, null);
-            FieldInfo pawnInfo = AccessTools.Field(typeof(Need_Outdoors), "pawn");
             Pawn pawn = (Pawn)pawnInfo.GetValue(__instance);
-            FieldInfo lastEffectiveDeltaInfo = AccessTools.Field(typeof(Need_Outdoors), "lastEffectiveDelta");
 
             if (disabled)
             {
