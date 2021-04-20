@@ -37,7 +37,9 @@ namespace OpenTheWindows
         private CompWindow 
             mainComp, 
             ventComp;
+
         private IntRange targetTemp => OpenTheWindowsSettings.ComfortTemp;
+
         public Room attachedRoom
         {
             get

@@ -81,8 +81,8 @@
     <None Include="HarmonyPatches\TestArea\Pawn_PathFollower_GenerateNewPath.cs" />
     <None Include="HarmonyPatches\TestArea\RegionTypeUtility_GetExpectedRegionType.cs" />
     <Compile Include="HarmonyPatches\Compatibility\AlertManager_LoadState.cs" />
-    <Compile Include="HarmonyPatches\TestArea\PathFinder_GetBuildingCost.cs" />
-    <Compile Include="HarmonyPatches\TestArea\PathGrid_CalculatedCostAt.cs" />
+    <Compile Include="HarmonyPatches\PathFinder_GetBuildingCost.cs" />
+    <Compile Include="HarmonyPatches\PathGrid_CalculatedCostAt.cs" />
     <None Include="HarmonyPatches\TestArea\Region_Allows.cs" />
     <Compile Include="HarmonyPatches\GlowGrid_GameGlowAt.cs" />
     <Compile Include="HarmonyPatcher.cs" />
