@@ -12,7 +12,7 @@
       </mods>
 
       <nomatch Class="PatchOperationSequence">
-        <success>Normal</success>
+        <success>Always</success>
         <operations>
 
           <li Class="PatchOperationReplace">
@@ -101,6 +101,49 @@
               <Steel>60</Steel>
             </value>
           </li>
+
+          <!--Addons-->
+          <li Class="PatchOperationReplace">
+            <xpath>/Defs/ThingDef[defName = "SkyLightE"]/costList</xpath>
+            <value>
+              <costList>
+                <Steel>40</Steel>
+              </costList>
+            </value>
+          </li>
+          <li Class="PatchOperationReplace">
+            <xpath>/Defs/ThingDef[defName = "SkyLightF"]/costList</xpath>
+            <value>
+              <costList>
+                <Steel>50</Steel>
+              </costList>
+            </value>
+          </li>
+          <li Class="PatchOperationReplace">
+            <xpath>/Defs/ThingDef[defName = "SkyLightG"]/costList</xpath>
+            <value>
+              <costList>
+                <Steel>75</Steel>
+              </costList>
+            </value>
+          </li>
+          <li Class="PatchOperationReplace">
+            <xpath>/Defs/ThingDef[defName = "SkyLightH"]/costList</xpath>
+            <value>
+              <costList>
+                <Steel>90</Steel>
+              </costList>
+            </value>
+          </li>
+          <li Class="PatchOperationReplace">
+            <xpath>/Defs/ThingDef[defName = "SkyLightI"]/costList</xpath>
+            <value>
+              <costList>
+                <Steel>120</Steel>
+              </costList>
+            </value>
+          </li>
+          
         </operations>
       </nomatch>
 
@@ -109,7 +152,7 @@
           <li>Dubs Skylights Glass+Lights Patch</li>
         </mods>
         <nomatch Class="PatchOperationSequence">
-          <success>Normal</success>
+          <success>Always</success>
           <operations>
 
             <!--From Maaxar's Dubs Skylights Glass+Lights Patch-->
@@ -152,6 +195,54 @@
                 </costList>
               </value>
             </li>
+            
+            <!--Addons-->
+            <li Class="PatchOperationReplace">
+              <xpath>/Defs/ThingDef[defName = "SkyLightE"]/costList</xpath>
+              <value>
+                <costList>
+                  <Glass>2</Glass>
+                  <Steel>40</Steel>
+                </costList>
+              </value>
+            </li>
+            <li Class="PatchOperationReplace">
+              <xpath>/Defs/ThingDef[defName = "SkyLightF"]/costList</xpath>
+              <value>
+                <costList>
+                  <Glass>3</Glass>
+                  <Steel>50</Steel>
+                </costList>
+              </value>
+            </li>
+            <li Class="PatchOperationReplace">
+              <xpath>/Defs/ThingDef[defName = "SkyLightG"]/costList</xpath>
+              <value>
+                <costList>
+                  <Glass>6</Glass>
+                  <Steel>75</Steel>
+                </costList>
+              </value>
+            </li>
+            <li Class="PatchOperationReplace">
+              <xpath>/Defs/ThingDef[defName = "SkyLightH"]/costList</xpath>
+              <value>
+                <costList>
+                  <Glass>8</Glass>
+                  <Steel>90</Steel>
+                </costList>
+              </value>
+            </li>
+            <li Class="PatchOperationReplace">
+              <xpath>/Defs/ThingDef[defName = "SkyLightI"]/costList</xpath>
+              <value>
+                <costList>
+                  <Glass>12</Glass>
+                  <Steel>120</Steel>
+                </costList>
+              </value>
+            </li>            
+            
             <li Class="PatchOperationRemove">
               <xpath>/Defs/RecipeDef[defName = "SmeltGlass"]</xpath>
             </li>
@@ -173,5 +264,6 @@
         </nomatch>
       </match>
     </match>
+  
   </Operation>
 </Patch>
