@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Verse;
 
@@ -9,34 +10,15 @@ namespace OpenTheWindows
     public class MapComp_Windows : MapComponent
     {
         public List<Building_Window> cachedWindows = new List<Building_Window>();
-        public bool updateRequest = false;
-        public bool roofUpdateRequest = false;
         public HashSet<IntVec3> WindowCells;
         public int[] WindowScanGrid;
-
-        private Type DubsSkylights_type;
-        private FieldInfo DubsSkylights_skylightGridinfo;
+        private FieldInfo
+            DubsSkylights_skylightGridinfo,
+            ExpandedRoofing_roofTransparentInfo;
+        private Type
+            DubsSkylights_type,
+            ExpandedRoofing_type;
         private MethodInfo MapCompInfo;
-        private Type ExpandedRoofing_type;
-        private FieldInfo ExpandedRoofing_roofTransparentInfo;
-
-        public void IncludeTile(IntVec3 tile)
-        {
-            if (!WindowCells.Contains(tile))
-            {
-                WindowCells.Add(tile);
-                map.glowGrid.MarkGlowGridDirty(tile);
-            }
-        }
-
-        public void ExcludeTile(IntVec3 tile)
-        {
-            if (WindowCells.Contains(tile))
-            {
-                WindowCells.Remove(tile);
-                map.glowGrid.MarkGlowGridDirty(tile);
-            }
-        }
 
         public MapComp_Windows(Map map) : base(map)
         {
@@ -53,19 +35,19 @@ namespace OpenTheWindows
                 ExpandedRoofing_type = AccessTools.TypeByName("ExpandedRoofing.RoofDefOf");
                 ExpandedRoofing_roofTransparentInfo = AccessTools.Field(ExpandedRoofing_type, "RoofTransparent");
             }
+            MapUpdateWatcher.MapUpdate += MapUpdated;  // register with an event, handler must match template signature
         }
 
-        public void CastNaturalLightOnDemand()
+        public void CastNaturalLightOnDemand(List<Building_Window> windows, bool reFace)
         {
-            foreach (Building_Window window in cachedWindows)
+            foreach (Building_Window window in windows)
             {
-                if (roofUpdateRequest && window.NeedExternalFacingUpdate())
+                if (reFace && window.NeedExternalFacingUpdate())
                 {
                     WindowUtility.FindWindowExternalFacing(window);
                 }
                 window.CastLight();
             }
-            updateRequest = (roofUpdateRequest = false);
         }
 
         public void DeRegisterWindow(Building_Window window)
@@ -77,60 +59,36 @@ namespace OpenTheWindows
             }
         }
 
-        public override void MapComponentTick()
+        public void ExcludeTile(IntVec3 tile)
         {
-            base.MapComponentTick();
-            if (updateRequest || roofUpdateRequest)
+            if (WindowCells.Contains(tile))
             {
-                CastNaturalLightOnDemand();
+                WindowCells.Remove(tile);
+                map.glowGrid.MarkGlowGridDirty(tile);
             }
         }
 
-        // Issue. This function sucks.
+        public void IncludeTile(IntVec3 tile)
+        {
+            if (!WindowCells.Contains(tile))
+            {
+                WindowCells.Add(tile);
+                map.glowGrid.MarkGlowGridDirty(tile);
+            }
+        }
+        public void MapUpdated(object sender, IntVec3 center) // event handler
+        {
+            map.cellIndices.CellToIndex(center);
+            List<Building_Window> windows = new List<Building_Window>();
+            var region = map.regionGrid.GetValidRegionAt(center);
+            if (region == null) return;
+            FindAffectedWindows(windows, region);
+            if (!windows.NullOrEmpty()) CastNaturalLightOnDemand(windows, sender is RoofGrid);
+        }
+
+        //Windows register their cells on their on, this is just for compatibles.
         public void RegenGrid()
         {
-            /*
-             * Why on earth do we need to reset here? We can very easily tell which window has been changed, WE IMPLEMENT THE WINDOW CLASS !!!
-             * You can quite easily implement this and make this function mostly neglible performance wise.
-             */
-            //WindowCells = new HashSet<IntVec3>();
-
-            //foreach (Building_Window window in cachedWindows)
-            //{
-            //    if (window.open && window.isFacingSet)
-            //    {
-            //        foreach (IntVec3 c in window.effectArea)
-            //        {
-            //            bool interior = false;
-            //            switch (window.Facing)
-            //            {
-            //                case LinkDirections.Up:
-            //                    if (c.z < window.Position.z) interior = true;
-            //                    break;
-
-            //                case LinkDirections.Right:
-            //                    if (c.x < window.Position.x) interior = true;
-            //                    break;
-
-            //                case LinkDirections.Down:
-            //                    if (c.z > window.Position.z) interior = true;
-            //                    break;
-
-            //                case LinkDirections.Left:
-            //                    if (c.x > window.Position.x) interior = true;
-            //                    break;
-
-            //                case LinkDirections.None:
-            //                    break;
-            //            }
-            //            if (interior)
-            //            {
-            //                WindowCells.Add(c);
-            //            }
-            //        }
-            //    }
-            //}
-
             if (HarmonyPatcher.DubsSkylights)
             {
                 bool[] DubsSkylights_skyLightGrid = (bool[])DubsSkylights_skylightGridinfo.GetValue(MapCompInfo.Invoke(map, new[] { DubsSkylights_type }));
@@ -162,6 +120,22 @@ namespace OpenTheWindows
             {
                 cachedWindows.Add(window);
                 SetWindowScanArea(window, true);
+            }
+        }
+
+        private static void FindAffectedWindows(List<Building_Window> windows, Region region, bool recursive = true)
+        {
+            foreach (Region connected in region.links.Select(x => x.GetOtherRegion(region)))
+            {
+                if (connected.IsDoorway)
+                {
+                    var window = connected.ListerThings.AllThings.FirstOrDefault(x => x is Building_Window);
+                    if (window != null)
+                    {
+                        windows.Add(window as Building_Window);
+                    }
+                }
+                else if (recursive) FindAffectedWindows(windows, connected, false);
             }
         }
 

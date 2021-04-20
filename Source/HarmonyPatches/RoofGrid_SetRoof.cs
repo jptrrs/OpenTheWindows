@@ -15,7 +15,9 @@ namespace OpenTheWindows
             MapComp_Windows mapComp = map.GetComponent<MapComp_Windows>();
 
             if (mapComp != null && mapComp.WindowScanGrid[map.cellIndices.CellToIndex(c)] > 0)
-                mapComp.roofUpdateRequest = true;
+            {
+                MapUpdateWatcher.OnMapUpdate(__instance, c);
+            }
         }
     }
 }

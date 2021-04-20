@@ -14,7 +14,7 @@ namespace OpenTheWindows
                 MapComp_Windows mapComp = t.Map.GetComponent<MapComp_Windows>();
                 if (mapComp != null && mapComp.WindowScanGrid[t.Map.cellIndices.CellToIndex(c)] > 0)
                 {
-                    mapComp.updateRequest = true;
+                    MapUpdateWatcher.OnMapUpdate(t, c);
                 }
             }
         }
@@ -30,7 +30,7 @@ namespace OpenTheWindows
                 MapComp_Windows mapComp = t.Map.GetComponent<MapComp_Windows>();
                 if (mapComp != null && mapComp.WindowScanGrid[t.Map.cellIndices.CellToIndex(c)] > 0)
                 {
-                    mapComp.updateRequest = true;
+                    MapUpdateWatcher.OnMapUpdate(t, c);
                 }
             }
         }
