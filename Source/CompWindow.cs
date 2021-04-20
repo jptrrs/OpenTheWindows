@@ -21,7 +21,7 @@ namespace OpenTheWindows
             }
         }
 
-        public new bool wantSwitchOn
+        public bool WantSwitchOn
         {
             get
             {
@@ -33,7 +33,7 @@ namespace OpenTheWindows
             }
         }
 
-        public new bool switchOnInt
+        public bool SwitchOnInt
         {
             get
             {
@@ -61,8 +61,8 @@ namespace OpenTheWindows
             bool state = false;
             if (Props.signal == "light" || Props.signal == "both") state = window.open;
             else if (Props.signal == "air") state = window.venting;
-            wantSwitchOn = state;
-            switchOnInt = state;
+            WantSwitchOn = state;
+            SwitchOnInt = state;
             SwitchIsOn = state;
         }
 
@@ -85,14 +85,14 @@ namespace OpenTheWindows
 
         public void AutoFlickRequest()
         {
-            if (Powered)
-            {
-                DoFlick();
-                return;
-            }
             if (!WantsFlick())
             {
-                wantSwitchOn = !wantSwitchOn;
+                WantSwitchOn = !WantSwitchOn;
+                if (Powered)
+                {
+                    DoFlick();
+                    return;
+                }
                 FlickUtility.UpdateFlickDesignation(parent);
             }
         }
@@ -115,7 +115,7 @@ namespace OpenTheWindows
                     icon = (Texture2D)AccessTools.Property(typeof(CompFlickable), "CommandTex").GetValue(this),
                     defaultLabel = Props.commandLabelKey.Translate(),
                     defaultDesc = Props.commandDescKey.Translate() + ManualNote,
-                    isActive = () => wantSwitchOn,
+                    isActive = () => WantSwitchOn,
                     disabled = GizmoDisable,
                     disabledReason = window.alarmReact ? "DisabledByEmergency".Translate() : "DisabledForAutoVentilation".Translate(),
                     toggleAction = delegate ()
