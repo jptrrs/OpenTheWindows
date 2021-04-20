@@ -49,6 +49,7 @@ namespace OpenTheWindows
                 return null;
             }
         }
+
         public override Graphic Graphic
         {
             get
@@ -56,6 +57,7 @@ namespace OpenTheWindows
                 return mainComp.CurrentGraphic;
             }
         }
+
         private int size => Math.Max(def.size.x, def.size.z);
         private IntVec3 inside
         {
@@ -106,7 +108,7 @@ namespace OpenTheWindows
             }
         }
         private float ventRate => size * 14f;
-        
+
         public void CastLight()
         {
             DarkenCellsCarefully();
@@ -338,35 +340,77 @@ namespace OpenTheWindows
 
         public override void ReceiveCompSignal(string signal)
         {
-            //Log.Message($"{this} received a signal");
+            Log.Message($"{this} received a signal: {signal}");
             bool needsupdate = false;
-            if (signal == "lightOff" || signal == "bothOff")
+            switch (signal)
             {
-                def.blockLight = true;
-                open = false;
-                needsupdate = true;
-            }
-            if (signal == "lightOn" || signal == "bothOn")
-            {
-                open = true;
-                def.blockLight = false;
-                needsupdate = true;
+                case "lightOn":
+                    open = true;
+                    def.blockLight = false;
+                    needsupdate = true;
+                    break;
+                case "lightOff":
+                    def.blockLight = true;
+                    open = false;
+                    needsupdate = true;
+                    break;
+                case "airOn":
+                    venting = true;
+                    recentlyOperated = true;
+                    break;
+                case "airOff":
+                    venting = false;
+                    recentlyOperated = true;
+                    break;
+                case "bothOn":
+                    open = true;
+                    def.blockLight = false;
+                    needsupdate = true;
+                    venting = true;
+                    recentlyOperated = true;
+                    break;
+                case "bothOff":
+                    def.blockLight = true;
+                    open = false;
+                    needsupdate = true;
+                    venting = false;
+                    recentlyOperated = true;
+                    break;
+                default:
+                    break;
             }
             if (needsupdate)
             {
                 if (!isFacingSet) WindowUtility.FindWindowExternalFacing(this);
                 CastLight();
             }
-            if (signal == "airOn" || signal == "bothOn")
-            {
-                venting = true;
-                recentlyOperated = true;
-            }
-            if (signal == "airOff" || signal == "bothOff")
-            {
-                venting = false;
-                recentlyOperated = true;
-            }
+            //if (signal == "lightOff" || signal == "bothOff")
+            //{
+            //    def.blockLight = true;
+            //    open = false;
+            //    needsupdate = true;
+            //}
+            //if (signal == "lightOn" || signal == "bothOn")
+            //{
+            //    open = true;
+            //    def.blockLight = false;
+            //    needsupdate = true;
+            //}
+            //if (needsupdate)
+            //{
+            //    if (!isFacingSet) WindowUtility.FindWindowExternalFacing(this);
+            //    CastLight();
+            //}
+            //if (signal == "airOn" || signal == "bothOn")
+            //{
+            //    venting = true;
+            //    recentlyOperated = true;
+            //}
+            //if (signal == "airOff" || signal == "bothOff")
+            //{
+            //    venting = false;
+            //    recentlyOperated = true;
+            //}
         }
 
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
@@ -408,47 +452,51 @@ namespace OpenTheWindows
                 float vent = ventRate * leakVentFactor;
                 GenTemperature.EqualizeTemperaturesThroughBuilding(this, vent, true);
             }
-            //autoVent
             if (autoVent && !emergencyShut && isFacingSet && attachedRoom != null && !attachedRoom.UsesOutdoorTemperature)
             {
-                float insideTemp = attachedRoom.Temperature;
-                int ticksGame = Find.TickManager.TicksGame;
-                if (!targetTemp.Includes(insideTemp) && !recentlyOperated)
-                {
-                    //Log.Message(this + " found inside temperature is out of range (" + insideTemp.ToStringTemperature());
-                    if (nextToleranceCheckTick == 0 || ticksGame >= nextToleranceCheckTick)
-                    {
-                        float outsideTemp = GenTemperature.GetTemperatureForCell(outside, Map);
-                        bool
-                            colderOutside = insideTemp > outsideTemp,
-                            colderInside = insideTemp < outsideTemp,
-                            tooHotInside = insideTemp > targetTemp.max,
-                            tooColdInside = insideTemp < targetTemp.min,
-                            tooHotOutside = outsideTemp > targetTemp.max,
-                            tooColdOutside = outsideTemp < targetTemp.min;
-                        bool doFlick = false;
-                        if (!venting) //open if...
-                        {
-                            doFlick = (tooHotInside && colderOutside) || (tooColdInside && colderInside && !tooColdOutside);
-                        }
-                        else //close if...
-                        {
-                            doFlick = (tooHotInside && tooHotOutside) || (tooColdInside && tooColdOutside);
-                        }
-                        if (doFlick)
-                        {
-                            recentlyOperated = true;
-                            ventComp.AutoFlickRequest();
-                        }
-                        nextToleranceCheckTick = ticksGame + toleranceCheckInterval;
-                    }
-                }
-                else if (ticksGame >= nextToleranceCheckTick + (toleranceCheckInterval * intervalMultiplierAfterAttempts) || targetTemp.Includes(insideTemp))
-                {
-                    if (recentlyOperated) recentlyOperated = false;
-                }
+                AutoVentControl();
             }
             base.TickRare();
+        }
+
+        private void AutoVentControl()
+        {
+            float insideTemp = attachedRoom.Temperature;
+            int ticksGame = Find.TickManager.TicksGame;
+            if (!targetTemp.Includes(insideTemp) && !recentlyOperated)
+            {
+                //Log.Message(this + " found inside temperature is out of range (" + insideTemp.ToStringTemperature());
+                if (nextToleranceCheckTick == 0 || ticksGame >= nextToleranceCheckTick)
+                {
+                    float outsideTemp = GenTemperature.GetTemperatureForCell(outside, Map);
+                    bool
+                        colderOutside = insideTemp > outsideTemp,
+                        colderInside = insideTemp < outsideTemp,
+                        tooHotInside = insideTemp > targetTemp.max,
+                        tooColdInside = insideTemp < targetTemp.min,
+                        tooHotOutside = outsideTemp > targetTemp.max,
+                        tooColdOutside = outsideTemp < targetTemp.min;
+                    bool doFlick = false;
+                    if (!venting) //open if...
+                    {
+                        doFlick = (tooHotInside && colderOutside) || (tooColdInside && colderInside && !tooColdOutside);
+                    }
+                    else //close if...
+                    {
+                        doFlick = (tooHotInside && tooHotOutside) || (tooColdInside && tooColdOutside);
+                    }
+                    if (doFlick)
+                    {
+                        recentlyOperated = true;
+                        ventComp.AutoFlickRequest();
+                    }
+                    nextToleranceCheckTick = ticksGame + toleranceCheckInterval;
+                }
+            }
+            else if (ticksGame >= nextToleranceCheckTick + (toleranceCheckInterval * intervalMultiplierAfterAttempts) || targetTemp.Includes(insideTemp))
+            {
+                if (recentlyOperated) recentlyOperated = false;
+            }
         }
 
         #region adapting as door

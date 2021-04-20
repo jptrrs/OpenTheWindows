@@ -21,18 +21,6 @@ namespace OpenTheWindows
             }
         }
 
-        public new bool switchOnInt
-        {
-            get
-            {
-                return (bool)baseSwitchOnIntInfo.GetValue(this);
-            }
-            set
-            {
-                baseSwitchOnIntInfo.SetValue(this, value);
-            }
-        }
-
         public new bool wantSwitchOn
         {
             get
@@ -45,42 +33,25 @@ namespace OpenTheWindows
             }
         }
 
-        public new bool SwitchIsOn
+        public new bool switchOnInt
         {
             get
             {
-                return switchOnInt;
+                return (bool)baseSwitchOnIntInfo.GetValue(this);
             }
             set
             {
-                if (switchOnInt == value)
-                {
-                    return;
-                }
-                if (switchOnInt)
-                {
-                    parent.BroadcastCompSignal(FlickedOnSignal());
-                }
-                else
-                {
-                    parent.BroadcastCompSignal(FlickedOffSignal());
-                }
-                if (parent.Spawned)
-                {
-                    parent.Map.mapDrawer.MapMeshDirty(parent.Position, MapMeshFlag.Things | MapMeshFlag.Buildings);
-                }
+                baseSwitchOnIntInfo.SetValue(this, value);
             }
         }
 
-        public new string FlickedOffSignal() => Props.signal + "Off";
+        public new string FlickedOffSignal => Props.signal + "Off";
 
-        public new string FlickedOnSignal() => Props.signal + "On";
+        public new string FlickedOnSignal => Props.signal + "On";
 
         public override void Initialize(CompProperties props)
         {
             base.Initialize(props);
-            FlickedOnSignal();
-            FlickedOffSignal();
             SetupState();
         }
 
@@ -90,8 +61,8 @@ namespace OpenTheWindows
             bool state = false;
             if (Props.signal == "light" || Props.signal == "both") state = window.open;
             else if (Props.signal == "air") state = window.venting;
-            baseWantSwitchInfo.SetValue(this, state);
-            baseSwitchOnIntInfo.SetValue(this, state);
+            wantSwitchOn = state;
+            switchOnInt = state;
             SwitchIsOn = state;
         }
 
@@ -152,6 +123,20 @@ namespace OpenTheWindows
                         AutoFlickRequest();
                     }
                 };
+
+                //foreach (Gizmo gizmo in base.CompGetGizmosExtra())
+                //{
+                //    if (gizmo is Command_Toggle toggle)
+                //    {
+                //        toggle.isActive = () => wantSwitchOn;
+                //        toggle.toggleAction = delegate ()
+                //        {
+                //            wantSwitchOn = !wantSwitchOn;
+                //            FlickUtility.UpdateFlickDesignation(parent);
+                //        };
+                //    }
+                //}
+
             }
             yield break;
         }
@@ -166,5 +151,6 @@ namespace OpenTheWindows
                 return ifAutovent || ifAlarm;
             }
         }
+
     }
 }
