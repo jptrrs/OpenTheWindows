@@ -68,7 +68,7 @@
     <Compile Include="HarmonyPatches\Building.cs" />
     <Compile Include="HarmonyPatches\Compatibility\AlertManagerProxy.cs" />
     <Compile Include="HarmonyPatches\CompFlickable_SwitchIsOn.cs" />
-    <Compile Include="HarmonyPatches\CompFlickable.cs" />
+    <Compile Include="HarmonyPatches\CompFlickable_PostExposeData.cs" />
     <Compile Include="HarmonyPatches\CoverUtility_BaseBlockChance.cs" />
     <Compile Include="HarmonyPatches\GenGrid_CanBeSeenOvercs.cs" />
     <None Include="HarmonyPatches\TestArea\PathFinder_BlocksDiagonalMovement.cs" />
