@@ -4,6 +4,7 @@ using Verse;
 
 namespace OpenTheWindows
 {
+    //Updates the natural light overlay.
     [HarmonyPatch(typeof(MapInterface), nameof(MapInterface.MapInterfaceUpdate))]
     public static class MapInterface_MapInterfaceUpdate
     {

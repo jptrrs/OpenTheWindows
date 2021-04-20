@@ -3,6 +3,7 @@ using Verse;
 
 namespace OpenTheWindows
 {
+    //Linking to walls
     [HarmonyPatch(typeof(Building), nameof(Building.SpawnSetup))]
     public static class Building_SpawnSetup
     {

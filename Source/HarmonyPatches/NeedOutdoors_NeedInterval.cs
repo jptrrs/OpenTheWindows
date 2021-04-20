@@ -6,6 +6,7 @@ using Verse;
 
 namespace OpenTheWindows
 {
+    //Tweaks the Outdoor need calculation (TODO: cache reflections)
     [HarmonyPatch(typeof(Need_Outdoors), nameof(Need_Outdoors.NeedInterval))]
     public static class NeedOutdoors_NeedInterval
     {

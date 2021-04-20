@@ -3,6 +3,7 @@ using Verse;
 
 namespace OpenTheWindows
 {
+    //Triggers the illuminated area recalculation when thing is constructed/deconstructed.
     [HarmonyPatch(typeof(ThingGrid), nameof(ThingGrid.RegisterInCell))]
     public static class ThingGrid_Register
     {

@@ -5,11 +5,10 @@ using Verse;
 
 namespace OpenTheWindows
 {
+    //Illuminates the tiles that are under a window's influence area.
     [HarmonyPatch(typeof(GlowGrid), nameof(GlowGrid.GameGlowAt))]
     public static class GlowGrid_GameGlowAt
     {
-        //private static float WindowFiltering() => OpenTheWindowsSettings.LightTransmission;
-
         public static void Postfix(IntVec3 c, ref float __result)
         {
             // more caching, this method is called A LOT !
@@ -20,7 +19,7 @@ namespace OpenTheWindows
             {
                 if (__result < 1f && comp.WindowCells.Contains(c))
                 {
-                    float x = Mathf.Max(0f, map.skyManager.CurSkyGlow * OpenTheWindowsSettings.LightTransmission/*WindowFiltering()*/);
+                    float x = Mathf.Max(0f, map.skyManager.CurSkyGlow * OpenTheWindowsSettings.LightTransmission);
                     __result = Mathf.Max(__result, x);
                 }
             }

@@ -5,6 +5,7 @@ using Verse;
 
 namespace OpenTheWindows
 {
+    //Maps the roofs over the windows's influence area.
     [HarmonyPatch(typeof(SectionLayer_LightingOverlay), nameof(SectionLayer_LightingOverlay.Regenerate))]
     public static class LightingOverlay_Regenerate
     {

@@ -5,6 +5,7 @@ using Verse;
 
 namespace OpenTheWindows
 {
+    //Tweaks the report on cover effectiveness for windows.
     [HarmonyPatch(typeof(ThingDef), nameof(ThingDef.SpecialDisplayStats))]
     public static class ThingDef_SpecialDisplayStats
     {

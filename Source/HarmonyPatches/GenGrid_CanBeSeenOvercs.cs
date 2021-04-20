@@ -5,6 +5,7 @@ using Verse;
 
 namespace OpenTheWindows
 {
+    //Changes the visibility through the windows when they are open.
     [HarmonyPatch(typeof(GenGrid), nameof(GenGrid.CanBeSeenOver), new Type[] { typeof(Building) })]
     public static class GenGrid_CanBeSeenOvercs
     {

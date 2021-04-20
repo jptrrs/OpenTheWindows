@@ -4,6 +4,7 @@ using Verse;
 
 namespace OpenTheWindows
 {
+    //Triggers the illuminated area recalculation when roof is constructed.
     [HarmonyPatch(typeof(RoofGrid), nameof(RoofGrid.SetRoof))]
     public static class RoofGrid_SetRoof
     {
