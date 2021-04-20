@@ -19,6 +19,7 @@
   <loadAfter>
     <li>brrainz.harmony</li>
     <li>Dubwise.DubsSkylights</li>
+    <li>BJR1984.DubsSkylights.addon</li>
     <li>Meltup.BeautifulOutdoors</li>
   </loadAfter>
 
