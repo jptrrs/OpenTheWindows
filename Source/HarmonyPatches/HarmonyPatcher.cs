@@ -11,6 +11,7 @@ namespace OpenTheWindows
     {
         public static readonly Type patchType = typeof(HarmonyPatcher);
         public static bool
+            Blueprints = false,
             ExpandedRoofing = false,
             DubsSkylights = false,
             BetterPawnControl = false;
@@ -29,7 +30,7 @@ namespace OpenTheWindows
         {
             Instance.PatchAll();
 
-            Harmony.DEBUG = true;
+            //Harmony.DEBUG = true;
 
             if (LoadedModManager.RunningModsListForReading.Any(x => x.Name == "Dubs Skylights"))
             {
@@ -65,11 +66,18 @@ namespace OpenTheWindows
 
             if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("VouLT.BetterPawnControl")))
             {
-                Log.Message("[OpenTheWindows] Better Pawn Control mod detected! Integrating...");
+                Log.Message("[OpenTheWindows] Better Pawn Control detected! Integrating...");
                 BetterPawnControl = true;
                 Type AlertManagerType = AccessTools.TypeByName("BetterPawnControl.AlertManager");
                 Instance.Patch(AccessTools.Method(AlertManagerType, "LoadState"), null, new HarmonyMethod(typeof(AlertManager_LoadState), nameof(AlertManager_LoadState.LoadState_Postfix)));
                 Instance.CreateReversePatcher(AccessTools.PropertyGetter(AlertManagerType, "OnAlert"), new HarmonyMethod(AccessTools.Method(typeof(AlertManagerProxy), nameof(AlertManagerProxy.OnAlert)))).Patch();
+            }
+
+            if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("fluffy.blueprints")))
+            {
+                Log.Message("[OpenTheWindows] Blueprints detected! Integrating...");
+                Blueprints = true;
+                Instance.Patch(AccessTools.Method("Blueprints.BuildableInfo:DrawGhost"), new HarmonyMethod(typeof(BuildableInfo_DrawGhost), nameof(BuildableInfo_DrawGhost.DrawGhost_Prefix)), new HarmonyMethod(typeof(BuildableInfo_DrawGhost), nameof(BuildableInfo_DrawGhost.DrawGhost_Postfix)));
             }
         }
 
