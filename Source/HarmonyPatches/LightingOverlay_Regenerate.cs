@@ -14,13 +14,6 @@ namespace OpenTheWindows
         public static RoofDef[] roofRef = null;
         public static bool stateDirty = true;
         public static MapComp_Windows windowComponent = null;
-        public static void Postfix()
-        {
-            foreach (KeyValuePair<IntVec3, RoofDef> entry in changedRoofs)
-            {
-                roofRef[map.cellIndices.CellToIndex(entry.Key)] = entry.Value;
-            }
-        }
 
         public static void Prefix()
         {
@@ -44,6 +37,14 @@ namespace OpenTheWindows
                 var index = map.cellIndices.CellToIndex(cell);
                 changedRoofs.Add(cell, roofRef[index]);
                 roofRef[index] = null;
+            }
+        }
+
+        public static void Postfix()
+        {
+            foreach (KeyValuePair<IntVec3, RoofDef> entry in changedRoofs)
+            {
+                roofRef[map.cellIndices.CellToIndex(entry.Key)] = entry.Value;
             }
         }
     }

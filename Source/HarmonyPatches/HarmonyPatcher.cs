@@ -29,6 +29,8 @@ namespace OpenTheWindows
         {
             Instance.PatchAll();
 
+            Harmony.DEBUG = true;
+
             if (LoadedModManager.RunningModsListForReading.Any(x => x.Name == "Dubs Skylights"))
             {
                 Log.Message("[OpenTheWindows] Dubs Skylights detected! Integrating...");
@@ -41,10 +43,18 @@ namespace OpenTheWindows
 
             if (AccessTools.TypeByName("ExpandedRoofing.HarmonyPatches") is Type expandedRoofingType)
             {
-                Log.Message("[OpenTheWindows] Expanded Roofing detected! Integrating...");
+                Log.Message("[OpenTheWindows] Expanded Roofing detected! Integrating...");  
                 ExpandedRoofing = true;
                 Instance.Patch(AccessTools.Method("ExpandedRoofing.CompCustomRoof:PostSpawnSetup"), null, new HarmonyMethod(patchType, nameof(RegenGrid_Postfix)), null);
             }
+
+            //Raise the Roof integration - Needs more work!
+            ////if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("machine.rtr")))
+            //if (AccessTools.TypeByName("RaiseTheRoof.Patches") is Type rtrType)
+            //{
+            //    Log.Message($"[OpenTheWindows] Raise The Roof detected! Integrating...");
+            //    Instance.Patch(AccessTools.Method(AccessTools.Inner(rtrType, "Patch_SectionLayer_LightingOverlay_Regenerate"), "Prefix"), new HarmonyMethod(patchType, nameof(Patch_Inhibitor_Prefix)), null, null);
+            //}
 
             if (LoadedModManager.RunningModsListForReading.Any(x => x.Name.Contains("Nature is Beautiful") || x.Name.Contains("Beautiful Outdoors") || x.Name.Contains("Custom Natural Beauty")))
             {

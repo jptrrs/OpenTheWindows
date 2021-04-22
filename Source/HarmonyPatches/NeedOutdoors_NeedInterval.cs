@@ -93,7 +93,8 @@ namespace OpenTheWindows
             {
                 if (num < 0f) num *= DeltaFactor_NoNaturalLight();
                 else num /= DeltaFactor_NoNaturalLight();
-            } //
+            }
+            //
             num *= 0.0025f;
             float _curLevel = curLevel;
             if (num < 0f)

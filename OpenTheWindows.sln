@@ -71,11 +71,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{44B639C0-085C-
 		Textures\UI\OpenWindows.png = Textures\UI\OpenWindows.png
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "News", "News", "{4B8CDE98-B209-4499-B836-CA7E5EA41859}"
-	ProjectSection(SolutionItems) = preProject
-		..\BurnItForFuel\News\OpenTheWindows_UpdateFeatures.xml = ..\BurnItForFuel\News\OpenTheWindows_UpdateFeatures.xml
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Languages", "Languages", "{7C1BB53B-EFD8-4C30-A364-2A2C8DAC7849}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ChineseSimplified", "ChineseSimplified", "{5AB0DF98-C63E-489C-96A0-D9446423D080}"
@@ -184,6 +179,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Defs", "Defs", "{F6777F35-8
 	ProjectSection(SolutionItems) = preProject
 		Defs\ResearchProjects.xml = Defs\ResearchProjects.xml
 		Defs\Things.xml = Defs\Things.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "News", "News", "{C39B34CB-225A-43AD-84B9-6518483150D5}"
+	ProjectSection(SolutionItems) = preProject
+		News\Alarm.png = News\Alarm.png
+		News\AutoVent.png = News\AutoVent.png
+		News\OpenTheWindows_UpdateFeatures.xml = News\OpenTheWindows_UpdateFeatures.xml
+		News\SmartWindow.png = News\SmartWindow.png
+		News\SmartWindows.png = News\SmartWindows.png
 	EndProjectSection
 EndProject
 Global
