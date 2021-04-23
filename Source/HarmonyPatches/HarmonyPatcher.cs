@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using RimWorld;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Verse;
 
@@ -10,11 +11,12 @@ namespace OpenTheWindows
     public static class HarmonyPatcher
     {
         public static readonly Type patchType = typeof(HarmonyPatcher);
+        public static Type LocksType = null;
         public static bool
+            BetterPawnControl = false,
             Blueprints = false,
-            ExpandedRoofing = false,
             DubsSkylights = false,
-            BetterPawnControl = false;
+            ExpandedRoofing = false;
         public static Harmony _instance = null;
         public static Harmony Instance
         {
@@ -32,7 +34,7 @@ namespace OpenTheWindows
 
             //Harmony.DEBUG = true;
 
-            if (LoadedModManager.RunningModsListForReading.Any(x => x.Name == "Dubs Skylights"))
+            if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("Dubwise.DubsSkylights")))
             {
                 Log.Message("[OpenTheWindows] Dubs Skylights detected! Integrating...");
                 DubsSkylights = true;
@@ -42,9 +44,9 @@ namespace OpenTheWindows
                 Instance.Patch(AccessTools.Method("Dubs_Skylight.MapComp_Skylights:RegenGrid"), null, new HarmonyMethod(patchType, nameof(RegenGrid_Postfix)), null);
             }
 
-            if (AccessTools.TypeByName("ExpandedRoofing.HarmonyPatches") is Type expandedRoofingType)
+            if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("wit.expandedroofing")))
             {
-                Log.Message("[OpenTheWindows] Expanded Roofing detected! Integrating...");  
+                Log.Message("[OpenTheWindows] Expanded Roofing detected! Integrating...");
                 ExpandedRoofing = true;
                 Instance.Patch(AccessTools.Method("ExpandedRoofing.CompCustomRoof:PostSpawnSetup"), null, new HarmonyMethod(patchType, nameof(RegenGrid_Postfix)), null);
             }
@@ -57,7 +59,8 @@ namespace OpenTheWindows
             //    Instance.Patch(AccessTools.Method(AccessTools.Inner(rtrType, "Patch_SectionLayer_LightingOverlay_Regenerate"), "Prefix"), new HarmonyMethod(patchType, nameof(Patch_Inhibitor_Prefix)), null, null);
             //}
 
-            if (LoadedModManager.RunningModsListForReading.Any(x => x.Name.Contains("Nature is Beautiful") || x.Name.Contains("Beautiful Outdoors") || x.Name.Contains("Custom Natural Beauty")))
+            List<string> beautyMods = new List<string>() { "JPT.CustomNaturalBeauty", "zhrocks11.NatureIsBeautiful", "Meltup.BeautifulOutdoors" };
+            if (LoadedModManager.RunningModsListForReading.Any(x => x.Name.Contains("Nature is Beautiful") || beautyMods.Select(id => x.PackageIdPlayerFacing.StartsWith(id)).Any()))
             {
                 Log.Message("[OpenTheWindows] Landscape beautification mod detected! Integrating...");
                 OpenTheWindowsSettings.IsBeautyOn = true;
@@ -75,9 +78,15 @@ namespace OpenTheWindows
 
             if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("fluffy.blueprints")))
             {
-                Log.Message("[OpenTheWindows] Blueprints detected! Integrating...");
+                Log.Message("[OpenTheWindows] Blueprints detected! Adapting...");
                 Blueprints = true;
                 Instance.Patch(AccessTools.Method("Blueprints.BuildableInfo:DrawGhost"), new HarmonyMethod(typeof(BuildableInfo_DrawGhost), nameof(BuildableInfo_DrawGhost.DrawGhost_Prefix)), new HarmonyMethod(typeof(BuildableInfo_DrawGhost), nameof(BuildableInfo_DrawGhost.DrawGhost_Postfix)));
+            }
+
+            if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("avius.locks")))
+            {
+                Log.Message("[OpenTheWindows] Locks detected! Adapting...");
+                LocksType = AccessTools.TypeByName("Locks.LockGizmo");
             }
         }
 

@@ -227,7 +227,9 @@ namespace OpenTheWindows
         {
             foreach (Gizmo gizmo in base.GetGizmos())
             {
-                if (!(gizmo is Command_Toggle toggle && toggle.icon == TexCommand.HoldOpen)) yield return gizmo;
+                //Log.Message($"DEBUG window gizmo type is {gizmo.ge}")
+
+                if (!GizmoInhibitor(gizmo)) yield return gizmo;
             }
             yield return new Command_Toggle
             {
@@ -265,6 +267,13 @@ namespace OpenTheWindows
                     }
                 };
             }
+        }
+
+        private bool GizmoInhibitor(Gizmo gizmo)
+        {
+            return
+                (gizmo is Command_Toggle toggle && toggle.icon == TexCommand.HoldOpen) ||
+                (HarmonyPatcher.LocksType != null && gizmo.GetType() == HarmonyPatcher.LocksType);
         }
 
         public override string GetInspectString()
@@ -386,33 +395,6 @@ namespace OpenTheWindows
                 if (!isFacingSet) WindowUtility.FindWindowExternalFacing(this);
                 CastLight();
             }
-            //if (signal == "lightOff" || signal == "bothOff")
-            //{
-            //    def.blockLight = true;
-            //    open = false;
-            //    needsupdate = true;
-            //}
-            //if (signal == "lightOn" || signal == "bothOn")
-            //{
-            //    open = true;
-            //    def.blockLight = false;
-            //    needsupdate = true;
-            //}
-            //if (needsupdate)
-            //{
-            //    if (!isFacingSet) WindowUtility.FindWindowExternalFacing(this);
-            //    CastLight();
-            //}
-            //if (signal == "airOn" || signal == "bothOn")
-            //{
-            //    venting = true;
-            //    recentlyOperated = true;
-            //}
-            //if (signal == "airOff" || signal == "bothOff")
-            //{
-            //    venting = false;
-            //    recentlyOperated = true;
-            //}
         }
 
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
