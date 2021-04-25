@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace OpenTheWindows
 {
-    //Modifies beauty for windows. Manually patched if any landscape beautification mod is present.
+    //Modifies beauty need sensitivity. Manually patched if any landscape beautification mod is present.
     public static class NeedBeauty_LevelFromBeauty
     {
         private static float ModifiedBeautyImpactFactor() => 0.1f - (OpenTheWindowsSettings.BeautySensitivityReduction / 10); // original is 0.1f ... testing
