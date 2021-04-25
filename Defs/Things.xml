@@ -24,7 +24,7 @@
     <coversFloor>true</coversFloor>
     <castEdgeShadows>true</castEdgeShadows>
     <canOverlapZones>false</canOverlapZones>
-    <tickerType>Rare</tickerType>
+    <tickerType>Normal</tickerType>
     <placeWorkers>
       <li>OpenTheWindows.PlaceWorker_Window</li>
     </placeWorkers>

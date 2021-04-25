@@ -7,12 +7,17 @@ namespace OpenTheWindows
     {
         //public delegate void Notify();  // delegate: "template" for the handler to be defined on the subscriber class, replaced by .Net's EventHandler
         
-        public static event EventHandler<IntVec3> MapUpdate; // event
+        public static event EventHandler<MapUpdateInfo> MapUpdate; // event
 
-        public static void OnMapUpdate(object sender, IntVec3 center) //if event is not null then call delegate
+        public static void OnMapUpdate(object sender, MapUpdateInfo info) //if event is not null then call delegate
         {
-            MapUpdate?.Invoke(sender, center);
+            MapUpdate?.Invoke(sender, info);
         }
 
+        public class MapUpdateInfo : EventArgs
+        {
+            public IntVec3 center;
+            public bool removing;
+        }
     }
 }

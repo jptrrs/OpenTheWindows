@@ -1,6 +1,7 @@
 ﻿using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace OpenTheWindows
@@ -9,187 +10,111 @@ namespace OpenTheWindows
     {
         public const int deep = 2;
 
-        public static IEnumerable<IntVec3> CalculateWindowLightCells(Building_Window window)
-        {
-            return CalculateWindowLightCells(window.def.size, window.Position, window.Rotation, window.Map, window.start, window.end);
-        }
-
-        public static IEnumerable<IntVec3> CalculateWindowLightCells(IntVec2 size, IntVec3 center, Rot4 rot, Map map, IntVec3 start, IntVec3 end)
-        {
-            foreach (IntVec3 c in GetWindowObfuscation(center, rot, size, map, start, end))
-            {
-                if (DoesLightReach(c, center, map))
-                {
-                    yield return c;
-                }
-            }
-            yield break;
-        }
-
-        private static bool DoesLightReach(IntVec3 watchCell, IntVec3 buildingCenter, Map map)
-        {
-            return (watchCell.Walkable(map) && GenSight.LineOfSightToEdges(buildingCenter, watchCell, map, true, null));
-        }
-
-        private static IEnumerable<IntVec3> GetWindowObfuscation(IntVec3 center, Rot4 rot, IntVec2 size, Map map, IntVec3 start, IntVec3 end)
+        public static IEnumerable<IntVec3> GetWindowObfuscation(IntVec2 size, IntVec3 center, Rot4 rot, Map map, IntVec3 start, IntVec3 end)
         {
             //base vars
             List<IntVec3> area = new List<IntVec3>();
             int reach = Math.Max(size.x, size.z) / 2 + 1;
             bool large = Math.Max(size.x, size.z) > 1;
+            int maxReach = reach + deep;
 
             //front and back
             foreach (IntVec3 c in GenAdj.OccupiedRect(center, rot, size))
             {
-                if (c.InBounds(map))
-                {
-                    int maxReachA = 0;
-                    int maxReachB = 0;
-                    int cellx = c.x;
-                    int cellz = c.z;
-
-                    if (rot.IsHorizontal)
-                    {
-                        //find reach
-                        for (int i = 1; i <= reach + deep; i++)
-                        {
-                            IntVec3 target = new IntVec3(cellx + i, 0, cellz);
-                            if (target.InBounds(map) && target.Walkable(map) && !map.roofGrid.Roofed(target)) maxReachA++;
-                            else break;
-                        }
-                        for (int i = 1; i <= reach + deep; i++)
-                        {
-                            IntVec3 target = new IntVec3(Math.Max(0, cellx - i), 0, cellz);
-                            if (target.InBounds(map) && target.Walkable(map) && !map.roofGrid.Roofed(target)) maxReachB++;
-                            else break;
-                        }
-                        int maxReach = Math.Max(maxReachA, maxReachB);
-
-                        //register affected cells
-                        for (int i = 1; i <= maxReach; i++)
-                        {
-                            area.Add(new IntVec3(cellx + i, 0, cellz));
-                            area.Add(new IntVec3(cellx - i, 0, cellz));
-                        }
-
-                        //add borders if on extremity
-                        if (!large || c + IntVec3.North == start)
-                        {
-                            //for (int f = 1; f <= reach; f++)
-                            //{
-                            for (int i = 1; i <= maxReach; i++)
-                            {
-                                area.Add(new IntVec3(cellx + i, 0, cellz + 1));
-                                area.Add(new IntVec3(cellx - i, 0, cellz + 1));
-                            }
-                            //}
-                        }
-                        if (!large || c + IntVec3.South == end)
-                        {
-                            //for (int f = 1; f <= reach; f++)
-                            //{
-                            for (int i = 1; i <= maxReach; i++)
-                            {
-                                area.Add(new IntVec3(cellx + i, 0, cellz - 1));
-                                area.Add(new IntVec3(cellx - i, 0, cellz - 1));
-                            }
-                            //}
-                        }
-                    }
-                    else
-                    {
-                        //find reach
-                        for (int i = 1; i <= reach + deep; i++)
-                        {
-                            IntVec3 target = new IntVec3(cellx, 0, cellz + i);
-                            if (target.Walkable(map) & !map.roofGrid.Roofed(target)) maxReachA++;
-                            else break;
-                        }
-                        for (int i = 1; i <= reach + deep; i++)
-                        {
-                            IntVec3 target = new IntVec3(cellx, 0, Math.Max(0, cellz - i));
-                            if (target.Walkable(map) & !map.roofGrid.Roofed(target)) maxReachB++;
-                            else break;
-                        }
-                        int maxReach = Math.Max(maxReachA, maxReachB);
-
-                        //register affected cells
-                        for (int i = 1; i <= maxReach; i++)
-                        {
-                            area.Add(new IntVec3(cellx, 0, cellz + i));
-                            area.Add(new IntVec3(cellx, 0, cellz - i));
-                        }
-
-                        //add borders if on extremity
-                        if (!large || c + IntVec3.East == start)
-                        {
-                            for (int i = 1; i <= maxReach; i++)
-                            {
-                                area.Add(new IntVec3(cellx + 1, 0, cellz + i));
-                                area.Add(new IntVec3(cellx + 1, 0, cellz - i));
-                                //}
-                            }
-                        }
-                        if (!large || c + IntVec3.West == end)
-                        {
-                            //for (int f = 1; f <= reach; f++)
-                            //{
-                            for (int i = 1; i <= maxReach; i++)
-                            {
-                                area.Add(new IntVec3(cellx - 1, 0, cellz + i));
-                                area.Add(new IntVec3(cellx - 1, 0, cellz - i));
-                            }
-                            //}
-                        }
-                    }
-                    //clean cell itself
-                    //area.Remove(c);
-                }
+                if (!c.InBounds(map)) break;
+                var right = rot.IsHorizontal ? IntVec3.North : IntVec3.East;
+                var left = rot.IsHorizontal ? IntVec3.South : IntVec3.West;
+                area.AddRange(UnobstructedGhost(c, rot, map, maxReach, rot.IsHorizontal, !large || c + right == start, !large || c + left == end));
             }
             return area;
         }
 
-        public static void FindWindowExternalFacing(Building_Window window)
-        {
-            List<IntVec3> openSideA = new List<IntVec3>();
-            List<IntVec3> openSideB = new List<IntVec3>();
-            LinkDirections dirA, dirB;
-            IntVec3 centerAdjustB, centerAdjustA;
+        public delegate bool cellTest(IntVec3 cell, bool inside = false);
 
-            if (window.Rotation.IsHorizontal)
+        public static List<IntVec3> UnobstructedGhost(IntVec3 position, Rot4 rot, Map map, int maxreach, bool horizontal, bool bleedRight, bool bleedLeft)
+        {
+            bool southward = rot == Rot4.South || rot == Rot4.West;
+            cellTest clear = (c, b) => c.InBounds(map) && c.Walkable(map) && !map.roofGrid.Roofed(c);
+
+            //3. Determine clearence and max reach on each side
+            Dictionary<IntVec3, int> cleared = new Dictionary<IntVec3, int>();
+            int reachFwd = 0;
+            int reachBwd = 0;
+
+            //forward (walks North/East)
+            for (int i = 1; i <= maxreach; i++)
             {
-                dirA = LinkDirections.Right;
-                dirB = LinkDirections.Left;
-                centerAdjustA = IntVec3.West;
-                centerAdjustB = IntVec3.East;
-            }
-            else
-            {
-                dirA = LinkDirections.Up;
-                dirB = LinkDirections.Down;
-                centerAdjustA = IntVec3.South;
-                centerAdjustB = IntVec3.North;
-            }
-            foreach (IntVec3 c in GenAdj.CellsAdjacentAlongEdge(window.Position + centerAdjustA, window.Rotation, window.def.size, dirA))
-            {
-                if (!window.Map.roofGrid.Roofed(c))
+                IntVec3 clearedFwd;
+                if (ClearForwards(position, horizontal, clear, southward, i, out clearedFwd))
                 {
-                    openSideA.Add(c);
+                    cleared.Add(clearedFwd, i);
+                    reachFwd++;
+                }
+                else break;
+            }
+            //backward (walks South/West)
+            for (int i = 1; i <= maxreach; i++)
+            {
+                IntVec3 clearedBwd;
+                if (ClearBackwards(position, horizontal, clear, !southward, i, out clearedBwd))
+                {
+                    cleared.Add(clearedBwd, i);
+                    reachBwd++;
+                }
+                else break;
+            }
+
+            //5. Apply clearance.
+            int obstructed = Math.Min(reachBwd,reachFwd);
+            cleared.RemoveAll(x => x.Value > obstructed);
+            var result = cleared.Keys.ToList();
+            List<IntVec3> bleed = new List<IntVec3>();
+
+            //6. Apply Bleed
+            if (bleedRight)
+            {
+                IntVec3 dir = rot.IsHorizontal ? IntVec3.North : IntVec3.East;
+                foreach (var cell in result)
+                {
+                    var edge = cell + dir;
+                    if (clear(edge, false)) bleed.Add(edge);
                 }
             }
-            foreach (IntVec3 c in GenAdj.CellsAdjacentAlongEdge(window.Position + centerAdjustB, window.Rotation, window.def.size, dirB))
+            if (bleedLeft)
             {
-                if (!window.Map.roofGrid.Roofed(c))
+                IntVec3 dir = rot.IsHorizontal ? IntVec3.South : IntVec3.West;
+                foreach (var cell in result)
                 {
-                    openSideB.Add(c);
+                    var edge = cell + dir;
+                    if (clear(edge, false)) bleed.Add(edge);
                 }
             }
-            if (openSideA.Count != openSideB.Count)
-            {
-                window.Facing = (openSideA.Count > openSideB.Count) ? dirA : dirB;
-                window.isFacingSet = true;
-            }
-            else window.isFacingSet = false;
+            if (!bleed.NullOrEmpty()) result.AddRange(bleed);
+            return result;
+        }
+
+        public static bool ClearForwards(IntVec3 position, bool horizontal, cellTest test, bool inside, int dist, out IntVec3 output)
+        {
+            int cellx = position.x;
+            int cellz = position.z;
+            int deltaX = horizontal ? dist : 0;
+            int deltaZ = horizontal ? 0 : dist;
+            IntVec3 target = new IntVec3(cellx + deltaX, 0, cellz + deltaZ);
+            bool result = test(target, inside);
+            output = result ? target : IntVec3.Zero;
+            return result;
+        }
+
+        public static bool ClearBackwards(IntVec3 position, bool horizontal, cellTest test, bool inside, int dist, out IntVec3 output)
+        {
+            int cellx = position.x;
+            int cellz = position.z;
+            int targetX = horizontal ? Math.Max(0, cellx - dist) : cellx;
+            int targetZ = horizontal ? cellz : Math.Max(0, cellz - dist);
+            IntVec3 target = new IntVec3(targetX, 0, targetZ);
+            bool result = test(target, inside);
+            output = result ? target : IntVec3.Zero;
+            return result;
         }
 
         public static void FindEnds(Building_Window window)

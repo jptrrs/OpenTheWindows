@@ -1,7 +1,6 @@
 ﻿using HarmonyLib;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Verse;
 
@@ -11,7 +10,6 @@ namespace OpenTheWindows
     {
         public List<Building_Window> cachedWindows = new List<Building_Window>();
         public HashSet<IntVec3> WindowCells;
-        public int[] WindowScanGrid;
         private FieldInfo
             DubsSkylights_skylightGridinfo,
             ExpandedRoofing_roofTransparentInfo;
@@ -22,7 +20,6 @@ namespace OpenTheWindows
 
         public MapComp_Windows(Map map) : base(map)
         {
-            WindowScanGrid = new int[map.cellIndices.NumGridCells];
             WindowCells = new HashSet<IntVec3>();
             if (HarmonyPatcher.DubsSkylights)
             {
@@ -35,19 +32,6 @@ namespace OpenTheWindows
                 ExpandedRoofing_type = AccessTools.TypeByName("ExpandedRoofing.RoofDefOf");
                 ExpandedRoofing_roofTransparentInfo = AccessTools.Field(ExpandedRoofing_type, "RoofTransparent");
             }
-            MapUpdateWatcher.MapUpdate += MapUpdated;  // register with an event, handler must match template signature
-        }
-
-        public void CastNaturalLightOnDemand(List<Building_Window> windows, bool reFace)
-        {
-            foreach (Building_Window window in windows)
-            {
-                if (reFace && window.NeedExternalFacingUpdate())
-                {
-                    WindowUtility.FindWindowExternalFacing(window);
-                }
-                window.CastLight();
-            }
         }
 
         public void DeRegisterWindow(Building_Window window)
@@ -55,7 +39,6 @@ namespace OpenTheWindows
             if (cachedWindows.Contains(window))
             {
                 cachedWindows.Remove(window);
-                SetWindowScanArea(window, false);
             }
         }
 
@@ -64,7 +47,16 @@ namespace OpenTheWindows
             if (WindowCells.Contains(tile))
             {
                 WindowCells.Remove(tile);
-                map.glowGrid.MarkGlowGridDirty(tile);
+            }
+            map.glowGrid.MarkGlowGridDirty(tile);
+        }
+
+        public void ExcludeTileRange(List<IntVec3> tiles)
+        {
+            //Log.Message($"DEBUG excluding {tiles.Count()} tiles");
+            foreach (var c in tiles)
+            {
+                ExcludeTile(c);
             }
         }
 
@@ -73,17 +65,17 @@ namespace OpenTheWindows
             if (!WindowCells.Contains(tile))
             {
                 WindowCells.Add(tile);
-                map.glowGrid.MarkGlowGridDirty(tile);
             }
+            map.glowGrid.MarkGlowGridDirty(tile);
         }
-        public void MapUpdated(object sender, IntVec3 center) // event handler
+
+        public void IncludeTileRange(List<IntVec3> tiles)
         {
-            map.cellIndices.CellToIndex(center);
-            List<Building_Window> windows = new List<Building_Window>();
-            var region = map.regionGrid.GetValidRegionAt(center);
-            if (region == null) return;
-            FindAffectedWindows(windows, region);
-            if (!windows.NullOrEmpty()) CastNaturalLightOnDemand(windows, sender is RoofGrid);
+            //Log.Message($"DEBUG including {tiles.Count()} tiles");
+            foreach (var c in tiles)
+            {
+                IncludeTile(c);
+            }
         }
 
         //Windows register their cells on their on, this is just for compatibles.
@@ -119,58 +111,6 @@ namespace OpenTheWindows
             if (!cachedWindows.Contains(window))
             {
                 cachedWindows.Add(window);
-                SetWindowScanArea(window, true);
-            }
-        }
-
-        private static void FindAffectedWindows(List<Building_Window> windows, Region region, bool recursive = true)
-        {
-            foreach (Region connected in region.links.Select(x => x.GetOtherRegion(region)))
-            {
-                if (connected.IsDoorway)
-                {
-                    var window = connected.ListerThings.AllThings.FirstOrDefault(x => x is Building_Window);
-                    if (window != null)
-                    {
-                        windows.Add(window as Building_Window);
-                    }
-                }
-                else if (recursive) FindAffectedWindows(windows, connected, false);
-            }
-        }
-
-        private void SetWindowScanArea(Building_Window window, bool register)
-        {
-            Map map = window.Map;
-            int deep = WindowUtility.deep;
-            int reach = Math.Max(window.def.size.x, window.def.size.z) / 2 + 1;
-            int delta = register ? 1 : -1;
-
-            //front and back
-            foreach (IntVec3 c in GenAdj.OccupiedRect(window.Position, window.Rotation, window.def.size))
-            {
-                if (c.InBounds(map))
-                {
-                    int cellx = c.x;
-                    int cellz = c.z;
-                    for (int i = 1; i <= +reach + deep; i++)
-                    {
-                        if (window.Rotation.IsHorizontal)
-                        {
-                            IntVec3 targetA = new IntVec3(cellx + i, 0, cellz);
-                            if (targetA.InBounds(map)) WindowScanGrid[map.cellIndices.CellToIndex(targetA)] += delta;
-                            IntVec3 targetB = new IntVec3(Math.Max(0, cellx - i), 0, cellz);
-                            if (targetB.InBounds(map)) WindowScanGrid[map.cellIndices.CellToIndex(targetB)] += delta;
-                        }
-                        else
-                        {
-                            IntVec3 targetA = new IntVec3(cellx, 0, cellz + i);
-                            if (targetA.InBounds(map)) WindowScanGrid[map.cellIndices.CellToIndex(targetA)] += delta;
-                            IntVec3 targetB = new IntVec3(cellx, 0, Math.Max(0, cellz - i));
-                            if (targetB.InBounds(map)) WindowScanGrid[map.cellIndices.CellToIndex(targetB)] += delta;
-                        }
-                    }
-                }
             }
         }
     }

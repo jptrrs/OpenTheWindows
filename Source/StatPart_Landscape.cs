@@ -33,9 +33,9 @@ namespace OpenTheWindows
 
         public float WindowViewBeauty(Building_Window window)
         {
-            if (window != null && window.open && window.isFacingSet && window.effectArea.Count > 0)
+            if (window != null && window.open && window.isFacingSet && window.view.Count > 0)
             {
-                IEnumerable<IntVec3> view = window.effectArea.Except(window.illuminated);
+                IEnumerable<IntVec3> view = window.view;
                 float result = 0;
                 List<Thing> counted = new List<Thing>();
                 foreach (IntVec3 c in view)
