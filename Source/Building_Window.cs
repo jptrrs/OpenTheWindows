@@ -462,7 +462,7 @@ namespace OpenTheWindows
             var region = Map.regionGrid.GetValidRegionAt(Inside);
             if (region == null) return null;
             List<Building_Window> result = new List<Building_Window>();
-            FindAffectedWindows(result, region);
+            FindAffectedWindows(result, region, this.GetRegion());
             //if (result.Count() > 3) result.RemoveAll(x => x.Position.DistanceToSquared(Position) > MaxNeighborDistance); //Unreliable, for some reason. But not tremendously needed.
             return result;
         }
@@ -503,22 +503,6 @@ namespace OpenTheWindows
             else if (ticksGame >= nextToleranceCheckTick + (toleranceCheckInterval * intervalMultiplierAfterAttempts) || TargetTemp.Includes(insideTemp))
             {
                 if (recentlyOperated) recentlyOperated = false;
-            }
-        }
-
-        private void FindAffectedWindows(List<Building_Window> windows, Region region, bool recursive = true)
-        {
-            foreach (Region connected in region.links.Select(x => x.GetOtherRegion(region)).Except(this.GetRegion()))
-            {
-                if (connected.IsDoorway)
-                {
-                    var window = connected.ListerThings.AllThings.FirstOrDefault(x => x is Building_Window);
-                    if (window != null && !windows.Contains(window) && window != this)
-                    {
-                        windows.Add(window as Building_Window);
-                    }
-                }
-                else if (recursive) FindAffectedWindows(windows, connected, false);
             }
         }
 
@@ -744,14 +728,16 @@ namespace OpenTheWindows
                 if (parent.large && !SomeSiblingOff())
                 {
                     var b = c + bleedDirection;
-                    list.AddDistinct(b);
+                    if (b.Walkable(map)) list.AddDistinct(b);
                 }
                 else
                 {
-                    IntVec3 dirA = horizontal ? IntVec3.South : IntVec3.West;
-                    IntVec3 dirB = horizontal ? IntVec3.North : IntVec3.East;
-                    list.AddDistinct(c + dirA);
-                    list.AddDistinct(c + dirB);
+                    var left = horizontal ? IntVec3.South : IntVec3.West;
+                    var right = horizontal ? IntVec3.North : IntVec3.East;
+                    var leftEdge = c + left;
+                    var rightEdge = c + right;
+                    if (leftEdge.Walkable(map)) list.AddDistinct(leftEdge);
+                    if (rightEdge.Walkable(map)) list.AddDistinct(rightEdge);
                 }
             }
 

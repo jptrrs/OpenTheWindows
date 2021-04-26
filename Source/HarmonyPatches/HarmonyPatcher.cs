@@ -11,7 +11,9 @@ namespace OpenTheWindows
     public static class HarmonyPatcher
     {
         public static readonly Type patchType = typeof(HarmonyPatcher);
-        public static Type LocksType = null;
+        public static Type
+            Building_Skylight,
+            LocksType;
         public static bool
             BetterPawnControl = false,
             Blueprints = false,
@@ -42,6 +44,7 @@ namespace OpenTheWindows
                 Instance.Patch(AccessTools.Method("Dubs_Skylight.Patch_SectionLayer_LightingOverlay_Regenerate:Prefix"), new HarmonyMethod(patchType, nameof(Patch_Inhibitor_Prefix)), null, null);
                 Instance.Patch(AccessTools.Method("Dubs_Skylight.Patch_SectionLayer_LightingOverlay_Regenerate:Postfix"), new HarmonyMethod(patchType, nameof(Patch_Inhibitor_Prefix)), null, null);
                 Instance.Patch(AccessTools.Method("Dubs_Skylight.MapComp_Skylights:RegenGrid"), null, new HarmonyMethod(patchType, nameof(RegenGrid_Postfix)), null);
+                Building_Skylight = AccessTools.TypeByName("Dubs_Skylight.Building_skyLight");
             }
 
             if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("wit.expandedroofing")))

@@ -144,5 +144,22 @@ namespace OpenTheWindows
             LinkDirections dir = again ? dirB : dirA;
             return GenAdj.CellsAdjacentAlongEdge(center + adjust, rot, size, dir).FirstOrFallback();
         }
+
+        public static void FindAffectedWindows(List<Building_Window> windows, Region initial, Region ignore = null, bool recursive = true)
+        {
+            foreach (Region connected in initial.links.Select(x => x.GetOtherRegion(initial)).Except(ignore))
+            {
+                if (connected.IsDoorway)
+                {
+                    var window = connected.ListerThings.AllThings.FirstOrDefault(x => x is Building_Window);
+                    if (window != null && !windows.Contains(window))
+                    {
+                        windows.Add(window as Building_Window);
+                    }
+                }
+                else if (recursive) FindAffectedWindows(windows, connected, ignore, false);
+            }
+        }
+
     }
 }
