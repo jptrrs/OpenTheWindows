@@ -161,5 +161,14 @@ namespace OpenTheWindows
             }
         }
 
+        public static void ResetWindowsAround(Map map, IntVec3 tile)
+        {
+            Region region = map.regionGrid.GetValidRegionAt(tile);
+            if (region == null) return;
+            List<Building_Window> neighbors = new List<Building_Window>();
+            FindAffectedWindows(neighbors, region);
+            neighbors.ForEach(window => window.CastLight());
+        }
+
     }
 }

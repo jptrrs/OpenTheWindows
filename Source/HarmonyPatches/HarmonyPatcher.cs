@@ -20,6 +20,8 @@ namespace OpenTheWindows
             DubsSkylights = false,
             ExpandedRoofing = false;
         public static Harmony _instance = null;
+        public static ModContentPack ExpandedRoofingMod;
+        public static List<RoofDef> transparentRoofs = new List<RoofDef>();
         public static Harmony Instance
         {
             get
@@ -34,7 +36,7 @@ namespace OpenTheWindows
         {
             Instance.PatchAll();
 
-            //Harmony.DEBUG = true;
+            Harmony.DEBUG = true;
 
             if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("Dubwise.DubsSkylights")))
             {
@@ -43,23 +45,25 @@ namespace OpenTheWindows
                 Instance.Patch(AccessTools.Method("Dubs_Skylight.Patch_GameGlowAt:Postfix"), new HarmonyMethod(patchType, nameof(Patch_Inhibitor_Prefix)), null, null);
                 Instance.Patch(AccessTools.Method("Dubs_Skylight.Patch_SectionLayer_LightingOverlay_Regenerate:Prefix"), new HarmonyMethod(patchType, nameof(Patch_Inhibitor_Prefix)), null, null);
                 Instance.Patch(AccessTools.Method("Dubs_Skylight.Patch_SectionLayer_LightingOverlay_Regenerate:Postfix"), new HarmonyMethod(patchType, nameof(Patch_Inhibitor_Prefix)), null, null);
-                Instance.Patch(AccessTools.Method("Dubs_Skylight.MapComp_Skylights:RegenGrid"), null, new HarmonyMethod(patchType, nameof(RegenGrid_Postfix)), null);
                 Building_Skylight = AccessTools.TypeByName("Dubs_Skylight.Building_skyLight");
             }
 
-            if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("wit.expandedroofing")))
+            ExpandedRoofingMod = LoadedModManager.RunningModsListForReading.FirstOrDefault(x => x.PackageIdPlayerFacing.StartsWith("wit.expandedroofing"));
+            if (ExpandedRoofingMod != null)
             {
                 Log.Message("[OpenTheWindows] Expanded Roofing detected! Integrating...");
-                ExpandedRoofing = true;
-                Instance.Patch(AccessTools.Method("ExpandedRoofing.CompCustomRoof:PostSpawnSetup"), null, new HarmonyMethod(patchType, nameof(RegenGrid_Postfix)), null);
+                transparentRoofs.Add(DefDatabase<RoofDef>.GetNamed("RoofTransparent"));
+                if (transparentRoofs.NullOrEmpty()) Log.Error($"[OpenTheWindows] No transparent roofs detected, Expanded Roofing integration failed!");
+                else ExpandedRoofing = true;
             }
 
-            //Raise the Roof integration - Needs more work!
+            ////Raise the Roof integration -Needs more work!
             ////if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("machine.rtr")))
             //if (AccessTools.TypeByName("RaiseTheRoof.Patches") is Type rtrType)
             //{
             //    Log.Message($"[OpenTheWindows] Raise The Roof detected! Integrating...");
             //    Instance.Patch(AccessTools.Method(AccessTools.Inner(rtrType, "Patch_SectionLayer_LightingOverlay_Regenerate"), "Prefix"), new HarmonyMethod(patchType, nameof(Patch_Inhibitor_Prefix)), null, null);
+            //    Instance.Patch(AccessTools.Method(AccessTools.Inner(rtrType, "Patch_GlowGrid_GameGlowAt"), "Prefix"), new HarmonyMethod(patchType, nameof(Patch_Inhibitor_Prefix)), null, null);
             //}
 
             List<string> beautyMods = new List<string>() { "JPT.CustomNaturalBeauty", "zhrocks11.NatureIsBeautiful", "Meltup.BeautifulOutdoors" };
@@ -98,9 +102,9 @@ namespace OpenTheWindows
             return false;
         }
 
-        public static void RegenGrid_Postfix()
-        {
-            Find.CurrentMap.GetComponent<MapComp_Windows>().RegenGrid();
-        }
+        //public static void RegenGrid_Postfix()
+        //{
+        //    Find.CurrentMap.GetComponent<MapComp_Windows>().RegenGrid();
+        //}
     }
 }

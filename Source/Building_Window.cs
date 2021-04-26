@@ -516,7 +516,7 @@ namespace OpenTheWindows
         private void MapUpdateHandler(object sender, MapUpdateWatcher.MapUpdateInfo info)
         {
             var cell = info.center;
-            bool removing = info.removing;
+            bool removed = info.removed;
             if (isFacingSet && sender is RoofGrid && cell.IsInterior(this) && !GenAdj.CellsAdjacentCardinal(this).Contains(cell)) return;
             bool unsureFace = false;
             for (int i = 0; i < scanLines.Count(); i++)
@@ -525,7 +525,7 @@ namespace OpenTheWindows
                 {
                     var line = scanLines[i];
                     bool face = line.facingSet;
-                    line.FindObstruction(cell, removing);
+                    line.FindObstruction(cell, removed);
                     unsureFace |= line.facingSet != face;
                     NeedsUpdate = true;
                 }
@@ -610,9 +610,9 @@ namespace OpenTheWindows
                 }
             }
 
-            public void FindObstruction(IntVec3 motivator, bool removing = false)
+            public void FindObstruction(IntVec3 motivator, bool removed = false)
             {
-                var actualClearCells = Unobstructed(motivator, removing);
+                var actualClearCells = Unobstructed(motivator, removed);
                 var replaced = clearCells;
                 clearCells = scanLine.Where(x => actualClearCells.Contains(x)).Select(x => scanLine.IndexOf(x)).ToArray();
             }
@@ -646,11 +646,11 @@ namespace OpenTheWindows
                 }
             }
 
-            public List<IntVec3> Unobstructed(IntVec3 motivator, bool removing = false)
+            public List<IntVec3> Unobstructed(IntVec3 motivator, bool removed = false)
             {
                 //1. What is the test is?
                 bool lazy = motivator == IntVec3.Zero;
-                cellTest motivated = (target, inside) => target == motivator ? removing : IsClear(target, inside);
+                cellTest motivated = (target, inside) => target == motivator ? removed : IsClear(target, inside);
                 cellTest clear = lazy ? IsClear : motivated;
 
                 //2. Determine facing

@@ -17,7 +17,6 @@ namespace OpenTheWindows
                     return false;
                 }
                 compWindow.SwitchOnInt = value;
-                Log.Warning($"DEBUG compWindow {compWindow.Props.signal} flicked. New value={true} and swithconInt={___switchOnInt}");
                 var parent = compWindow.parent;
                 if (___switchOnInt)
                 {

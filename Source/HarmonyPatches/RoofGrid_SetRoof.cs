@@ -8,12 +8,20 @@ namespace OpenTheWindows
     [HarmonyPatch(typeof(RoofGrid), nameof(RoofGrid.SetRoof))]
     public static class RoofGrid_SetRoof
     {
-        public static void Postfix(RoofGrid __instance, IntVec3 c, RoofDef def)
+        public static void Prefix(RoofGrid __instance, IntVec3 c, out RoofDef __state)
         {
+            __state = HarmonyPatcher.ExpandedRoofing ? __instance.RoofAt(c) : null;
+        }
+
+        public static void Postfix(RoofGrid __instance, IntVec3 c, RoofDef def, RoofDef __state)
+        {
+            bool removing = def == null;
+            RoofDef defToPass = HarmonyPatcher.ExpandedRoofing ? (removing ? __state : def) : def;
             var info = new MapUpdateWatcher.MapUpdateInfo()
             {
                 center = c,
-                removing = def == null
+                removed = removing,
+                roofDef = defToPass
             };
             MapUpdateWatcher.OnMapUpdate(__instance, info);
         }

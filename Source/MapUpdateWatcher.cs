@@ -17,7 +17,8 @@ namespace OpenTheWindows
         public class MapUpdateInfo : EventArgs
         {
             public IntVec3 center;
-            public bool removing;
+            public bool removed;
+            public RoofDef roofDef;
         }
     }
 }

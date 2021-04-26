@@ -20,6 +20,7 @@ namespace OpenTheWindows
             ExpandedRoofing_type;
         private MethodInfo MapCompInfo;
         private bool[] skyLightGrid => (bool[])DubsSkylights_skylightGridinfo.GetValue(MapCompInfo.Invoke(map, new[] { DubsSkylights_type }));
+        RoofDef roofTransparent;
 
         public MapComp_Windows(Map map) : base(map)
         {
@@ -33,10 +34,11 @@ namespace OpenTheWindows
             }
             if (ExpandedRoofing)
             {
-                ExpandedRoofing_type = AccessTools.TypeByName("ExpandedRoofing.RoofDefOf");
-                ExpandedRoofing_roofTransparentInfo = AccessTools.Field(ExpandedRoofing_type, "RoofTransparent");
+                //ExpandedRoofing_type = AccessTools.TypeByName("ExpandedRoofing.RoofDefOf");
+                //ExpandedRoofing_roofTransparentInfo = AccessTools.Field(ExpandedRoofing_type, "RoofTransparent");
+                //roofTransparent = (RoofDef)ExpandedRoofing_roofTransparentInfo.GetValue(Find.CurrentMap.roofGrid);
+                MapUpdateWatcher.MapUpdate += MapUpdated;
             }
-            
         }
 
         public void DeRegisterWindow(Building_Window window)
@@ -47,21 +49,12 @@ namespace OpenTheWindows
             }
         }
 
-        public void ExcludeTile(IntVec3 tile)
+        public void ExcludeTile(IntVec3 tile, bool bypass = false)
         {
-            if (DubsSkylights)
-            {
-                if (WindowCells.Contains(tile) && !skyLightGrid[map.cellIndices.CellToIndex(tile)])
-                {
-                    WindowCells.Remove(tile);
-                    map.glowGrid.MarkGlowGridDirty(tile);
-                }
-                return;
-            }
-            if (WindowCells.Contains(tile))
-            {
-                WindowCells.Remove(tile);
-            }
+            if (!WindowCells.Contains(tile)) return;
+            if (DubsSkylights && skyLightGrid[map.cellIndices.CellToIndex(tile)]) return;
+            if (ExpandedRoofing && !bypass && transparentRoofs.Contains(map.roofGrid.RoofAt(tile))) return;
+            WindowCells.Remove(tile);
             map.glowGrid.MarkGlowGridDirty(tile);
         }
 
@@ -76,10 +69,8 @@ namespace OpenTheWindows
 
         public void IncludeTile(IntVec3 tile)
         {
-            if (!WindowCells.Contains(tile))
-            {
-                WindowCells.Add(tile);
-            }
+            if (WindowCells.Contains(tile)) return;
+            WindowCells.Add(tile);
             map.glowGrid.MarkGlowGridDirty(tile);
         }
 
@@ -94,44 +85,60 @@ namespace OpenTheWindows
 
         public void MapUpdated(object sender, MapUpdateWatcher.MapUpdateInfo info)
         {
-            if (DubsSkylights && sender.GetType() == Building_Skylight && info.removing)
+            if (DubsSkylights && sender.GetType() == Building_Skylight)
             {
                 Thing thing = sender as Thing;
-                ExcludeTileRange(thing.OccupiedRect().ExpandedBy(1).Cells);
-                Region region = info.center.GetRegion(map);
-                if (region == null) return;
-                List<Building_Window> neighbors = new List<Building_Window>();
-                WindowUtility.FindAffectedWindows(neighbors, region);
-                neighbors.ForEach(window => window.CastLight());
+                var tiles = thing.OccupiedRect().ExpandedBy(1).Cells;
+                if (info.removed)
+                {
+                    ExcludeTileRange(tiles);
+                    WindowUtility.ResetWindowsAround(map, info.center);
+                }
+                else
+                {
+                    IncludeTileRange(tiles);
+                }
+            }
+            if (ExpandedRoofing && sender is RoofGrid && info.roofDef != null && info.roofDef.modContentPack == ExpandedRoofingMod)
+            {
+                bool transparent = transparentRoofs.Contains(info.roofDef);
+                if ((transparent && info.removed) || (!info.removed && !transparent))
+                {
+                    ExcludeTile(info.center, true);
+                    WindowUtility.ResetWindowsAround(map, info.center);
+                }
+                if (!info.removed && transparent)
+                {
+                    IncludeTile(info.center);
+                }
             }
         }
 
         //Windows register their cells on their on, this is just for compatibles.
-        public void RegenGrid()
-        {
-            if (DubsSkylights)
-            {
-                for (int i = 0; i < skyLightGrid.Length; i++)
-                {
-                    if (skyLightGrid[i] == true)
-                    {
-                        WindowCells.Add(map.cellIndices.IndexToCell(i));
-                    }
-                }
-            }
+        //public void RegenGrid()
+        //{
+        //    if (DubsSkylights)
+        //    {
+        //        for (int i = 0; i < skyLightGrid.Length; i++)
+        //        {
+        //            if (skyLightGrid[i] == true)
+        //            {
+        //                WindowCells.Add(map.cellIndices.IndexToCell(i));
+        //            }
+        //        }
+        //    }
 
-            if (ExpandedRoofing)
-            {
-                RoofDef roofTransparent = (RoofDef)ExpandedRoofing_roofTransparentInfo.GetValue(Find.CurrentMap.roofGrid);
-                for (int i = 0; i < map.cellIndices.NumGridCells; i++)
-                {
-                    if (map.roofGrid.RoofAt(i) == roofTransparent)
-                    {
-                        WindowCells.Add(map.cellIndices.IndexToCell(i));
-                    }
-                }
-            }
-        }
+        //    //if (ExpandedRoofing)
+        //    //{
+        //    //    for (int i = 0; i < map.cellIndices.NumGridCells; i++)
+        //    //    {
+        //    //        if (map.roofGrid.RoofAt(i) == roofTransparent)
+        //    //        {
+        //    //            WindowCells.Add(map.cellIndices.IndexToCell(i));
+        //    //        }
+        //    //    }
+        //    //}
+        //}
 
         public void RegisterWindow(Building_Window window)
         {

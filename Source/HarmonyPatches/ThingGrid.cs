@@ -9,12 +9,12 @@ namespace OpenTheWindows
     {
         public static void Postfix(Thing t, IntVec3 c)
         {
-            if (t is Building && t.def.passability == Traversability.Impassable)
+            if ((t is Building && t.def.passability == Traversability.Impassable) || (HarmonyPatcher.DubsSkylights && t.GetType() == HarmonyPatcher.Building_Skylight))
             {
                 var info = new MapUpdateWatcher.MapUpdateInfo()
                 {
                     center = c,
-                    removing = false
+                    removed = false
                 };
                 MapUpdateWatcher.OnMapUpdate(t, info);
             }
@@ -31,7 +31,7 @@ namespace OpenTheWindows
                 var info = new MapUpdateWatcher.MapUpdateInfo()
                 {
                     center = c,
-                    removing = true
+                    removed = true
                 };
                 MapUpdateWatcher.OnMapUpdate(t, info);
             }
