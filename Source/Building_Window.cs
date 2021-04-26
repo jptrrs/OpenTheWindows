@@ -43,8 +43,7 @@ namespace OpenTheWindows
         private int
             nextToleranceCheckTick,
             toleranceCheckInterval = 1000,
-            intervalMultiplierAfterAttempts = 4,
-            updateDelay = 0;
+            intervalMultiplierAfterAttempts = 4;
 
         private List<ScanLine> scanLines = new List<ScanLine>();
         #endregion
@@ -320,18 +319,10 @@ namespace OpenTheWindows
             base.Tick();
             if (NeedsUpdate)
             {
-                if (updateDelay < 1)
-                {
-                    updateDelay++;
-                }
-                else
-                {
-                    if (!isFacingSet) CheckFacing();
-                    CastLight();
-                    Map.GetComponent<MapComp_Windows>().IncludeTileRange(illuminated);
-                    NeedsUpdate = false;
-                    updateDelay = 0;
-                }
+                if (!isFacingSet) CheckFacing();
+                CastLight();
+                Map.GetComponent<MapComp_Windows>().IncludeTileRange(illuminated);
+                NeedsUpdate = false;
             }
         }
         public override void TickRare()
@@ -396,6 +387,7 @@ namespace OpenTheWindows
 
         public void CheckFacing()
         {
+            bool before = isFacingSet;
             LinkDirections fwdDir = Rotation.IsHorizontal ? LinkDirections.Right : LinkDirections.Up;
             LinkDirections bwdDir = Rotation.IsHorizontal ? LinkDirections.Left : LinkDirections.Down;
             int fwdVotes = 0;
@@ -415,16 +407,19 @@ namespace OpenTheWindows
                 isFacingSet = false;
                 foreach (var line in scanLines) line.Reset();
             }
+            if (!NeedsUpdate && isFacingSet != before) NeedsUpdate = true;
         }
 
         public void DarkenCellsCarefully()
         {
             if (!illuminated.NullOrEmpty())
             {
-                var neighbors = Neighbors()?.Where(x => x.open && !x.illuminated.EnumerableNullOrEmpty());
+                var neighbors = Neighbors()?.Where(x => x != this && x.open && !x.illuminated.EnumerableNullOrEmpty());
                 IEnumerable<IntVec3> competing = neighbors.EnumerableNullOrEmpty() ? null : neighbors.Select(x => x.illuminated).Aggregate((l, r) => l.Union(r).ToList());
                 List<IntVec3> affected = competing.EnumerableNullOrEmpty() ? illuminated : illuminated.Except(competing).ToList();
                 Map.GetComponent<MapComp_Windows>().ExcludeTileRange(affected);
+                //Log.Message($"{this} darkened {affected.Count()} cells from {illuminated.Count()} that were illuminated.\n" +
+                //    $"There were {competing.EnumerableCount()} competing cells from {neighbors.EnumerableCount()} neighbors.");
                 illuminated.Clear();
             }
         }
@@ -517,16 +512,18 @@ namespace OpenTheWindows
         {
             var cell = info.center;
             bool removed = info.removed;
-            if (isFacingSet && sender is RoofGrid && cell.IsInterior(this) && !GenAdj.CellsAdjacentCardinal(this).Contains(cell)) return;
+            bool roof = sender is RoofGrid;
+            if (isFacingSet && roof && cell.IsInterior(this) && !GenAdj.CellsAdjacentCardinal(this).Contains(cell)) return;
             bool unsureFace = false;
             for (int i = 0; i < scanLines.Count(); i++)
             {
                 if (scanLines[i].Affected(cell))
                 {
+                    IntVec3 motivator = roof ? IntVec3.Zero : cell;
                     var line = scanLines[i];
-                    bool face = line.facingSet;
-                    line.FindObstruction(cell, removed);
-                    unsureFace |= line.facingSet != face;
+                    bool before = line.facingSet;
+                    line.FindObstruction(motivator, removed);
+                    unsureFace |= line.facingSet != before;
                     NeedsUpdate = true;
                 }
             }
@@ -591,6 +588,7 @@ namespace OpenTheWindows
             List<IntVec3> clearLine => scanLine.FindAll(x => clearCells.Contains(scanLine.IndexOf(x)));
             ScanLine siblingRight => parent.scanLines.Find(x => x.position == toRight);
             ScanLine siblingLeft => parent.scanLines.Find(x => x.position == toLeft);
+            private bool siblingClear => (siblingLeft != null && leftIsSet) || (siblingRight != null && rightIsSet);
             bool rightIsSet => siblingRight.facingSet;
             bool leftIsSet => siblingLeft.facingSet;
 
@@ -602,19 +600,20 @@ namespace OpenTheWindows
             public void CastLight()
             {
                 if (!facingSet) return;
-                foreach (IntVec3 c in clearLine)
+                foreach (IntVec3 cell in clearLine)
                 {
-                    var relevant = c.IsInterior(position, parent.Facing) ? parent.illuminated : parent.view;
-                    relevant.AddDistinct(c);
-                    if (bleeds) AddBleed(c, relevant);
+                    var relevant = cell.IsInterior(position, parent.Facing) ? parent.illuminated : parent.view;
+                    relevant.AddDistinct(cell);
+                    if (bleeds) AddBleed(cell, relevant);
                 }
+                //Log.Message($"DEBUG @{position} CastLight: {clearCells.Count()} clearCells / {count} interior.");
             }
 
             public void FindObstruction(IntVec3 motivator, bool removed = false)
             {
                 var actualClearCells = Unobstructed(motivator, removed);
-                var replaced = clearCells;
                 clearCells = scanLine.Where(x => actualClearCells.Contains(x)).Select(x => scanLine.IndexOf(x)).ToArray();
+                //Log.Message($"DEBUG @{position} FindObstruction: {clearCells.Count()} clearCells from {replaced.Count()} before.");
             }
 
             public void LineAdjust(int[] old, int[] @new)
@@ -694,39 +693,11 @@ namespace OpenTheWindows
                 return cleared.Keys.ToList();
             }
 
-            //private bool ClearForwards(cellTest test, bool inside, int dist, out IntVec3 output)
-            //{
-            //    int cellx = position.x;
-            //    int cellz = position.z;
-            //    int deltaX = horizontal ? dist : 0;
-            //    int deltaZ = horizontal ? 0 : dist;
-            //    IntVec3 target = new IntVec3(cellx + deltaX, 0, cellz + deltaZ);
-            //    bool result = test(target, inside);
-            //    output = result ? target : IntVec3.Zero;
-            //    return result;
-            //}
-
-            //private bool ClearBackwards(cellTest test, bool inside, int dist, out IntVec3 output)
-            //{
-            //    int cellx = position.x;
-            //    int cellz = position.z;
-            //    int targetX = horizontal ? Math.Max(0, cellx - dist) : cellx;
-            //    int targetZ = horizontal ? cellz : Math.Max(0, cellz - dist);
-            //    IntVec3 target = new IntVec3(targetX, 0, targetZ);
-            //    bool result = test(target, inside);
-            //    output = result ? target : IntVec3.Zero;
-            //    return result;
-            //}
-
-            private bool SomeSiblingOff()
-            {
-                return (siblingLeft != null && !leftIsSet) || (siblingRight != null && !rightIsSet);
-            }
-
             private void AddBleed(IntVec3 c, List<IntVec3> list)
             {
-                if (parent.large && !SomeSiblingOff())
+                if (parent.large)
                 {
+                    if (!siblingClear) return;
                     var b = c + bleedDirection;
                     if (b.Walkable(map)) list.AddDistinct(b);
                 }
