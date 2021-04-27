@@ -715,7 +715,7 @@ namespace OpenTheWindows
 
             private bool IsClear(IntVec3 c, bool inside)
             {
-                bool result = Affected(c) && c.Walkable(map) && (inside || !map.roofGrid.Roofed(c) || HarmonyPatcher.transparentRoofs.Contains(map.roofGrid.RoofAt(c)));
+                bool result = Affected(c) && c.Walkable(map) && (inside || !map.roofGrid.Roofed(c) || HarmonyPatcher.TransparentRoofsList.Contains(map.roofGrid.RoofAt(c)));
                 return result;
             }
 

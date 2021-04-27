@@ -67,6 +67,7 @@
     <Compile Include="Extensions.cs" />
     <None Include="HarmonyPatches\Command_LabelCap.cs" />
     <Compile Include="HarmonyPatches\Compatibility\BuildableInfo_DrawGhost.cs" />
+    <Compile Include="HarmonyPatches\Compatibility\RoofGrid_Roofed.cs" />
     <Compile Include="HarmonyPatches\RoomGroupTempTracker_EqualizeTemperature.cs" />
     <Compile Include="MapUpdateWatcher.cs" />
     <Compile Include="HarmonyPatches\Building.cs" />

@@ -10,13 +10,13 @@ namespace OpenTheWindows
     {
         public static void Prefix(RoofGrid __instance, IntVec3 c, out RoofDef __state)
         {
-            __state = HarmonyPatcher.ExpandedRoofing ? __instance.RoofAt(c) : null;
+            __state = HarmonyPatcher.TransparentRoofs ? __instance.RoofAt(c) : null;
         }
 
         public static void Postfix(RoofGrid __instance, IntVec3 c, RoofDef def, RoofDef __state)
         {
             bool removing = def == null;
-            RoofDef defToPass = HarmonyPatcher.ExpandedRoofing ? (removing ? __state : def) : def;
+            RoofDef defToPass = HarmonyPatcher.TransparentRoofs ? (removing ? __state : def) : def;
             var info = new MapUpdateWatcher.MapUpdateInfo()
             {
                 center = c,

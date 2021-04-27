@@ -12,10 +12,8 @@ namespace OpenTheWindows
     {
         public List<Building_Window> cachedWindows = new List<Building_Window>();
         public HashSet<IntVec3> WindowCells;
-        private FieldInfo
-            DubsSkylights_skylightGridinfo;
-        private Type
-            DubsSkylights_type;
+        private FieldInfo DubsSkylights_skylightGridinfo;
+        private Type DubsSkylights_type;
         private MethodInfo MapCompInfo;
         private bool[] skyLightGrid => (bool[])DubsSkylights_skylightGridinfo.GetValue(MapCompInfo.Invoke(map, new[] { DubsSkylights_type }));
 
@@ -28,7 +26,7 @@ namespace OpenTheWindows
                 DubsSkylights_skylightGridinfo = AccessTools.Field(DubsSkylights_type, "SkylightGrid");
                 MapCompInfo = AccessTools.Method(typeof(Map), "GetComponent", new[] { typeof(Type) });
             }
-            if (DubsSkylights || ExpandedRoofing)
+            if (DubsSkylights || TransparentRoofs)
             {
                 MapUpdateWatcher.MapUpdate += MapUpdated;
             }
@@ -46,7 +44,7 @@ namespace OpenTheWindows
         {
             if (!WindowCells.Contains(tile)) return;
             if (DubsSkylights && skyLightGrid[map.cellIndices.CellToIndex(tile)]) return;
-            if (ExpandedRoofing && !bypass && transparentRoofs.Contains(map.roofGrid.RoofAt(tile))) return;
+            if (TransparentRoofs && !bypass && TransparentRoofsList.Contains(map.roofGrid.RoofAt(tile))) return;
             WindowCells.Remove(tile);
             map.glowGrid.MarkGlowGridDirty(tile);
         }
@@ -84,7 +82,7 @@ namespace OpenTheWindows
                 var tiles = thing.OccupiedRect().ExpandedBy(1).Cells;
                 ReactSkylights(info, tiles);
             }
-            if (ExpandedRoofing && sender is RoofGrid && info.roofDef != null && info.roofDef.modContentPack == ExpandedRoofingMod)
+            if (TransparentRoofs && sender is RoofGrid && info.roofDef != null && TransparentRoofsList.Contains(info.roofDef))
             {
                 ReactTransparentRoof(info);
             }
@@ -105,7 +103,7 @@ namespace OpenTheWindows
 
         private void ReactTransparentRoof(MapUpdateWatcher.MapUpdateInfo info)
         {
-            if (transparentRoofs.Contains(info.roofDef))
+            if (TransparentRoofsList.Contains(info.roofDef))
             {
                 if (info.removed)
                 {

@@ -168,7 +168,6 @@ namespace OpenTheWindows
             if (region == null) return;
             List<Building_Window> neighbors = new List<Building_Window>();
             FindAffectedWindows(neighbors, region);
-            Log.Message($"Resetting {neighbors.Count()} neighbors");
             neighbors.ForEach(window => window.needsUpdate = true);
         }
 

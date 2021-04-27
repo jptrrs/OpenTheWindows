@@ -3,6 +3,7 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Verse;
 
 namespace OpenTheWindows
@@ -17,11 +18,11 @@ namespace OpenTheWindows
         public static bool
             BetterPawnControl = false,
             Blueprints = false,
-            DubsSkylights = false,
-            ExpandedRoofing = false;
+            DubsSkylights = false;
         public static Harmony _instance = null;
-        public static ModContentPack ExpandedRoofingMod;
-        public static List<RoofDef> transparentRoofs = new List<RoofDef>();
+        public static List<RoofDef> TransparentRoofsList = new List<RoofDef>();
+        const string roofsFailed = "[OpenTheWindows] ...but no roofs detected! Integration failed.";
+        public static bool TransparentRoofs => !TransparentRoofsList.NullOrEmpty();
         public static Harmony Instance
         {
             get
@@ -47,23 +48,19 @@ namespace OpenTheWindows
                 Building_Skylight = AccessTools.TypeByName("Dubs_Skylight.Building_skyLight");
             }
 
-            ExpandedRoofingMod = LoadedModManager.RunningModsListForReading.FirstOrDefault(x => x.PackageIdPlayerFacing.StartsWith("wit.expandedroofing"));
-            if (ExpandedRoofingMod != null)
+            if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("wit.expandedroofing")))
             {
                 Log.Message("[OpenTheWindows] Expanded Roofing detected! Integrating...");
-                transparentRoofs.Add(DefDatabase<RoofDef>.GetNamed("RoofTransparent"));
-                if (transparentRoofs.NullOrEmpty()) Log.Error($"[OpenTheWindows] No transparent roofs detected, Expanded Roofing integration failed!");
-                else ExpandedRoofing = true;
+                TransparentRoofsList.Add(DefDatabase<RoofDef>.GetNamed("RoofTransparent"));
+                if (!TransparentRoofs) Log.Error(roofsFailed);
             }
 
-            //Raise the Roof integration -Needs more work!
-            ////if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("machine.rtr")))
-            //if (AccessTools.TypeByName("RaiseTheRoof.Patches") is Type rtrType)
-            //{
-            //    Log.Message($"[OpenTheWindows] Raise The Roof detected! Integrating...");
-            //    Instance.Patch(AccessTools.Method(AccessTools.Inner(rtrType, "Patch_SectionLayer_LightingOverlay_Regenerate"), "Prefix"), new HarmonyMethod(patchType, nameof(Patch_Inhibitor_Prefix)), null, null);
-            //    Instance.Patch(AccessTools.Method(AccessTools.Inner(rtrType, "Patch_GlowGrid_GameGlowAt"), "Prefix"), new HarmonyMethod(patchType, nameof(Patch_Inhibitor_Prefix)), null, null);
-            //}
+            if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("machine.rtr")))
+            {
+                Log.Message($"[OpenTheWindows] Raise the Roof detected! Integrating...");
+                TransparentRoofsList.AddRange(DefDatabase<RoofDef>.AllDefsListForReading.Where(x => x.defName.StartsWith("RTR_RoofTransparent")));
+                if (!TransparentRoofs) Log.Error(roofsFailed);
+            }
 
             List<string> beautyMods = new List<string>() { "JPT.CustomNaturalBeauty", "zhrocks11.NatureIsBeautiful", "Meltup.BeautifulOutdoors" };
             if (LoadedModManager.RunningModsListForReading.Any(x => x.Name.Contains("Nature is Beautiful") || beautyMods.Select(id => x.PackageIdPlayerFacing.StartsWith(id)).Any()))
