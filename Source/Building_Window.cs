@@ -1,7 +1,9 @@
-﻿using RimWorld;
+﻿using HarmonyLib;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using UnityEngine;
 using Verse;
@@ -144,6 +146,9 @@ namespace OpenTheWindows
                 Map.linkGrid.Notify_LinkerCreatedOrDestroyed(this);
                 Map.mapDrawer.MapMeshDirty(Position, MapMeshFlag.Things, true, false);
             }
+            //MethodInfo SetRegionDirtyInfo = AccessTools.Method(typeof(RegionDirtyer), nameof(RegionDirtyer.SetRegionDirty));
+            //Region orphan = this.GetRegion();
+            //SetRegionDirtyInfo.Invoke(Map.regionDirtyer, new object[] { orphan, true });
             base.DeSpawn(mode);
         }
         public override void ExposeData()
