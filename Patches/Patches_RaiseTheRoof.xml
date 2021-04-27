@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+	<Operation Class="JPTools.PatchOperationFindModById">
+		<mods>
+			<li>machine.rtr</li>
+		</mods>
+		<match Class="PatchOperationSequence">
+			<success>Normal</success>
+			<operations>
+        
+        <li Class="JPTools.PatchOperationFindModById">
+          <mods>
+            <li>nanoce.glasslights</li>
+            <li>spoden.justglass</li>
+          </mods>
+          <match Class="PatchOperationSequence">
+            <success>Normal</success>
+            <operations>
+              <li Class="PatchOperationAdd">
+                <xpath>Defs/ResearchProjectDef[defName = "TransparentRoofing"]/prerequisites</xpath>
+                <value>
+                  <li>GlassworksResearch</li>
+                </value>
+              </li>
+              <li Class="PatchOperationReplace">
+                <xpath>Defs/ThingDef[defName = "RTR_TransparentRoof" or defName = "RTR_TransparentSolarRoof"]/costList/Synthread</xpath>
+                <value>
+                    <Glass>1</Glass>
+                </value>
+              </li>
+            </operations>
+          </match>
+          <nomatch Class="PatchOperationAdd">
+            <xpath>Defs/ResearchProjectDef[defName = "TransparentRoofing"]/prerequisites</xpath>
+            <value>
+              <li>Glassworks</li>
+            </value>
+          </nomatch>
+        </li>
+        
+			</operations>
+		</match> 
+	</Operation>
+
+</Patch>
+

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Patch>
-  <Operation Class="PatchOperationFindMod">
+  <Operation Class="JPTools.PatchOperationFindModById">
     <mods>
-      <li>Dubs Skylights</li>
+      <li>Dubwise.DubsSkylights</li>
     </mods>
 
-    <match Class="PatchOperationFindMod">
+    <match Class="JPTools.PatchOperationFindModById">
       <mods>
-        <li>Glass+Lights</li>
-        <li>Just Glass</li>
+        <li>nanoce.glasslights</li>
+        <li>spoden.justglass</li>
       </mods>
 
       <nomatch Class="PatchOperationSequence">
@@ -147,9 +147,9 @@
         </operations>
       </nomatch>
 
-      <match Class="PatchOperationFindMod">
+      <match Class="JPTools.PatchOperationFindModById">
         <mods>
-          <li>Dubs Skylights Glass+Lights Patch</li>
+          <li>maaxar.dubsskylights.glasslights.patch</li>
         </mods>
         <nomatch Class="PatchOperationSequence">
           <success>Always</success>

@@ -64,10 +64,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Tools\PatchOperationFindModById.cs" />
     <Compile Include="Extensions.cs" />
     <None Include="HarmonyPatches\Command_LabelCap.cs" />
     <Compile Include="HarmonyPatches\Compatibility\BuildableInfo_DrawGhost.cs" />
-    <Compile Include="HarmonyPatches\Compatibility\RoofGrid_Roofed.cs" />
     <Compile Include="HarmonyPatches\RoomGroupTempTracker_EqualizeTemperature.cs" />
     <Compile Include="MapUpdateWatcher.cs" />
     <Compile Include="HarmonyPatches\Building.cs" />
@@ -133,13 +133,13 @@
       <HintPath>..\packages\Lib.Harmony.2.0.1\lib\net472\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Assembly-CSharp_publicized, Version=1.1.7415.31616, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Assembly-CSharp_publicized">
       <HintPath>..\..\..\RimWorldWin64_Data\Managed\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation" />
+    <Reference Include="System.Xml" />
     <Reference Include="Unity.TextMeshPro">
       <HintPath>..\..\..\RimWorldWin64_Data\Managed\Unity.TextMeshPro.dll</HintPath>
       <Private>False</Private>

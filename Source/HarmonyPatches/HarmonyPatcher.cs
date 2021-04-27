@@ -46,9 +46,11 @@ namespace OpenTheWindows
                 if (!TransparentRoofs) Log.Error(roofsFailed);
             }
 
-            if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("machine.rtr")))
+            //if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("machine.rtr")))
+            if (AccessTools.TypeByName("RaiseTheRoof.Patches") is Type rtrType)
             {
                 Log.Message($"[OpenTheWindows] Raise the roof detected! Integrating...");
+                Instance.Patch(AccessTools.Method(AccessTools.Inner(rtrType, "Patch_GlowGrid_GameGlowAt"), "Prefix"), new HarmonyMethod(patchType, nameof(Patch_Inhibitor_Prefix)), null, null);
                 TransparentRoofsList.AddRange(DefDatabase<RoofDef>.AllDefsListForReading.Where(x => x.defName.StartsWith("RTR_RoofTransparent")));
                 if (!TransparentRoofs) Log.Error(roofsFailed);
             }

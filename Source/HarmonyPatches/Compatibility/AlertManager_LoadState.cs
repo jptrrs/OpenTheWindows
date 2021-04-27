@@ -2,7 +2,7 @@
 
 namespace OpenTheWindows
 {
-    //Creates and event from the emergency button. Manually patched if Better Pawn Control is present.
+    //Creates an event from the emergency button. Manually patched if Better Pawn Control is present.
     public static class AlertManager_LoadState
     {
         //public delegate void Notify();  // delegate: "template" for the handler to be defined on the subscriber class, replaced by .Net's EventHandler

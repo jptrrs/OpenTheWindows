@@ -2,13 +2,12 @@
 <Patch>
 
   <!--to Stats_Basics_General-->
-  <Operation Class="PatchOperationFindMod">
+  <Operation Class="JPTools.PatchOperationFindModById">
     <mods>
-      <li>Nature is Beautiful [1.0]</li>
-      <li>Nature is Beautiful [rebalanced]</li>
-      <li>Nature is Beautiful [1.0+]</li>
-      <li>Beautiful Outdoors</li>
-      <li>[JPT] Custom Natural Beauty</li>
+      <li>thomhblairhiii888.naturehishbeautifulhq1v0s</li>
+      <li>zhrocks11.natureisbeautiful</li>
+      <li>meltup.beautifuloutdoors</li>
+      <li>JPT.CustomNaturalBeauty</li>
     </mods>
     <match Class="PatchOperationSequence">
       <success>Always</success>
