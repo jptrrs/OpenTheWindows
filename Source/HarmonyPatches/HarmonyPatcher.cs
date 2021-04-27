@@ -35,8 +35,7 @@ namespace OpenTheWindows
         static HarmonyPatcher()
         {
             Instance.PatchAll();
-
-            Harmony.DEBUG = true;
+            //Harmony.DEBUG = true;
 
             if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("Dubwise.DubsSkylights")))
             {
@@ -57,7 +56,7 @@ namespace OpenTheWindows
                 else ExpandedRoofing = true;
             }
 
-            ////Raise the Roof integration -Needs more work!
+            //Raise the Roof integration -Needs more work!
             ////if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("machine.rtr")))
             //if (AccessTools.TypeByName("RaiseTheRoof.Patches") is Type rtrType)
             //{

@@ -10,6 +10,10 @@
   <LargeOpenWindow.label>Finestra grande</LargeOpenWindow.label>
   <LargeOpenWindow.description>Una finestra grande con vetri e persiana, tramite cui possono passare aria e molta luce. Offre una vista.</LargeOpenWindow.description>
 
+  <!--Missing-->
+  <!--<LargeReinforcedOpenWindow.label>Huge Window</LargeReinforcedOpenWindow.label>
+  <LargeReinforcedOpenWindow.description>A tall, huge window, equipped with rotating brise-soleil. Allows in a massive volume of light.</LargeReinforcedOpenWindow.description>-->
+
   <ReinforcedOpenWindow.label>Finestra blindata</ReinforcedOpenWindow.label>
   <ReinforcedOpenWindow.description>Una finestra blindata con vetri e persiana. Controlla separatamente il passaggio di luce ed aria.</ReinforcedOpenWindow.description>
 

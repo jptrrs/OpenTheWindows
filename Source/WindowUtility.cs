@@ -9,6 +9,7 @@ namespace OpenTheWindows
     public class WindowUtility
     {
         public const int deep = 2;
+        public const float WindowBaseFillPercent = 0.65f; //used on cover calculation.
 
         public static IEnumerable<IntVec3> GetWindowObfuscation(IntVec2 size, IntVec3 center, Rot4 rot, Map map, IntVec3 start, IntVec3 end)
         {

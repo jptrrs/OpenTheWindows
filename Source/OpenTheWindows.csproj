@@ -65,7 +65,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
-    <Compile Include="HarmonyPatches\Command_LabelCap.cs" />
+    <None Include="HarmonyPatches\Command_LabelCap.cs" />
     <Compile Include="HarmonyPatches\Compatibility\BuildableInfo_DrawGhost.cs" />
     <Compile Include="HarmonyPatches\RoomGroupTempTracker_EqualizeTemperature.cs" />
     <Compile Include="MapUpdateWatcher.cs" />

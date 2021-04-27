@@ -19,6 +19,10 @@
   <LargeOpenWindow_Frame.label>大窗（建造中）</LargeOpenWindow_Frame.label>
   <LargeOpenWindow_Frame.description>配备玻璃的大型百叶窗，可以大量通风和采光，视野也很开阔。</LargeOpenWindow_Frame.description>
 
+  <!--Missing-->
+  <!--<LargeReinforcedOpenWindow.label>Huge Window</LargeReinforcedOpenWindow.label>
+  <LargeReinforcedOpenWindow.description>A tall, huge window, equipped with rotating brise-soleil. Allows in a massive volume of light.</LargeReinforcedOpenWindow.description>-->
+
   <ReinforcedOpenWindow.label>加固窗</ReinforcedOpenWindow.label>
   <ReinforcedOpenWindow.description>配备玻璃的加固百叶窗，通风和采光可以分别调整。</ReinforcedOpenWindow.description>
   <ReinforcedOpenWindow_Blueprint.label>加固窗（蓝图）</ReinforcedOpenWindow_Blueprint.label>

@@ -40,7 +40,6 @@
       </linkFlags>
     </graphicData>
     <pathCost>50</pathCost>
-
   </ThingDef>
 
   <ThingDef ParentName="WindowBase">
