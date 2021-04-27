@@ -12,27 +12,18 @@ namespace OpenTheWindows
     public static class HarmonyPatcher
     {
         public static readonly Type patchType = typeof(HarmonyPatcher);
-        public static Type
-            Building_Skylight,
-            LocksType;
+        public static Harmony _instance = null;
+
         public static bool
             BetterPawnControl = false,
             Blueprints = false,
             DubsSkylights = false;
-        public static Harmony _instance = null;
+
+        public static Type
+            Building_Skylight,
+            LocksType;
         public static List<RoofDef> TransparentRoofsList = new List<RoofDef>();
         const string roofsFailed = "[OpenTheWindows] ...but no roofs detected! Integration failed.";
-        public static bool TransparentRoofs => !TransparentRoofsList.NullOrEmpty();
-        public static Harmony Instance
-        {
-            get
-            {
-                if (_instance == null)
-                    _instance = new Harmony("JPT.OpenTheWindows");
-                return _instance;
-            }
-        }
-
         static HarmonyPatcher()
         {
             Instance.PatchAll();
@@ -57,7 +48,7 @@ namespace OpenTheWindows
 
             if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("machine.rtr")))
             {
-                Log.Message($"[OpenTheWindows] Raise the Roof detected! Integrating...");
+                Log.Message($"[OpenTheWindows] Raise the roof detected! Integrating...");
                 TransparentRoofsList.AddRange(DefDatabase<RoofDef>.AllDefsListForReading.Where(x => x.defName.StartsWith("RTR_RoofTransparent")));
                 if (!TransparentRoofs) Log.Error(roofsFailed);
             }
@@ -93,14 +84,20 @@ namespace OpenTheWindows
             }
         }
 
+        public static Harmony Instance
+        {
+            get
+            {
+                if (_instance == null)
+                    _instance = new Harmony("JPT.OpenTheWindows");
+                return _instance;
+            }
+        }
+
+        public static bool TransparentRoofs => !TransparentRoofsList.NullOrEmpty();
         public static bool Patch_Inhibitor_Prefix()
         {
             return false;
         }
-
-        //public static void RegenGrid_Postfix()
-        //{
-        //    Find.CurrentMap.GetComponent<MapComp_Windows>().RegenGrid();
-        //}
     }
 }

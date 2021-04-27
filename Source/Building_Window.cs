@@ -169,8 +169,8 @@ namespace OpenTheWindows
             yield return new Command_Toggle
             {
                 icon = ContentFinder<Texture2D>.Get("UI/AutoVentIcon_" + ventComp.Props.signal, true),
-                defaultLabel = "AutoVentilation".Translate(),
-                defaultDesc = "AutoVentilationDesc".Translate(),
+                defaultLabel = "CommandAutoVentilation".Translate(),
+                defaultDesc = "CommandAutoVentilationDesc".Translate(),
                 isActive = () => autoVent,
                 disabled = alarmReact && AlertManagerProxy.onAlert,
                 disabledReason = "DisabledByEmergency".Translate(),
