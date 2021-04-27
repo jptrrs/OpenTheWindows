@@ -1,9 +1,7 @@
-﻿using HarmonyLib;
-using RimWorld;
+﻿using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using UnityEngine;
 using Verse;
@@ -20,7 +18,7 @@ namespace OpenTheWindows
             isFacingSet = false,
             open = true,
             venting = false,
-            NeedsUpdate = true,
+            needsUpdate = true,
             autoVent = false,
             alarmReact = OpenTheWindowsSettings.AlarmReactDefault,
             emergencyShut = false;
@@ -131,7 +129,7 @@ namespace OpenTheWindows
         public Building_Window()
         {
             MapUpdateWatcher.MapUpdate += MapUpdateHandler;
-            AlertManager_LoadState.Alarm += EmergencyShutOff; // register with an event, handler must match template signature
+            if (HarmonyPatcher.BetterPawnControl) AlertManager_LoadState.Alarm += EmergencyShutOff; // register with an event, handler must match template signature
         }
 
         #region vanilla overrides
@@ -146,9 +144,6 @@ namespace OpenTheWindows
                 Map.linkGrid.Notify_LinkerCreatedOrDestroyed(this);
                 Map.mapDrawer.MapMeshDirty(Position, MapMeshFlag.Things, true, false);
             }
-            //MethodInfo SetRegionDirtyInfo = AccessTools.Method(typeof(RegionDirtyer), nameof(RegionDirtyer.SetRegionDirty));
-            //Region orphan = this.GetRegion();
-            //SetRegionDirtyInfo.Invoke(Map.regionDirtyer, new object[] { orphan, true });
             base.DeSpawn(mode);
         }
         public override void ExposeData()
@@ -247,20 +242,20 @@ namespace OpenTheWindows
             }
             return stringBuilder.ToString();
         }
+
         public override void ReceiveCompSignal(string signal)
         {
-            bool needsupdate = false;
             switch (signal)
             {
                 case "lightOn":
                     open = true;
                     def.blockLight = false;
-                    needsupdate = true;
+                    needsUpdate = true;
                     break;
                 case "lightOff":
                     def.blockLight = true;
                     open = false;
-                    needsupdate = true;
+                    needsUpdate = true;
                     break;
                 case "airOn":
                     venting = true;
@@ -273,24 +268,19 @@ namespace OpenTheWindows
                 case "bothOn":
                     open = true;
                     def.blockLight = false;
-                    needsupdate = true;
+                    needsUpdate = true;
                     venting = true;
                     recentlyOperated = true;
                     break;
                 case "bothOff":
                     def.blockLight = true;
                     open = false;
-                    needsupdate = true;
+                    needsUpdate = true;
                     venting = false;
                     recentlyOperated = true;
                     break;
                 default:
                     break;
-            }
-            if (needsupdate)
-            {
-                CastLight();
-                NeedsUpdate = true;
             }
         }
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
@@ -322,12 +312,12 @@ namespace OpenTheWindows
         public override void Tick()
         {
             base.Tick();
-            if (NeedsUpdate)
+            if (needsUpdate)
             {
                 if (!isFacingSet) CheckFacing();
                 CastLight();
                 Map.GetComponent<MapComp_Windows>().IncludeTileRange(illuminated);
-                NeedsUpdate = false;
+                needsUpdate = false;
             }
         }
         public override void TickRare()
@@ -365,7 +355,7 @@ namespace OpenTheWindows
                 {
                     SetScanLines();
                     isFacingSet = false;
-                    NeedsUpdate = true;
+                    needsUpdate = true;
                 }
             }
             else Comps_PostDraw();
@@ -412,7 +402,7 @@ namespace OpenTheWindows
                 isFacingSet = false;
                 foreach (var line in scanLines) line.Reset();
             }
-            if (!NeedsUpdate && isFacingSet != before) NeedsUpdate = true;
+            if (!needsUpdate && isFacingSet != before) needsUpdate = true;
         }
 
         public void DarkenCellsCarefully()
@@ -529,7 +519,7 @@ namespace OpenTheWindows
                     bool before = line.facingSet;
                     line.FindObstruction(motivator, removed);
                     unsureFace |= line.facingSet != before;
-                    NeedsUpdate = true;
+                    needsUpdate = true;
                 }
             }
             if (unsureFace) isFacingSet = false;
@@ -659,9 +649,9 @@ namespace OpenTheWindows
 
                 //2. Determine facing
                 IntVec3 dummy;
-                bool hangerFwd = !ClearForwards(position, horizontal, clear, false, 1, out dummy); //sets facing Down/Left
-                bool hangerBwd = !ClearBackwards(position, horizontal, clear, false, 1, out dummy); //sets facing Up/Right
-                facingSet = SetFacing(hangerFwd, hangerBwd);
+                bool overhangFwd = !ClearForward(position, horizontal, clear, false, 1, out dummy); //sets facing Down/Left
+                bool overhangBwd = !ClearBackward(position, horizontal, clear, false, 1, out dummy); //sets facing Up/Right
+                facingSet = SetFacing(overhangFwd, overhangBwd);
                 if (!facingSet) return new List<IntVec3>(); //escape if unable to determine sides
                 bool southward = facing == LinkDirections.Down || facing == LinkDirections.Left;
 
@@ -673,7 +663,7 @@ namespace OpenTheWindows
                 for (int i = 1; i <= maxreach; i++)
                 {
                     IntVec3 clearedFwd;
-                    if (ClearForwards(position, horizontal, clear, southward, i, out clearedFwd))
+                    if (ClearForward(position, horizontal, clear, southward, i, out clearedFwd))
                     {
                         cleared.Add(clearedFwd,i);
                         reachFwd++;
@@ -684,7 +674,7 @@ namespace OpenTheWindows
                 for (int i = 1; i <= maxreach; i++)
                 {
                     IntVec3 clearedBwd;
-                    if (ClearBackwards(position, horizontal, clear, !southward, i, out clearedBwd))
+                    if (ClearBackward(position, horizontal, clear, !southward, i, out clearedBwd))
                     {
                         cleared.Add(clearedBwd, i);
                         reachBwd++;
@@ -725,16 +715,16 @@ namespace OpenTheWindows
 
             private bool IsClear(IntVec3 c, bool inside)
             {
-                bool result = Affected(c) && c.Walkable(map) && (inside || !map.roofGrid.Roofed(c));
+                bool result = Affected(c) && c.Walkable(map) && (inside || !map.roofGrid.Roofed(c) || HarmonyPatcher.transparentRoofs.Contains(map.roofGrid.RoofAt(c)));
                 return result;
             }
 
-            private bool SetFacing(bool hangerFwd, bool hangerBwd)
+            private bool SetFacing(bool overhangFwd, bool overhangBwd)
             {
-                if (hangerFwd != hangerBwd)
+                if (overhangFwd != overhangBwd)
                 {
-                    if (hangerFwd) facing = horizontal ? LinkDirections.Left : LinkDirections.Down;
-                    if (hangerBwd) facing = horizontal ? LinkDirections.Right : LinkDirections.Up;
+                    if (overhangFwd) facing = horizontal ? LinkDirections.Left : LinkDirections.Down;
+                    if (overhangBwd) facing = horizontal ? LinkDirections.Right : LinkDirections.Up;
                     return true;
                 }
                 return false;

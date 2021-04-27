@@ -46,7 +46,7 @@ namespace OpenTheWindows
             for (int i = 1; i <= maxreach; i++)
             {
                 IntVec3 clearedFwd;
-                if (ClearForwards(position, horizontal, clear, southward, i, out clearedFwd))
+                if (ClearForward(position, horizontal, clear, southward, i, out clearedFwd))
                 {
                     cleared.Add(clearedFwd, i);
                     reachFwd++;
@@ -57,7 +57,7 @@ namespace OpenTheWindows
             for (int i = 1; i <= maxreach; i++)
             {
                 IntVec3 clearedBwd;
-                if (ClearBackwards(position, horizontal, clear, !southward, i, out clearedBwd))
+                if (ClearBackward(position, horizontal, clear, !southward, i, out clearedBwd))
                 {
                     cleared.Add(clearedBwd, i);
                     reachBwd++;
@@ -94,7 +94,7 @@ namespace OpenTheWindows
             return result;
         }
 
-        public static bool ClearForwards(IntVec3 position, bool horizontal, cellTest test, bool inside, int dist, out IntVec3 output)
+        public static bool ClearForward(IntVec3 position, bool horizontal, cellTest test, bool inside, int dist, out IntVec3 output)
         {
             int cellx = position.x;
             int cellz = position.z;
@@ -106,7 +106,7 @@ namespace OpenTheWindows
             return result;
         }
 
-        public static bool ClearBackwards(IntVec3 position, bool horizontal, cellTest test, bool inside, int dist, out IntVec3 output)
+        public static bool ClearBackward(IntVec3 position, bool horizontal, cellTest test, bool inside, int dist, out IntVec3 output)
         {
             int cellx = position.x;
             int cellz = position.z;
@@ -168,7 +168,8 @@ namespace OpenTheWindows
             if (region == null) return;
             List<Building_Window> neighbors = new List<Building_Window>();
             FindAffectedWindows(neighbors, region);
-            neighbors.ForEach(window => window.CastLight());
+            Log.Message($"Resetting {neighbors.Count()} neighbors");
+            neighbors.ForEach(window => window.needsUpdate = true);
         }
 
     }
