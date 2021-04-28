@@ -15,7 +15,7 @@ namespace OpenTheWindows
         private FieldInfo DubsSkylights_skylightGridinfo;
         private Type DubsSkylights_type;
         private MethodInfo MapCompInfo;
-        private bool[] skyLightGrid => (bool[])DubsSkylights_skylightGridinfo.GetValue(MapCompInfo.Invoke(map, new[] { DubsSkylights_type }));
+        private bool[] skyLightGrid;
 
         public MapComp_Windows(Map map) : base(map)
         {
@@ -25,6 +25,7 @@ namespace OpenTheWindows
                 DubsSkylights_type = AccessTools.TypeByName("Dubs_Skylight.MapComp_Skylights");
                 DubsSkylights_skylightGridinfo = AccessTools.Field(DubsSkylights_type, "SkylightGrid");
                 MapCompInfo = AccessTools.Method(typeof(Map), "GetComponent", new[] { typeof(Type) });
+                skyLightGrid = (bool[])DubsSkylights_skylightGridinfo.GetValue(MapCompInfo.Invoke(map, new[] { DubsSkylights_type }));
             }
             if (DubsSkylights || TransparentRoofs)
             {

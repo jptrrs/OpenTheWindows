@@ -14,7 +14,8 @@ namespace OpenTheWindows
                 var info = new MapUpdateWatcher.MapUpdateInfo()
                 {
                     center = c,
-                    removed = false
+                    removed = false,
+                    map = t.Map
                 };
                 MapUpdateWatcher.OnMapUpdate(t, info);
             }
@@ -31,7 +32,8 @@ namespace OpenTheWindows
                 var info = new MapUpdateWatcher.MapUpdateInfo()
                 {
                     center = c,
-                    removed = true
+                    removed = true,
+                    map = t.Map
                 };
                 MapUpdateWatcher.OnMapUpdate(t, info);
             }

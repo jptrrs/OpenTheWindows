@@ -19,6 +19,7 @@ namespace OpenTheWindows
             public IntVec3 center;
             public bool removed;
             public RoofDef roofDef;
+            public Map map;
         }
     }
 }

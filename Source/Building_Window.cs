@@ -517,7 +517,7 @@ namespace OpenTheWindows
                     IntVec3 motivator = roof ? IntVec3.Zero : cell;
                     var line = scanLines[i];
                     bool before = line.facingSet;
-                    line.FindObstruction(motivator, removed);
+                    line.FindObstruction(motivator, removed, info.map);
                     unsureFace |= line.facingSet != before;
                     needsUpdate = true;
                 }
@@ -604,8 +604,9 @@ namespace OpenTheWindows
                 //Log.Message($"DEBUG @{position} CastLight: {clearCells.Count()} clearCells / {count} interior.");
             }
 
-            public void FindObstruction(IntVec3 motivator, bool removed = false)
+            public void FindObstruction(IntVec3 motivator, bool removed = false, Map updatedMap = null)
             {
+                if (updatedMap != null) map = updatedMap;
                 var actualClearCells = Unobstructed(motivator, removed);
                 clearCells = scanLine.Where(x => actualClearCells.Contains(x)).Select(x => scanLine.IndexOf(x)).ToArray();
                 //Log.Message($"DEBUG @{position} FindObstruction: {clearCells.Count()} clearCells from {replaced.Count()} before.");
