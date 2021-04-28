@@ -14,7 +14,6 @@ namespace OpenTheWindows
             // more caching, this method is called A LOT !
             Map map = LightingOverlay_Regenerate.map;
             MapComp_Windows comp = LightingOverlay_Regenerate.windowComponent;
-
             try
             {
                 if (__result < 1f && comp.WindowCells.Contains(c))

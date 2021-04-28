@@ -2,17 +2,28 @@
 <LanguageData>
   <!--ui-->
   <ClosedWindow>關閉</ClosedWindow>
+  <!--New--><EmergencyClosed>Closed by emergency</EmergencyClosed>
   <butVenting>，但保持通風。</butVenting>
   <notVenting>不通風</notVenting>
   <Facing>朝{0}。</Facing>
   <LandscapeToThe>視野可延伸到</LandscapeToThe>
   <cantDetermineSides>無法確定哪一側為外部。</cantDetermineSides>
+  <!--New--><ManualCommandNote>A colonist will come to perform the task.</ManualCommandNote>
   <CommandDesignateOpenCloseWindowLabel>設定打開/關閉</CommandDesignateOpenCloseWindowLabel>
-  <CommandDesignateOpenCloseWindowDesc>將此窗口設定為打開或關閉。不久就會有一個殖民者來執行這項任務。</CommandDesignateOpenCloseWindowDesc>
+  <!--Changed--><CommandDesignateOpenCloseWindowDesc>將此窗口設定為打開或關閉。不久就會有一個殖民者來執行這項任務。</CommandDesignateOpenCloseWindowDesc>
   <CommandOpenCloseWindowLightLabel>采光</CommandOpenCloseWindowLightLabel>
-  <CommandOpenCloseWindowLightDesc>設定是否采光。不久就會有一個殖民者來執行這項任務。</CommandOpenCloseWindowLightDesc>
+  <!--Changed--><CommandOpenCloseWindowLightDesc>設定是否采光。不久就會有一個殖民者來執行這項任務。</CommandOpenCloseWindowLightDesc>
   <CommandOpenCloseWindowVentLabel>通風</CommandOpenCloseWindowVentLabel>
-  <CommandOpenCloseWindowVentDesc>設定是否通風。不久就會有一個殖民者來執行這項任務。</CommandOpenCloseWindowVentDesc>
+  <!--Changed--><CommandOpenCloseWindowVentDesc>設定是否通風。不久就會有一個殖民者來執行這項任務。</CommandOpenCloseWindowVentDesc>
+  <!--New--><CommandAutoVentilation>Automatic ventilation</CommandAutoVentilation>
+  <!--New--><CommandAutoVentilationDesc>Mark the window for opening or closing when room temperature becomes uncomfortable.</CommandAutoVentilationDesc>
+  <!--New--><DisabledForAutoVentilation>Following automatic ventilation parameters.</DisabledForAutoVentilation>
+  <!--New--><TrackingTemperature>Tracking temperature.</TrackingTemperature>
+  <!--New--><WaitingTemperatureNormalization>Waiting for temperature to equalize.</WaitingTemperatureNormalization>
+  <!--New--><CantTrackTemperature>Adjacent room is unroofed, can't track temperature.</CantTrackTemperature>
+  <!--New--><CommandCloseOnEmergency>Close on emergency</CommandCloseOnEmergency>
+  <!--New--><CommandCloseOnEmergencyDesc>Mark the window for closing when the emergency alarm is activated.</CommandCloseOnEmergencyDesc>
+  <!--New--><DisabledByEmergency>Normal operation disabled during emergency.</DisabledByEmergency>
   <NaturalLightMap>顯示自然光</NaturalLightMap>
 
   <!--settings-->
@@ -22,12 +33,18 @@
   <LightTransmission>透光率</LightTransmission>
   <LightTransmissionIncludesRoofs>包括天窗</LightTransmissionIncludesRoofs>
   <LightTransmissionDesc>外部光線能夠穿過玻璃和百葉的比例。現實中大約是90%。</LightTransmissionDesc>
+  <!--New--><ComfortableTemperature>Comfortable temperature range (°C)</ComfortableTemperature>
+  <!--New--><ComfortableTemperatureDesc>The desired temperature range for the auto-ventilation function. The default is what the game considers the human comfort zone.</ComfortableTemperatureDesc>
   <BeautySensitivityReduction>美觀需求</BeautySensitivityReduction>
   <BeautySensitivityReductionDesc>小人對窗外景觀的敏感度，以平衡「美麗的大自然」Mod中的相關設定。</BeautySensitivityReductionDesc>
+  <!--New--><BeautyFromBuildings>Add beauty from buildings when calculating a window's view.</BeautyFromBuildings>
+  <!--New--><BeautyFromBuildingsDesc>If checked, beauty from buildings in view (including sculptures) will also be added to the window beauty stat, alongside plants and other items.</BeautyFromBuildingsDesc>
   <LinkOptionsLabel>調整墻的貼圖</LinkOptionsLabel>
   <RequiresRestart>需要重新啟動遊戲</RequiresRestart>
   <LinkWindowsAndWalls>與窗相連</LinkWindowsAndWalls>
   <LinkVentsAndWalls>與通風孔相連&amp;顏色</LinkVentsAndWalls>
   <LinkFridgesAndWalls>與通風孔相連，顏色&amp;「冰箱」Mod</LinkFridgesAndWalls>
+  <!--New--><AlarmOptionsLabel>Better Pawn Control integration</AlarmOptionsLabel>
+  <!--New--><AlarmReactDefault>Windows close on emergency by default</AlarmReactDefault>
 
 </LanguageData>
