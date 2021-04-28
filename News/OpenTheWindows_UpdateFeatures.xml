@@ -10,6 +10,7 @@
   <HugsLib.UpdateFeatureDef ParentName="OpenTheWindows.UpdateFeatureBase">
     <defName>OpenTheWindows_2_0</defName>
     <assemblyVersion>2.0</assemblyVersion>
+    <targetAudience>AllPlayers</targetAudience>
     <content>&lt;b&gt;Your good old windows have been upgraded!&lt;/b&gt; 
 |We improved the mod's performance and added some exciting new features:
 |img:AutoVent|caption:&lt;b&gt;Automatic ventilation:&lt;/b&gt; when this is on, your window will watch the temperature inside. If it gets too hot and the air outside is colder, it will be marked to be opened, so your colonists can get some fresh air. On the other hand, if it gets too cold inside, the window will be marked to be closed, keeping the heat in.
