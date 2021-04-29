@@ -12,11 +12,12 @@ namespace OpenTheWindows
     {
         public List<Building_Window> cachedWindows = new List<Building_Window>();
         public HashSet<IntVec3> WindowCells;
+        private bool audit = false;
         private FieldInfo DubsSkylights_skylightGridinfo;
         private Type DubsSkylights_type;
         private MethodInfo MapCompInfo;
         private bool[] skyLightGrid;
-
+        private HashSet<int> wrongTiles;
         public MapComp_Windows(Map map) : base(map)
         {
             WindowCells = new HashSet<IntVec3>();
@@ -59,6 +60,13 @@ namespace OpenTheWindows
             }
         }
 
+        public override void FinalizeInit()
+        {
+            wrongTiles = WindowCells.Where(x => map.glowGrid.GameGlowAt(x, true) == 0f).Select(x => map.cellIndices.CellToIndex(x)).ToHashSet();
+            audit = !wrongTiles.EnumerableNullOrEmpty();
+            base.FinalizeInit();
+        }
+
         public void IncludeTile(IntVec3 tile)
         {
             if (WindowCells.Contains(tile)) return;
@@ -75,8 +83,23 @@ namespace OpenTheWindows
             }
         }
 
+        public override void MapComponentTick()
+        {
+            if (audit)
+            {
+                foreach (int idx in wrongTiles)
+                {
+                    map.glowGrid.MarkGlowGridDirty(map.cellIndices.IndexToCell(idx));
+                }
+                wrongTiles.Clear();
+                audit = false;
+            }
+            base.MapComponentTick();
+        }
+
         public void MapUpdated(object sender, MapUpdateWatcher.MapUpdateInfo info)
         {
+            if (info.map != map) return;
             if (DubsSkylights && sender.GetType() == Building_Skylight)
             {
                 Thing thing = sender as Thing;
@@ -86,6 +109,14 @@ namespace OpenTheWindows
             if (TransparentRoofs && sender is RoofGrid && info.roofDef != null && TransparentRoofsList.Contains(info.roofDef))
             {
                 ReactTransparentRoof(info);
+            }
+        }
+
+        public void RegisterWindow(Building_Window window)
+        {
+            if (!cachedWindows.Contains(window))
+            {
+                cachedWindows.Add(window);
             }
         }
 
@@ -115,14 +146,6 @@ namespace OpenTheWindows
                 {
                     IncludeTile(info.center);
                 }
-            }
-        }
-
-        public void RegisterWindow(Building_Window window)
-        {
-            if (!cachedWindows.Contains(window))
-            {
-                cachedWindows.Add(window);
             }
         }
     }
