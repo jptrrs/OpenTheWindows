@@ -16,8 +16,17 @@ namespace OpenTheWindows
         private FieldInfo DubsSkylights_skylightGridinfo;
         private Type DubsSkylights_type;
         private MethodInfo MapCompInfo;
-        private bool[] skyLightGrid;
         private HashSet<int> wrongTiles;
+
+        private bool[] skyLightGrid
+        {
+            get
+            {
+                if (DubsSkylights) return (bool[])DubsSkylights_skylightGridinfo.GetValue(MapCompInfo.Invoke(map, new[] { DubsSkylights_type }));
+                return null;
+            }
+        }
+
         public MapComp_Windows(Map map) : base(map)
         {
             WindowCells = new HashSet<IntVec3>();
@@ -26,7 +35,6 @@ namespace OpenTheWindows
                 DubsSkylights_type = AccessTools.TypeByName("Dubs_Skylight.MapComp_Skylights");
                 DubsSkylights_skylightGridinfo = AccessTools.Field(DubsSkylights_type, "SkylightGrid");
                 MapCompInfo = AccessTools.Method(typeof(Map), "GetComponent", new[] { typeof(Type) });
-                skyLightGrid = (bool[])DubsSkylights_skylightGridinfo.GetValue(MapCompInfo.Invoke(map, new[] { DubsSkylights_type }));
             }
             if (DubsSkylights || TransparentRoofs)
             {
@@ -62,8 +70,11 @@ namespace OpenTheWindows
 
         public override void FinalizeInit()
         {
-            wrongTiles = WindowCells.Where(x => map.glowGrid.GameGlowAt(x, true) == 0f).Select(x => map.cellIndices.CellToIndex(x)).ToHashSet();
-            audit = !wrongTiles.EnumerableNullOrEmpty();
+            if (DubsSkylights)
+            {
+                wrongTiles = map.AllCells.Select(x => map.cellIndices.CellToIndex(x)).Where(i => skyLightGrid[i]).ToHashSet();
+                audit = !wrongTiles.EnumerableNullOrEmpty();
+            }
             base.FinalizeInit();
         }
 
