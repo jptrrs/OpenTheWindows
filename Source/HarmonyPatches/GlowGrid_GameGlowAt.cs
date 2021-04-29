@@ -11,16 +11,12 @@ namespace OpenTheWindows
     {
         public static void Postfix(IntVec3 c, ref float __result)
         {
-            // more caching, this method is called A LOT !
             Map map = LightingOverlay_Regenerate.map;
             MapComp_Windows comp = LightingOverlay_Regenerate.windowComponent;
+            if (!comp.WindowCells.Contains(c)) return;
             try
             {
-                if (__result < 1f && comp.WindowCells.Contains(c))
-                {
-                    float x = Mathf.Max(0f, map.skyManager.CurSkyGlow * OpenTheWindowsSettings.LightTransmission);
-                    __result = Mathf.Max(__result, x);
-                }
+                __result = Mathf.Max(0f, map.skyManager.CurSkyGlow * OpenTheWindowsSettings.LightTransmission);
             }
             catch (Exception e) // if you are catching err's you might as well explain them.
             {
