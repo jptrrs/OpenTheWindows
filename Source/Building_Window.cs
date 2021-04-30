@@ -319,6 +319,10 @@ namespace OpenTheWindows
                 Map.GetComponent<MapComp_Windows>().IncludeTileRange(illuminated);
                 needsUpdate = false;
             }
+            if (Find.TickManager.TicksGame % 250 == 0)
+            {
+                TickRare();
+            }
         }
         public override void TickRare()
         {
