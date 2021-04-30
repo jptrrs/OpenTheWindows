@@ -309,17 +309,7 @@ namespace OpenTheWindows
                 map.mapDrawer.MapMeshDirty(Position, MapMeshFlag.Things, true, false);
             }
         }
-        public override void Tick()
-        {
-            base.Tick();
-            if (needsUpdate)
-            {
-                if (!isFacingSet) CheckFacing();
-                CastLight();
-                Map.GetComponent<MapComp_Windows>().IncludeTileRange(illuminated);
-                needsUpdate = false;
-            }
-        }
+
         public override void TickRare()
         {
             if (Spawned)
@@ -338,6 +328,13 @@ namespace OpenTheWindows
                 {
                     AutoVentControl();
                 }
+            }
+			if (needsUpdate)
+            {
+                if (!isFacingSet) CheckFacing();
+                CastLight();
+                Map.GetComponent<MapComp_Windows>().IncludeTileRange(illuminated);
+                needsUpdate = false;
             }
             base.TickRare();
         }
