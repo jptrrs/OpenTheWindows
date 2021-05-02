@@ -54,7 +54,7 @@ namespace OpenTheWindows
         {
             if (!WindowCells.Contains(tile)) return;
             if (DubsSkylights && skyLightGrid[map.cellIndices.CellToIndex(tile)]) return;
-            if (TransparentRoofs && !bypass && TransparentRoofsList.Contains(map.roofGrid.RoofAt(tile))) return;
+            if (!bypass && tile.IsTransparentRoof(map)) return;
             WindowCells.Remove(tile);
             map.glowGrid.MarkGlowGridDirty(tile);
         }

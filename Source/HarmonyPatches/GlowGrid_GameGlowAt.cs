@@ -16,7 +16,12 @@ namespace OpenTheWindows
             if (!comp.WindowCells.Contains(c)) return;
             try
             {
-                __result = Mathf.Max(0f, map.skyManager.CurSkyGlow * OpenTheWindowsSettings.LightTransmission);
+                float fromSky = map.skyManager.CurSkyGlow * OpenTheWindowsSettings.LightTransmission;
+                if (HarmonyPatcher.RaiseTheRoof && c.Roofed(map) && c.IsTransparentRoof(map))
+                {
+                    __result *= OpenTheWindowsSettings.LightTransmission;
+                }
+                __result = Mathf.Max(__result, fromSky);
             }
             catch (Exception e) // if you are catching err's you might as well explain them.
             {

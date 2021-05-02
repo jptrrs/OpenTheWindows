@@ -41,5 +41,11 @@ namespace OpenTheWindows
             }
             return false;
         }
+
+        public static bool IsTransparentRoof(this IntVec3 cell, Map map)
+        {
+            if (!HarmonyPatcher.TransparentRoofs) return false;
+            return HarmonyPatcher.TransparentRoofsList.Contains(map.roofGrid.RoofAt(cell));
+        }
     }
 }

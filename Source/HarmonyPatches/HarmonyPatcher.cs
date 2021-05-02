@@ -12,12 +12,11 @@ namespace OpenTheWindows
     {
         public static readonly Type patchType = typeof(HarmonyPatcher);
         public static Harmony _instance = null;
-
         public static bool
             BetterPawnControl = false,
             Blueprints = false,
-            DubsSkylights = false;
-
+            DubsSkylights = false,
+            RaiseTheRoof = false;
         public static Type
             Building_Skylight,
             LocksType;
@@ -49,9 +48,9 @@ namespace OpenTheWindows
             if (AccessTools.TypeByName("RaiseTheRoof.Patches") is Type rtrType)
             {
                 Log.Message($"[OpenTheWindows] Raise the roof detected! Integrating...");
+                RaiseTheRoof = true;
                 TransparentRoofsList.AddRange(DefDatabase<RoofDef>.AllDefsListForReading.Where(x => x.defName.StartsWith("RTR_RoofTransparent")));
                 if (!TransparentRoofs) Log.Error(roofsFailed);
-
             }
 
             List<string> beautyMods = new List<string>() { "JPT.CustomNaturalBeauty", "zhrocks11.NatureIsBeautiful", "Meltup.BeautifulOutdoors" };
