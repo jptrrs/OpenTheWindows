@@ -37,9 +37,6 @@ namespace OpenTheWindows
                         __result = 50 + (int)(window.HitPoints * 0.2f);
                         break;
                 }
-                Log.Message($"{pawn} found a window on his path, result was {__result}.\n" +
-                    $"attackDoorIfTargetLost={pawn.CurJob.attackDoorIfTargetLost}, mode={traverseParms.mode}, canBash={traverseParms.canBash}");
-
             }
         }
     }
