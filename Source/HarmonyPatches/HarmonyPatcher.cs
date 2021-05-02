@@ -83,6 +83,12 @@ namespace OpenTheWindows
                 Log.Message("[OpenTheWindows] Locks detected! Adapting...");
                 LocksType = AccessTools.TypeByName("Locks.LockGizmo");
             }
+
+            if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("roolo.giddyupcore")))
+            {
+                Log.Message("[OpenTheWindows] Giddy-up! detected! Adapting...");
+                Instance.Patch(AccessTools.Method("GiddyUpCore.Jobs.JobDriver_Mount:letMountParticipate"), null, new HarmonyMethod(typeof(JobDriver_Mount_letMountParticipate), nameof(JobDriver_Mount_letMountParticipate.letMountParticipate_Postfix)));
+            }
         }
 
         public static Harmony Instance
