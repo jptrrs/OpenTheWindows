@@ -70,100 +70,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{44B639C0-085C-
 		Textures\UI\OpenWindows.png = Textures\UI\OpenWindows.png
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Languages", "Languages", "{7C1BB53B-EFD8-4C30-A364-2A2C8DAC7849}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ChineseSimplified", "ChineseSimplified", "{5AB0DF98-C63E-489C-96A0-D9446423D080}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DefInjected", "DefInjected", "{1695D58F-50AF-4037-A31D-9A6A7E9A8E32}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ResearchProjectDef", "ResearchProjectDef", "{C1DEBB03-42CC-4ADD-8EED-DA0DF7B2BAFC}"
-	ProjectSection(SolutionItems) = preProject
-		Languages\ChineseSimplified\DefInjected\ResearchProjectDef\ResearchProjects.xml = Languages\ChineseSimplified\DefInjected\ResearchProjectDef\ResearchProjects.xml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThingDef", "ThingDef", "{7B10D2DA-7235-4AF4-BD6D-15556D706800}"
-	ProjectSection(SolutionItems) = preProject
-		Languages\ChineseSimplified\DefInjected\ThingDef\Things.xml = Languages\ChineseSimplified\DefInjected\ThingDef\Things.xml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{EF2668A6-841C-4689-B1A1-8CC70009A48D}"
-	ProjectSection(SolutionItems) = preProject
-		Languages\ChineseSimplified\Keyed\OpenTheWindows_keys.xml = Languages\ChineseSimplified\Keyed\OpenTheWindows_keys.xml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ChineseTraditional", "ChineseTraditional", "{2C4330B5-9B16-4DAE-A7C3-C6463FBC4D7C}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DefInjected", "DefInjected", "{D2AC9282-D6AD-4442-846D-ECE72A196B9C}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ResearchProjectDef", "ResearchProjectDef", "{647ABAD9-7767-4CD2-B8DB-3A0E5600DD0C}"
-	ProjectSection(SolutionItems) = preProject
-		Languages\ChineseTraditional\DefInjected\ResearchProjectDef\ResearchProjects.xml = Languages\ChineseTraditional\DefInjected\ResearchProjectDef\ResearchProjects.xml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThingDef", "ThingDef", "{19B9A136-4EEE-4681-8A1C-446B94E05A9B}"
-	ProjectSection(SolutionItems) = preProject
-		Languages\ChineseTraditional\DefInjected\ThingDef\Things.xml = Languages\ChineseTraditional\DefInjected\ThingDef\Things.xml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{BA40E4B4-2AC6-4CFA-9599-6477DCA5147F}"
-	ProjectSection(SolutionItems) = preProject
-		Languages\ChineseTraditional\Keyed\OpenTheWindows_keys.xml = Languages\ChineseTraditional\Keyed\OpenTheWindows_keys.xml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "English", "English", "{C00DBF70-F0B7-4A5D-8D45-A4D37E4CA1C5}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{D2DF1234-84FF-4539-8501-74F3472136FC}"
-	ProjectSection(SolutionItems) = preProject
-		Languages\English\Keyed\OpenTheWindows_keys.xml = Languages\English\Keyed\OpenTheWindows_keys.xml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Italian", "Italian", "{308AB071-EB52-4049-8D63-0733537708A6}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DefInjected", "DefInjected", "{7B2E9B11-1339-44B1-AD94-2EADE490A88F}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThingDef", "ThingDef", "{F1F391D0-DF7E-4C15-9D67-BA527DB615F7}"
-	ProjectSection(SolutionItems) = preProject
-		Languages\Italian\DefInjected\ThingDef\TranslateThings.xml = Languages\Italian\DefInjected\ThingDef\TranslateThings.xml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{26FE43EF-6A11-45BD-9C75-F459AD50BF84}"
-	ProjectSection(SolutionItems) = preProject
-		Languages\Italian\Keyed\OpenTheWindows_keys.xml = Languages\Italian\Keyed\OpenTheWindows_keys.xml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PortugueseBrazilian", "PortugueseBrazilian", "{88F90ABF-3B83-4A41-8348-6A95D489E273}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DefInjected", "DefInjected", "{83657B8C-7BAC-416C-8870-491A2BC6A8B7}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThingDef", "ThingDef", "{B37ECF74-170B-4E61-81EF-697B66296802}"
-	ProjectSection(SolutionItems) = preProject
-		Languages\PortugueseBrazilian\DefInjected\ThingDef\TranslateThings.xml = Languages\PortugueseBrazilian\DefInjected\ThingDef\TranslateThings.xml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{11617ADD-7BDD-469E-8185-9F3C23D7FC64}"
-	ProjectSection(SolutionItems) = preProject
-		Languages\PortugueseBrazilian\Keyed\OpenTheWindows_keys.xml = Languages\PortugueseBrazilian\Keyed\OpenTheWindows_keys.xml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Russian", "Russian", "{3D43BFC6-8935-4365-A32D-700CC301AF50}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DefInjected", "DefInjected", "{80953A55-592D-4784-AB24-724544E83134}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ResearchProjectDef", "ResearchProjectDef", "{EC042415-5244-462D-BAA9-DEACC751D181}"
-	ProjectSection(SolutionItems) = preProject
-		Languages\Russian\DefInjected\ResearchProjectDef\ResearchProjects.xml = Languages\Russian\DefInjected\ResearchProjectDef\ResearchProjects.xml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThingDef", "ThingDef", "{79872075-CE99-48EB-A414-A30FE773E240}"
-	ProjectSection(SolutionItems) = preProject
-		Languages\Russian\DefInjected\ThingDef\Things.xml = Languages\Russian\DefInjected\ThingDef\Things.xml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{1B5D4128-8EFD-451F-A615-4C952AC694F1}"
-	ProjectSection(SolutionItems) = preProject
-		Languages\Russian\Keyed\OpenTheWindows_keys.xml = Languages\Russian\Keyed\OpenTheWindows_keys.xml
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Defs", "Defs", "{F6777F35-8912-4D90-B6BB-B2CF2F898A18}"
 	ProjectSection(SolutionItems) = preProject
 		Defs\ResearchProjects.xml = Defs\ResearchProjects.xml
@@ -190,6 +96,119 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patches", "Patches", "{0AE0
 		Patches\Patches_RimFridge.xml = Patches\Patches_RimFridge.xml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Languages", "Languages", "{1A8E66A4-DE1C-4DC9-BA20-7BE6E3148076}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ChineseSimplified", "ChineseSimplified", "{F9C71215-9C7D-49B3-9643-1F1E4A794CC9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DefInjected", "DefInjected", "{20EA4A03-1784-4AFB-875E-7BB6C5D08448}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ResearchProjectDef", "ResearchProjectDef", "{B92E432A-67CE-4260-8F45-77B627B5BA53}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\ChineseSimplified\DefInjected\ResearchProjectDef\ResearchProjects.xml = Languages\ChineseSimplified\DefInjected\ResearchProjectDef\ResearchProjects.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThingDef", "ThingDef", "{AA2446C9-555D-4953-8C5D-8BF7C96FC721}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\ChineseSimplified\DefInjected\ThingDef\Things.xml = Languages\ChineseSimplified\DefInjected\ThingDef\Things.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{79FB0CCF-BBF7-41B0-9844-D633CABEE192}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\ChineseSimplified\Keyed\OpenTheWindows_keys.xml = Languages\ChineseSimplified\Keyed\OpenTheWindows_keys.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ChineseTraditional", "ChineseTraditional", "{01DBA416-F305-49F6-858E-122F9566D80A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DefInjected", "DefInjected", "{D845953E-4786-459A-AC0F-D9AFE21BB0B1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ResearchProjectDef", "ResearchProjectDef", "{7172B8C9-FCDB-47FB-BD96-356ACAC8B4B8}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\ChineseTraditional\DefInjected\ResearchProjectDef\ResearchProjects.xml = Languages\ChineseTraditional\DefInjected\ResearchProjectDef\ResearchProjects.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThingDef", "ThingDef", "{ACE4759F-7510-433A-9F7C-290541998F10}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\ChineseTraditional\DefInjected\ThingDef\Things.xml = Languages\ChineseTraditional\DefInjected\ThingDef\Things.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{0C83398F-0D7A-4BED-881E-E9F8B21F5571}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\ChineseTraditional\Keyed\OpenTheWindows_keys.xml = Languages\ChineseTraditional\Keyed\OpenTheWindows_keys.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "English", "English", "{41CC156F-A249-49B1-81CB-1AEDA2C6C550}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{7D2F2B9F-EF43-46F5-AA74-75CB84BB5D07}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\English\Keyed\OpenTheWindows_keys.xml = Languages\English\Keyed\OpenTheWindows_keys.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "French", "French", "{192CB923-4C05-401A-9CC0-5DB8C0DE2F9E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DefInjected", "DefInjected", "{13B5DFF3-8FBA-4EE4-AE2B-EF4A00AB8D03}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ResearchProjectDef", "ResearchProjectDef", "{885B51DF-8285-4ED4-8379-034563E91364}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\French\DefInjected\ResearchProjectDef\ResearchProjects.xml = Languages\French\DefInjected\ResearchProjectDef\ResearchProjects.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThingDef", "ThingDef", "{B0D9D3CB-239D-448A-AEDC-118980FAF001}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\French\DefInjected\ThingDef\Things.xml = Languages\French\DefInjected\ThingDef\Things.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{45197375-C69B-4341-A2CD-FA5793658B8A}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\French\Keyed\OpenTheWindows_keys.xml = Languages\French\Keyed\OpenTheWindows_keys.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Italian", "Italian", "{9A239C26-310E-40C5-965D-2C1AE8482C28}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DefInjected", "DefInjected", "{54C211DC-6665-4200-AED5-3D012437F06B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThingDef", "ThingDef", "{32D4B8EF-4485-45A1-B414-160F684DF3A2}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\Italian\DefInjected\ThingDef\TranslateThings.xml = Languages\Italian\DefInjected\ThingDef\TranslateThings.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{7EBA6B6B-C3C9-4E3B-8351-3AECCCEEACB7}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\Italian\Keyed\OpenTheWindows_keys.xml = Languages\Italian\Keyed\OpenTheWindows_keys.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PortugueseBrazilian", "PortugueseBrazilian", "{DFD5E181-DDBD-46A6-B58C-0BDEEB250FDB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DefInjected", "DefInjected", "{37E1C419-FBBB-4EE3-A147-CCFB58A758CD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThingDef", "ThingDef", "{39280371-C04F-4FFA-BAF6-4D53C50D5470}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\PortugueseBrazilian\DefInjected\ThingDef\TranslateThings.xml = Languages\PortugueseBrazilian\DefInjected\ThingDef\TranslateThings.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{74694E1A-13A8-4381-9993-DC847F144CFC}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\PortugueseBrazilian\Keyed\OpenTheWindows_keys.xml = Languages\PortugueseBrazilian\Keyed\OpenTheWindows_keys.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Russian", "Russian", "{B0A48807-0D5A-43C4-AE8C-AD1A6DC774F0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DefInjected", "DefInjected", "{FC2F75F7-D815-41E0-9196-14ECABE34555}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ResearchProjectDef", "ResearchProjectDef", "{F38E875B-6601-4922-A466-4C71390F9EE6}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\Russian\DefInjected\ResearchProjectDef\ResearchProjects.xml = Languages\Russian\DefInjected\ResearchProjectDef\ResearchProjects.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThingDef", "ThingDef", "{56A8C019-4EB5-4AFD-9813-6D3D84454D42}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\Russian\DefInjected\ThingDef\Things.xml = Languages\Russian\DefInjected\ThingDef\Things.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{AFCF96BC-D940-49C5-9C2B-F5B455A694AB}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\Russian\Keyed\OpenTheWindows_keys.xml = Languages\Russian\Keyed\OpenTheWindows_keys.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		1.0|Any CPU = 1.0|Any CPU
@@ -211,31 +230,36 @@ Global
 		{071B7E40-F926-4602-92B7-55150D236FDD} = {8114C043-1A94-4248-927F-36E71DA53641}
 		{54E9F884-DD50-4D50-A7C2-ECF58C541093} = {071B7E40-F926-4602-92B7-55150D236FDD}
 		{44B639C0-085C-448A-BF22-C510212D9BF4} = {8114C043-1A94-4248-927F-36E71DA53641}
-		{5AB0DF98-C63E-489C-96A0-D9446423D080} = {7C1BB53B-EFD8-4C30-A364-2A2C8DAC7849}
-		{1695D58F-50AF-4037-A31D-9A6A7E9A8E32} = {5AB0DF98-C63E-489C-96A0-D9446423D080}
-		{C1DEBB03-42CC-4ADD-8EED-DA0DF7B2BAFC} = {1695D58F-50AF-4037-A31D-9A6A7E9A8E32}
-		{7B10D2DA-7235-4AF4-BD6D-15556D706800} = {1695D58F-50AF-4037-A31D-9A6A7E9A8E32}
-		{EF2668A6-841C-4689-B1A1-8CC70009A48D} = {5AB0DF98-C63E-489C-96A0-D9446423D080}
-		{2C4330B5-9B16-4DAE-A7C3-C6463FBC4D7C} = {7C1BB53B-EFD8-4C30-A364-2A2C8DAC7849}
-		{D2AC9282-D6AD-4442-846D-ECE72A196B9C} = {2C4330B5-9B16-4DAE-A7C3-C6463FBC4D7C}
-		{647ABAD9-7767-4CD2-B8DB-3A0E5600DD0C} = {D2AC9282-D6AD-4442-846D-ECE72A196B9C}
-		{19B9A136-4EEE-4681-8A1C-446B94E05A9B} = {D2AC9282-D6AD-4442-846D-ECE72A196B9C}
-		{BA40E4B4-2AC6-4CFA-9599-6477DCA5147F} = {2C4330B5-9B16-4DAE-A7C3-C6463FBC4D7C}
-		{C00DBF70-F0B7-4A5D-8D45-A4D37E4CA1C5} = {7C1BB53B-EFD8-4C30-A364-2A2C8DAC7849}
-		{D2DF1234-84FF-4539-8501-74F3472136FC} = {C00DBF70-F0B7-4A5D-8D45-A4D37E4CA1C5}
-		{308AB071-EB52-4049-8D63-0733537708A6} = {7C1BB53B-EFD8-4C30-A364-2A2C8DAC7849}
-		{7B2E9B11-1339-44B1-AD94-2EADE490A88F} = {308AB071-EB52-4049-8D63-0733537708A6}
-		{F1F391D0-DF7E-4C15-9D67-BA527DB615F7} = {7B2E9B11-1339-44B1-AD94-2EADE490A88F}
-		{26FE43EF-6A11-45BD-9C75-F459AD50BF84} = {308AB071-EB52-4049-8D63-0733537708A6}
-		{88F90ABF-3B83-4A41-8348-6A95D489E273} = {7C1BB53B-EFD8-4C30-A364-2A2C8DAC7849}
-		{83657B8C-7BAC-416C-8870-491A2BC6A8B7} = {88F90ABF-3B83-4A41-8348-6A95D489E273}
-		{B37ECF74-170B-4E61-81EF-697B66296802} = {83657B8C-7BAC-416C-8870-491A2BC6A8B7}
-		{11617ADD-7BDD-469E-8185-9F3C23D7FC64} = {88F90ABF-3B83-4A41-8348-6A95D489E273}
-		{3D43BFC6-8935-4365-A32D-700CC301AF50} = {7C1BB53B-EFD8-4C30-A364-2A2C8DAC7849}
-		{80953A55-592D-4784-AB24-724544E83134} = {3D43BFC6-8935-4365-A32D-700CC301AF50}
-		{EC042415-5244-462D-BAA9-DEACC751D181} = {80953A55-592D-4784-AB24-724544E83134}
-		{79872075-CE99-48EB-A414-A30FE773E240} = {80953A55-592D-4784-AB24-724544E83134}
-		{1B5D4128-8EFD-451F-A615-4C952AC694F1} = {3D43BFC6-8935-4365-A32D-700CC301AF50}
+		{F9C71215-9C7D-49B3-9643-1F1E4A794CC9} = {1A8E66A4-DE1C-4DC9-BA20-7BE6E3148076}
+		{20EA4A03-1784-4AFB-875E-7BB6C5D08448} = {F9C71215-9C7D-49B3-9643-1F1E4A794CC9}
+		{B92E432A-67CE-4260-8F45-77B627B5BA53} = {20EA4A03-1784-4AFB-875E-7BB6C5D08448}
+		{AA2446C9-555D-4953-8C5D-8BF7C96FC721} = {20EA4A03-1784-4AFB-875E-7BB6C5D08448}
+		{79FB0CCF-BBF7-41B0-9844-D633CABEE192} = {F9C71215-9C7D-49B3-9643-1F1E4A794CC9}
+		{01DBA416-F305-49F6-858E-122F9566D80A} = {1A8E66A4-DE1C-4DC9-BA20-7BE6E3148076}
+		{D845953E-4786-459A-AC0F-D9AFE21BB0B1} = {01DBA416-F305-49F6-858E-122F9566D80A}
+		{7172B8C9-FCDB-47FB-BD96-356ACAC8B4B8} = {D845953E-4786-459A-AC0F-D9AFE21BB0B1}
+		{ACE4759F-7510-433A-9F7C-290541998F10} = {D845953E-4786-459A-AC0F-D9AFE21BB0B1}
+		{0C83398F-0D7A-4BED-881E-E9F8B21F5571} = {01DBA416-F305-49F6-858E-122F9566D80A}
+		{41CC156F-A249-49B1-81CB-1AEDA2C6C550} = {1A8E66A4-DE1C-4DC9-BA20-7BE6E3148076}
+		{7D2F2B9F-EF43-46F5-AA74-75CB84BB5D07} = {41CC156F-A249-49B1-81CB-1AEDA2C6C550}
+		{192CB923-4C05-401A-9CC0-5DB8C0DE2F9E} = {1A8E66A4-DE1C-4DC9-BA20-7BE6E3148076}
+		{13B5DFF3-8FBA-4EE4-AE2B-EF4A00AB8D03} = {192CB923-4C05-401A-9CC0-5DB8C0DE2F9E}
+		{885B51DF-8285-4ED4-8379-034563E91364} = {13B5DFF3-8FBA-4EE4-AE2B-EF4A00AB8D03}
+		{B0D9D3CB-239D-448A-AEDC-118980FAF001} = {13B5DFF3-8FBA-4EE4-AE2B-EF4A00AB8D03}
+		{45197375-C69B-4341-A2CD-FA5793658B8A} = {192CB923-4C05-401A-9CC0-5DB8C0DE2F9E}
+		{9A239C26-310E-40C5-965D-2C1AE8482C28} = {1A8E66A4-DE1C-4DC9-BA20-7BE6E3148076}
+		{54C211DC-6665-4200-AED5-3D012437F06B} = {9A239C26-310E-40C5-965D-2C1AE8482C28}
+		{32D4B8EF-4485-45A1-B414-160F684DF3A2} = {54C211DC-6665-4200-AED5-3D012437F06B}
+		{7EBA6B6B-C3C9-4E3B-8351-3AECCCEEACB7} = {9A239C26-310E-40C5-965D-2C1AE8482C28}
+		{DFD5E181-DDBD-46A6-B58C-0BDEEB250FDB} = {1A8E66A4-DE1C-4DC9-BA20-7BE6E3148076}
+		{37E1C419-FBBB-4EE3-A147-CCFB58A758CD} = {DFD5E181-DDBD-46A6-B58C-0BDEEB250FDB}
+		{39280371-C04F-4FFA-BAF6-4D53C50D5470} = {37E1C419-FBBB-4EE3-A147-CCFB58A758CD}
+		{74694E1A-13A8-4381-9993-DC847F144CFC} = {DFD5E181-DDBD-46A6-B58C-0BDEEB250FDB}
+		{B0A48807-0D5A-43C4-AE8C-AD1A6DC774F0} = {1A8E66A4-DE1C-4DC9-BA20-7BE6E3148076}
+		{FC2F75F7-D815-41E0-9196-14ECABE34555} = {B0A48807-0D5A-43C4-AE8C-AD1A6DC774F0}
+		{F38E875B-6601-4922-A466-4C71390F9EE6} = {FC2F75F7-D815-41E0-9196-14ECABE34555}
+		{56A8C019-4EB5-4AFD-9813-6D3D84454D42} = {FC2F75F7-D815-41E0-9196-14ECABE34555}
+		{AFCF96BC-D940-49C5-9C2B-F5B455A694AB} = {B0A48807-0D5A-43C4-AE8C-AD1A6DC774F0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AE23F93A-4E76-4877-B2E2-7CED627DB416}

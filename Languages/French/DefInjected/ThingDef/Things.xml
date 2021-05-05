@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+  <SimpleOpenWindow.label>Fenêtre rustique</SimpleOpenWindow.label>
+  <SimpleOpenWindow.description>Les fenêtres simples peuvent ventiler et éclairer lorsqu'elles sont ouvertes. Même si elle est fermée, elle ne peut pas bien isoler. Ouvrez-vous sur l'extérieur.</SimpleOpenWindow.description>
+  <SimpleOpenWindow_Blueprint.label>Fenêtre rustique (plan)</SimpleOpenWindow_Blueprint.label>
+  <SimpleOpenWindow_Frame.label>Fenêtre rustique (construction)</SimpleOpenWindow_Frame.label>
+  <SimpleOpenWindow_Frame.description>Les fenêtres simples peuvent ventiler et éclairer lorsqu'elles sont ouvertes. Même si elle est fermée, elle ne peut pas bien isoler. Ouvrez-vous sur l'extérieur.</SimpleOpenWindow_Frame.description>
+
+  <OpenWindow.label>Fenêtre</OpenWindow.label>
+  <OpenWindow.description>Équipé de volets en verre, la ventilation et l'éclairage peuvent être réglés séparément. Ouvrez-vous sur l'extérieur.</OpenWindow.description>
+  <OpenWindow_Blueprint.label>Fenêtre (plan)</OpenWindow_Blueprint.label>
+  <OpenWindow_Frame.label>Fenêtre (en construction)</OpenWindow_Frame.label>
+  <OpenWindow_Frame.description>Équipé de volets en verre, la ventilation et l'éclairage peuvent être réglés séparément. Ouvrez-vous sur l'extérieur.</OpenWindow_Frame.description>
+
+  <LargeOpenWindow.label>Grande fenêtre</LargeOpenWindow.label>
+  <LargeOpenWindow.description>Les stores à grande échelle équipés de verre peuvent fournir beaucoup de ventilation et de lumière, et le champ de vision est également très large.</LargeOpenWindow.description>
+  <LargeOpenWindow_Blueprint.label>Grande fenêtre (plan)</LargeOpenWindow_Blueprint.label>
+  <LargeOpenWindow_Frame.label>Grande fenêtre (construction)</LargeOpenWindow_Frame.label>
+  <LargeOpenWindow_Frame.description>Les stores à grande échelle équipés de verre peuvent fournir beaucoup de ventilation et de lumière, et le champ de vision est également très large.</LargeOpenWindow_Frame.description>
+
+  <HugeOpenWindow.label>Immense fenêtre</HugeOpenWindow.label>
+  <HugeOpenWindow.description>Une immense fenêtre, équipée de pare-soleil rotatifs, permet un volume de lumière massif.</HugeOpenWindow.description>
+
+  <ReinforcedOpenWindow.label>Fenêtre renforcée</ReinforcedOpenWindow.label>
+  <ReinforcedOpenWindow.description>Équipé de volets de verre trempé, la ventilation et l'éclairage peuvent être réglés séparément.</ReinforcedOpenWindow.description>
+  <ReinforcedOpenWindow_Blueprint.label>Fenêtre renforcée (plan)</ReinforcedOpenWindow_Blueprint.label>
+  <ReinforcedOpenWindow_Frame.label>Fenêtre renforcée (construction)</ReinforcedOpenWindow_Frame.label>
+  <ReinforcedOpenWindow_Frame.description>Équipé de volets de verre trempé, la ventilation et l'éclairage peuvent être réglés séparément.</ReinforcedOpenWindow_Frame.description>
+
+  <LargeReinforcedOpenWindow.label>Grande fenêtre renforcée</LargeReinforcedOpenWindow.label>
+  <LargeReinforcedOpenWindow.description>Les volets à grande échelle équipés de verre trempé peuvent fournir beaucoup de ventilation et de lumière, et le champ de vision est également très large.</LargeReinforcedOpenWindow.description>
+  <LargeReinforcedOpenWindow_Blueprint.label>Grande fenêtre renforcée (plan)</LargeReinforcedOpenWindow_Blueprint.label>
+  <LargeReinforcedOpenWindow_Frame.label>Grande fenêtre renforcée (construction)</LargeReinforcedOpenWindow_Frame.label>
+  <LargeReinforcedOpenWindow_Frame.description>Les volets à grande échelle équipés de verre trempé peuvent fournir beaucoup de ventilation et de lumière, et le champ de vision est également très large.</LargeReinforcedOpenWindow_Frame.description>
+
+</LanguageData>
