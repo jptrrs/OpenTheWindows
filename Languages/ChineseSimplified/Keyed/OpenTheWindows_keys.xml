@@ -44,7 +44,7 @@
   <LinkWindowsAndWalls>与窗相连</LinkWindowsAndWalls>
   <LinkVentsAndWalls>与通风孔相连&amp;颜色</LinkVentsAndWalls>
   <LinkFridgesAndWalls>与通风孔相连，颜色&amp;「冰箱」Mod</LinkFridgesAndWalls>
-  <!--New--><AlarmOptionsLabel>Better Pawn Control integration</AlarmOptionsLabel>
+  <!--New--><AlarmOptionsLabel>&lt;i&gt;Better Pawn Control&lt;/i&gt; integration</AlarmOptionsLabel>
   <!--New--><AlarmReactDefault>Windows close on emergency by default</AlarmReactDefault>
 
 </LanguageData>

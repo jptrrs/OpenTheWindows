@@ -2,7 +2,7 @@
 <LanguageData>
 
   <SimpleOpenWindow.label>Janela Rústica</SimpleOpenWindow.label>
-  <SimpleOpenWindow.description>Uma janela simples que deixa entrar ar e luz quando aberta. Mas mesmo fechada não veda totalmente a passagem de ar. Tem uma vista.</SimpleOpenWindow.description>
+  <SimpleOpenWindow.description>Uma janela simples que deixa entrar ar e luz quando aberta. Mas mesmo fechada, não veda totalmente a passagem de ar. Tem uma vista.</SimpleOpenWindow.description>
 
   <OpenWindow.label>Janela</OpenWindow.label>
   <OpenWindow.description>Uma janela com uma folha de vidro e uma veneziana. Controla a passagem de luz e de ar separadamente. Tem uma vista.</OpenWindow.description>
@@ -11,7 +11,7 @@
   <LargeOpenWindow.description>Uma grande janela de vidro com veneziana que deixa passar muita luz, ar e a paisagem.</LargeOpenWindow.description>
 
   <HugeOpenWindow.label>Janela Reforçada Grande</HugeOpenWindow.label>
-  <HugeOpenWindow.description>Uma janela enorme, equipada com brises rotativos. Permite a pasagem de uma quantidada absurda de luz.</HugeOpenWindow.description>
+  <HugeOpenWindow.description>Uma janela enorme, equipada com brises rotativos. Permite a passagem de uma quantidada absurda de luz.</HugeOpenWindow.description>
 
   <ReinforcedOpenWindow.label>Janela Reforçada</ReinforcedOpenWindow.label>
   <ReinforcedOpenWindow.description>Uma janela reforçada com uma folha de vidro e uma veneziana. Controla a passagem de luz e de ar separadamente.</ReinforcedOpenWindow.description>

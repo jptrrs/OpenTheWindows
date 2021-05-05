@@ -45,7 +45,7 @@
   <LinkWindowsAndWalls>Связывать с окнами</LinkWindowsAndWalls>
   <LinkVentsAndWalls>Связывать с вентиляцией &amp; кондиционерами</LinkVentsAndWalls>
   <LinkFridgesAndWalls>Связывать с вентиляцией, кондиционерами &amp; холодильниками</LinkFridgesAndWalls>
-  <!--New--><AlarmOptionsLabel>Better Pawn Control integration</AlarmOptionsLabel>
+  <!--New--><AlarmOptionsLabel>&lt;i&gt;Better Pawn Control&lt;/i&gt; integration</AlarmOptionsLabel>
   <!--New--><AlarmReactDefault>Windows close on emergency by default</AlarmReactDefault>
   
 </LanguageData>

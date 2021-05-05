@@ -3,7 +3,7 @@
   <!--ui-->
   <ClosedWindow>Fechada</ClosedWindow>
   <EmergencyClosed>Fechada por emergência</EmergencyClosed>
-  <butVenting>, mas ventilando.</butVenting>
+  <butVenting>, mas a ventilar.</butVenting>
   <notVenting>Vedada</notVenting>
   <Facing>Voltada para {0}.</Facing>
   <LandscapeToThe>Vista para o {0}</LandscapeToThe>
@@ -17,9 +17,9 @@
   <CommandOpenCloseWindowVentDesc>Impedir ou permitir a passagem de ar pela janela.</CommandOpenCloseWindowVentDesc>
   <CommandAutoVentilation>Ventilação automática</CommandAutoVentilation>
   <CommandAutoVentilationDesc>Marcar uma janela para abrir ou fechar quando a temperatura interna se tornar desconfortável.</CommandAutoVentilationDesc>
-  <DisabledForAutoVentilation>Seguindo parâmetros da ventilação automática.</DisabledForAutoVentilation>
+  <DisabledForAutoVentilation>Vinculada a parâmetros da ventilação automática.</DisabledForAutoVentilation>
   <TrackingTemperature>Vigiando a temperatura.</TrackingTemperature>
-  <WaitingTemperatureNormalization>Aguardando a temperatura equalizar.</WaitingTemperatureNormalization>
+  <WaitingTemperatureNormalization>Temperatura a equilibrar-se.</WaitingTemperatureNormalization>
   <CantTrackTemperature>Sala adjacente está descoberta, não é possível vigiar a temperatura.</CantTrackTemperature>
   <CommandCloseOnEmergency>Fechar em emergências/</CommandCloseOnEmergency>
   <CommandCloseOnEmergencyDesc>Marcar a janela para fechar quando o alarme de emergência é ativado.</CommandCloseOnEmergencyDesc>
@@ -44,7 +44,7 @@
   <LinkWindowsAndWalls>Conectar com as janelas</LinkWindowsAndWalls>
   <LinkVentsAndWalls>Conectar com saídas de ventilação e refrigeradores</LinkVentsAndWalls>
   <LinkFridgesAndWalls>Conectar com saídas de ventilação e refrigeradores</LinkFridgesAndWalls>
-  <AlarmOptionsLabel>Integração com &lt;i&gt;Better Pawn Control&lt;/i&gt;</AlarmOptionsLabel>
+  <AlarmOptionsLabel>Integração com "Better Pawn Control"</AlarmOptionsLabel>
   <AlarmReactDefault>Janelas fecham em emergências por padrão.</AlarmReactDefault>
 
 </LanguageData>

@@ -44,7 +44,7 @@
   <LinkWindowsAndWalls>Lien avec les fenêtres</LinkWindowsAndWalls>
   <LinkVentsAndWalls>Lien avec les évents &amp; rafraichissuers</LinkVentsAndWalls>
   <LinkFridgesAndWalls>Lien avec les évents, rafraichisseurs &amp; réfrigérateurs</LinkFridgesAndWalls>
-  <AlarmOptionsLabel>Better Pawn Control intégration</AlarmOptionsLabel>
+  <AlarmOptionsLabel>&lt;i&gt;Better Pawn Control&lt;/i&gt; intégration</AlarmOptionsLabel>
   <AlarmReactDefault>La fenêtre se ferme en cas d'urgence par défaut</AlarmReactDefault>
   
 </LanguageData>

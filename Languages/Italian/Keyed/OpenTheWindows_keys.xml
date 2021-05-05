@@ -44,7 +44,7 @@
   <LinkWindowsAndWalls>Raccordo con le finestre</LinkWindowsAndWalls>
   <LinkVentsAndWalls>Raccorda la grafica con prese d'aria e unità di refrigerazione</LinkVentsAndWalls>
   <LinkFridgesAndWalls>Collega le prese d'aria e le unità di refrigerazione</LinkFridgesAndWalls>
-  <!--New--><AlarmOptionsLabel>Better Pawn Control integration</AlarmOptionsLabel>
+  <!--New--><AlarmOptionsLabel>&lt;i&gt;Better Pawn Control&lt;/i&gt; integration</AlarmOptionsLabel>
   <!--New--><AlarmReactDefault>Windows close on emergency by default</AlarmReactDefault>
 
 </LanguageData>
