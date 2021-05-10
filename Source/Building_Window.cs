@@ -25,21 +25,23 @@ namespace OpenTheWindows
         public List<IntVec3>
             view = new List<IntVec3>(),
             illuminated = new List<IntVec3>();
+        private const int tickRareInterval = 250;
+
         private float
-            closedVentFactor = 0.5f,
+                    closedVentFactor = 0.5f,
             leakVentFactor = 0.1f;
         private bool
             leaks = false,
-            badTemperature = false;
+            badTemperature = false,
+            niceOutside = false;
         private CompWindow
             mainComp,
             ventComp;
+        private List<ScanLine> scanLines = new List<ScanLine>();
+
         private int
             skippedTempChecks = 0,
-            maxTempChecks = 5; // 12,5 seconds each.
-        private const int tickRareInterval = 250;
-
-        private List<ScanLine> scanLines = new List<ScanLine>();
+            maxTempChecks = 4; // 12,5 seconds each.
         #endregion
 
         #region properties
@@ -113,7 +115,6 @@ namespace OpenTheWindows
                 return IntVec3.Zero;
             }
         }
-
         private int Size => Math.Max(def.size.x, def.size.z);
         private IntRange TargetTemp => OpenTheWindowsSettings.ComfortTemp;
         private float VentRate => Size * 14f;
@@ -449,60 +450,37 @@ namespace OpenTheWindows
             return result;
         }
 
-        private void AutoVentControl() 
+        private void AutoVentControl()
         {
             int ticksGame = Find.TickManager.TicksGame;
             if (ticksGame % (tickRareInterval * 3) != 0) return; //Checks only each 12,5 sec.
-            bool flickPending = ventComp.WantsFlick();
             float insideTemp = AttachedRoom.Temperature;
-            if (!TargetTemp.Includes(insideTemp)) //Take action if room temperature is wrong.
+            float outsideTemp = GenTemperature.GetTemperatureForCell(Outside, Map);
+            if (TargetTemp.Includes(insideTemp)) //Stand down if temperature is right.
             {
-                if (badTemperature)
+                badTemperature = false;
+                skippedTempChecks = 0;
+                if (ventComp.WantsFlick()) //If temperature is right but a command is still pending, cancel it.
                 {
-                    if (skippedTempChecks <= maxTempChecks)
-                    {
-                        skippedTempChecks++;
-                        return;  //Do this just once, until room stabilizes.
-                    }
-                    badTemperature = false;
-                    skippedTempChecks = 0;
+                    ventComp.FlickFor(venting);
                 }
-                float outsideTemp = GenTemperature.GetTemperatureForCell(Outside, Map);
-                bool
-                    colderOutside = insideTemp > outsideTemp,
-                    colderInside = insideTemp < outsideTemp,
-                    tooHotInside = insideTemp > TargetTemp.max,
-                    tooColdInside = insideTemp < TargetTemp.min,
-                    tooHotOutside = outsideTemp > TargetTemp.max,
-                    tooColdOutside = outsideTemp < TargetTemp.min,
-                    doFlick = false,
-                    intent;
-                if (!venting) //open if...
+                if (leaks && !open && TargetTemp.Includes(outsideTemp)) //If its a simple window, check if should re-open next cycle.
                 {
-                    doFlick = (tooHotInside && colderOutside) || (tooColdInside && colderInside && !tooColdOutside);
-                    intent = true;
-                }
-                else //close if...
-                {
-                    doFlick = (tooHotInside && tooHotOutside) || (tooColdInside && tooColdOutside);
-                    intent = false;
-                }
-                if (doFlick)
-                {
-                    badTemperature = true;
-                    ventComp.FlickFor(intent);
-                    string hotin = tooHotInside ? "TooHotInside" : "";
-                    string coldin = tooColdInside ? "TooColdInside" : "";
-                    //Log.Message($"{this} decided to {(intent ? "open" : "close")}. {hotin} {coldin}. Inside: {insideTemp}, outisde: {outsideTemp}, range: {TargetTemp.min}-{TargetTemp.max}");
+                    ShouldReOpen();
                 }
                 return;
             }
-            badTemperature = false;
-            skippedTempChecks = 0;
-            if (flickPending) //If temperature is right but a command is still pending, cancel it.
+            if (badTemperature) //Escape if acted recently.
             {
-                ventComp.FlickFor(venting);
+                if (skippedTempChecks <= maxTempChecks)
+                {
+                    skippedTempChecks++;
+                    return;
+                }
+                badTemperature = false;
+                skippedTempChecks = 0;
             }
+            ReactToTemperature(insideTemp, outsideTemp); //Actually evaluating the situation.
         }
 
         private bool GizmoInhibitor(Gizmo gizmo)
@@ -534,6 +512,43 @@ namespace OpenTheWindows
             if (unsureFace) isFacingSet = false;
         }
 
+        private void ReactToTemperature(float insideTemp, float outsideTemp)
+        {
+            bool
+                colderOutside = insideTemp > outsideTemp,
+                colderInside = insideTemp < outsideTemp,
+                tooHotInside = insideTemp > TargetTemp.max,
+                tooColdInside = insideTemp < TargetTemp.min,
+                tooHotOutside = outsideTemp > TargetTemp.max,
+                tooColdOutside = outsideTemp < TargetTemp.min,
+                doFlick = false,
+                intent;
+            if (niceOutside && (tooColdOutside || tooColdInside)) niceOutside = false;
+            if (!venting) //open if...
+            {
+                doFlick = (tooHotInside && colderOutside) || (tooColdInside && colderInside && !tooColdOutside);
+                intent = true;
+            }
+            else //close if...
+            {
+                doFlick = (tooHotInside && tooHotOutside) || (tooColdInside && tooColdOutside);
+                intent = false;
+            }
+            if (doFlick)
+            {
+                badTemperature = true;
+                ventComp.FlickFor(intent);
+                if (Prefs.LogVerbose)
+                {
+                    string action = intent ? "open" : "close";
+                    string inside = tooHotInside ? "HOT" : "COLD";
+                    string outside = tooHotOutside ? "HOT" : "COLD";
+                    string reason = intent ? $"{inside} inside and outside is better" : $"{outside} outside";
+                    Log.Message($"[OpenTheWindows] {this} @ {AttachedRoom.Role.LabelCap} decided to {action} because it's too {reason}. Comfortable temperature range is {TargetTemp}.");
+                }
+            }
+        }
+
         private void SetScanLines()
         {
             scanLines.Clear();
@@ -541,6 +556,21 @@ namespace OpenTheWindows
             {
                 scanLines.Add(new ScanLine(this, c));
             }
+        }
+
+        private void ShouldReOpen()
+        {
+            if (niceOutside)
+            {
+                mainComp.FlickFor(true);
+                niceOutside = false;
+                if (Prefs.LogVerbose)
+                {
+                    Log.Message($"[OpenTheWindows] {this} @ {AttachedRoom.Role.LabelCap} decided to re-open because outside doesn't look so bad. Comfortable temperature range is {TargetTemp}.");
+                }
+                return;
+            }
+            niceOutside = true;
         }
         #endregion
 
@@ -594,12 +624,11 @@ namespace OpenTheWindows
             }
 
             List<IntVec3> clearLine => scanLine.FindAll(x => clearCells.Contains(scanLine.IndexOf(x)));
-            ScanLine siblingRight => parent.scanLines.Find(x => x.position == toRight);
-            ScanLine siblingLeft => parent.scanLines.Find(x => x.position == toLeft);
-            private bool siblingClear => (siblingLeft != null && leftIsSet) || (siblingRight != null && rightIsSet);
-            bool rightIsSet => siblingRight.facingSet;
             bool leftIsSet => siblingLeft.facingSet;
-
+            bool rightIsSet => siblingRight.facingSet;
+            private bool siblingClear => (siblingLeft != null && leftIsSet) || (siblingRight != null && rightIsSet);
+            ScanLine siblingLeft => parent.scanLines.Find(x => x.position == toLeft);
+            ScanLine siblingRight => parent.scanLines.Find(x => x.position == toRight);
             public bool Affected(IntVec3 cell)
             {
                 return scanLine.Contains(cell);
@@ -628,6 +657,12 @@ namespace OpenTheWindows
             public void LineAdjust(int[] old, int[] @new)
             {
                 var delta = old.Except(@new);
+            }
+
+            public void Reset()
+            {
+                clearCells = new int[] { };
+                facingSet = false;
             }
 
             public void SetScanLine()
@@ -720,13 +755,6 @@ namespace OpenTheWindows
                     if (rightEdge.Walkable(map)) list.AddDistinct(rightEdge);
                 }
             }
-
-            public void Reset()
-            {
-                clearCells = new int[] { };
-                facingSet = false;
-            }
-
             private bool IsClear(IntVec3 c, bool inside)
             {
                 bool result = Affected(c) && c.Walkable(map) && (inside || !map.roofGrid.Roofed(c) || c.IsTransparentRoof(map));

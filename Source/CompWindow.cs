@@ -87,7 +87,7 @@ namespace OpenTheWindows
         {
             if (SwitchIsOn != request || WantsFlick())
             {
-                WantSwitchOn = request/*!WantSwitchOn*/;
+                WantSwitchOn = request;
                 if (Powered)
                 {
                     DoFlick();
