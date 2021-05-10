@@ -41,12 +41,13 @@ namespace OpenTheWindows
             BeautySensitivityReduction = BeautySensitivityReductionDefault,
             LightTransmission = LightTransmissionDefault;
 
-        public static bool 
+        public static bool
             IsBeautyOn = false,
             BeautyFromBuildings = false,
             LinkWindows = true,
             LinkVents = true,
-            AlarmReactDefault = false;
+            AlarmReactDefault = false,
+            dialogOpen = false;
 
         private static IntRange _comfortTemp;
 
@@ -58,7 +59,7 @@ namespace OpenTheWindows
                 {
                     return new IntRange((int)ThingDefOf.Human.GetStatValueAbstract(StatDefOf.ComfyTemperatureMin), (int)ThingDefOf.Human.GetStatValueAbstract(StatDefOf.ComfyTemperatureMax));
                 }
-                return new IntRange();
+                return IntRange.zero;
             }
         }
 
@@ -66,7 +67,7 @@ namespace OpenTheWindows
         {
             get
             {
-                if (_comfortTemp == null)
+                if (_comfortTemp == IntRange.zero)
                 {
                     return ValidateAndSetupComfortTemp();
                 }
@@ -80,24 +81,16 @@ namespace OpenTheWindows
 
         private static IntRange ValidateAndSetupComfortTemp()
         {
-            if (_comfortTemp == null || (!Input.GetMouseButton(0) && _comfortTemp.max == 0 && _comfortTemp.min == 0))
+            if (_comfortTemp == IntRange.zero && (!dialogOpen || (dialogOpen && !Input.GetMouseButton(0))))
             {
-                var defaultValue = ComfortTempDefault;
-                if (defaultValue.max == 0 && defaultValue.min == 0)
-                {
-                    Log.Error("[OpenTheWindows] Can't determine the default comfortable temperature range before the defs are loaded!");
-                }
-                else
-                {
-                    _comfortTemp = defaultValue;
-                }
-                return defaultValue;
+                _comfortTemp = ComfortTempDefault;
             }
             return _comfortTemp;
         }
 
         public static void DoWindowContents(Rect inRect)
         {
+            dialogOpen = true;
             float padding = 15f;
             //float vertLimit = 0.75f;
             float footer = 60f;
@@ -183,6 +176,7 @@ namespace OpenTheWindows
                 Reset();
             }
             bottomBar.End();
+            dialogOpen = false;
         }
 
         private static void Reset()

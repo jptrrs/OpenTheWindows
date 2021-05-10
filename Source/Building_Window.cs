@@ -13,7 +13,6 @@ namespace OpenTheWindows
     {
         #region variables
         public LinkDirections Facing;
-
         public bool
             isFacingSet = false,
             open = true,
@@ -22,28 +21,23 @@ namespace OpenTheWindows
             autoVent = false,
             alarmReact = OpenTheWindowsSettings.AlarmReactDefault,
             emergencyShut = false;
-
         public IntVec3 start, end;
-
         public List<IntVec3>
             view = new List<IntVec3>(),
             illuminated = new List<IntVec3>();
         private float
             closedVentFactor = 0.5f,
             leakVentFactor = 0.1f;
-
         private bool
             leaks = false,
-            recentlyOperated = false;
-
+            badTemperature = false;
         private CompWindow
             mainComp,
             ventComp;
-
         private int
-            nextToleranceCheckTick,
-            toleranceCheckInterval = 1000,
-            intervalMultiplierAfterAttempts = 4;
+            skippedTempChecks = 0,
+            maxTempChecks = 5; // 12,5 seconds each.
+        private const int tickRareInterval = 250;
 
         private List<ScanLine> scanLines = new List<ScanLine>();
         #endregion
@@ -94,7 +88,6 @@ namespace OpenTheWindows
                 return IntVec3.Zero;
             }
         }
-
         private int MaxNeighborDistance => 2 * (reach + WindowUtility.deep + 1);
         private IntVec3 Outside
         {
@@ -193,9 +186,10 @@ namespace OpenTheWindows
                         alarmReact = !alarmReact;
                         if (AlertManagerProxy.onAlert)
                         {
-                            mainComp.FlickFor(!open);
+                            mainComp.FlickFor(false);
+                            ventComp.FlickFor(false);
                         }
-                        if (!alarmReact && emergencyShut)
+                        if (!alarmReact && emergencyShut) 
                         {
                             emergencyShut = false;
                         }
@@ -227,7 +221,7 @@ namespace OpenTheWindows
                     string autoVentStatus = "";
                     if (!AttachedRoom.UsesOutdoorTemperature)
                     {
-                        autoVentStatus = recentlyOperated ? "WaitingTemperatureNormalization".Translate() : "TrackingTemperature".Translate();
+                        autoVentStatus = badTemperature ? "WaitingTemperatureNormalization".Translate() : "TrackingTemperature".Translate();
                     }
                     else autoVentStatus = "CantTrackTemperature".Translate();
                     stringBuilder.Append(autoVentStatus);
@@ -259,25 +253,21 @@ namespace OpenTheWindows
                     break;
                 case "airOn":
                     venting = true;
-                    recentlyOperated = true;
                     break;
                 case "airOff":
                     venting = false;
-                    recentlyOperated = true;
                     break;
                 case "bothOn":
                     open = true;
                     def.blockLight = false;
                     needsUpdate = true;
                     venting = true;
-                    recentlyOperated = true;
                     break;
                 case "bothOff":
                     def.blockLight = true;
                     open = false;
                     needsUpdate = true;
                     venting = false;
-                    recentlyOperated = true;
                     break;
                 default:
                     break;
@@ -319,7 +309,7 @@ namespace OpenTheWindows
                 Map.GetComponent<MapComp_Windows>().IncludeTileRange(illuminated);
                 needsUpdate = false;
             }
-            if (Find.TickManager.TicksGame % 250 == 0)
+            if (Find.TickManager.TicksGame % tickRareInterval == 0)
             {
                 TickRare();
             }
@@ -417,8 +407,6 @@ namespace OpenTheWindows
                 IEnumerable<IntVec3> competing = neighbors.EnumerableNullOrEmpty() ? null : neighbors.Select(x => x.illuminated).Aggregate((l, r) => l.Union(r).ToList());
                 List<IntVec3> affected = competing.EnumerableNullOrEmpty() ? illuminated : illuminated.Except(competing).ToList();
                 Map.GetComponent<MapComp_Windows>().ExcludeTileRange(affected);
-                //Log.Message($"{this} darkened {affected.Count()} cells from {illuminated.Count()} that were illuminated.\n" +
-                //    $"There were {competing.EnumerableCount()} competing cells from {neighbors.EnumerableCount()} neighbors.");
                 illuminated.Clear();
             }
         }
@@ -463,40 +451,57 @@ namespace OpenTheWindows
 
         private void AutoVentControl() 
         {
-            float insideTemp = AttachedRoom.Temperature;
             int ticksGame = Find.TickManager.TicksGame;
-            if (!TargetTemp.Includes(insideTemp) && !recentlyOperated)
+            if (ticksGame % (tickRareInterval * 3) != 0) return; //Checks only each 12,5 sec.
+            bool flickPending = ventComp.WantsFlick();
+            float insideTemp = AttachedRoom.Temperature;
+            if (!TargetTemp.Includes(insideTemp)) //Take action if room temperature is wrong.
             {
-                if (nextToleranceCheckTick == 0 || ticksGame >= nextToleranceCheckTick)
+                if (badTemperature)
                 {
-                    float outsideTemp = GenTemperature.GetTemperatureForCell(Outside, Map);
-                    bool
-                        colderOutside = insideTemp > outsideTemp,
-                        colderInside = insideTemp < outsideTemp,
-                        tooHotInside = insideTemp > TargetTemp.max,
-                        tooColdInside = insideTemp < TargetTemp.min,
-                        tooHotOutside = outsideTemp > TargetTemp.max,
-                        tooColdOutside = outsideTemp < TargetTemp.min;
-                    bool doFlick = false;
-                    if (!venting) //open if...
+                    if (skippedTempChecks <= maxTempChecks)
                     {
-                        doFlick = (tooHotInside && colderOutside) || (tooColdInside && colderInside && !tooColdOutside);
+                        skippedTempChecks++;
+                        return;  //Do this just once, until room stabilizes.
                     }
-                    else //close if...
-                    {
-                        doFlick = (tooHotInside && tooHotOutside) || (tooColdInside && tooColdOutside);
-                    }
-                    if (doFlick)
-                    {
-                        recentlyOperated = true;
-                        ventComp.AutoFlickRequest();
-                    }
-                    nextToleranceCheckTick = ticksGame + toleranceCheckInterval;
+                    badTemperature = false;
+                    skippedTempChecks = 0;
                 }
+                float outsideTemp = GenTemperature.GetTemperatureForCell(Outside, Map);
+                bool
+                    colderOutside = insideTemp > outsideTemp,
+                    colderInside = insideTemp < outsideTemp,
+                    tooHotInside = insideTemp > TargetTemp.max,
+                    tooColdInside = insideTemp < TargetTemp.min,
+                    tooHotOutside = outsideTemp > TargetTemp.max,
+                    tooColdOutside = outsideTemp < TargetTemp.min,
+                    doFlick = false,
+                    intent;
+                if (!venting) //open if...
+                {
+                    doFlick = (tooHotInside && colderOutside) || (tooColdInside && colderInside && !tooColdOutside);
+                    intent = true;
+                }
+                else //close if...
+                {
+                    doFlick = (tooHotInside && tooHotOutside) || (tooColdInside && tooColdOutside);
+                    intent = false;
+                }
+                if (doFlick)
+                {
+                    badTemperature = true;
+                    ventComp.FlickFor(intent);
+                    string hotin = tooHotInside ? "TooHotInside" : "";
+                    string coldin = tooColdInside ? "TooColdInside" : "";
+                    //Log.Message($"{this} decided to {(intent ? "open" : "close")}. {hotin} {coldin}. Inside: {insideTemp}, outisde: {outsideTemp}, range: {TargetTemp.min}-{TargetTemp.max}");
+                }
+                return;
             }
-            else if (ticksGame >= nextToleranceCheckTick + (toleranceCheckInterval * intervalMultiplierAfterAttempts) || TargetTemp.Includes(insideTemp))
+            badTemperature = false;
+            skippedTempChecks = 0;
+            if (flickPending) //If temperature is right but a command is still pending, cancel it.
             {
-                if (recentlyOperated) recentlyOperated = false;
+                ventComp.FlickFor(venting);
             }
         }
 
@@ -540,16 +545,20 @@ namespace OpenTheWindows
         #endregion
 
         #region adapting to Better Pawn Control
-        public void EmergencyShutOff(object sender, bool active) // event handler
+        public void EmergencyShutOff(object sender, bool danger) // event handler
         {
-            bool mustclose = active && alarmReact && open;
-            bool mustopen = !active && emergencyShut;
+            bool mustclose = danger && alarmReact && open;
+            bool mustopen = !danger && emergencyShut;
             if (mustclose || mustopen)
             {
-                mainComp.AutoFlickRequest();
-                ventComp.AutoFlickRequest();
+                mainComp.FlickFor(!open);
+                ventComp.FlickFor(!venting);
                 emergencyShut = !emergencyShut;
+                return;
             }
+            if (!alarmReact) return;
+            if (mainComp.WantsFlick() && mainComp.WantSwitchOn == danger) mainComp.FlickFor(!danger);
+            if (ventComp.WantsFlick() && ventComp.WantSwitchOn == danger) ventComp.FlickFor(!danger);
         }
         #endregion
 

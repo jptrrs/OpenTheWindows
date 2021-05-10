@@ -83,11 +83,11 @@ namespace OpenTheWindows
             }
         }
 
-        public void AutoFlickRequest()
+        public void FlickFor(bool request)
         {
-            if (!WantsFlick())
+            if (SwitchIsOn != request || WantsFlick())
             {
-                WantSwitchOn = !WantSwitchOn;
+                WantSwitchOn = request/*!WantSwitchOn*/;
                 if (Powered)
                 {
                     DoFlick();
@@ -95,11 +95,6 @@ namespace OpenTheWindows
                 }
                 FlickUtility.UpdateFlickDesignation(parent);
             }
-        }
-
-        public void FlickFor(bool state)
-        {
-            if (state != SwitchIsOn) AutoFlickRequest();
         }
 
         public string ManualNote => Props.automated ? "" : $" {"ManualCommandNote".Translate()}";
@@ -120,23 +115,9 @@ namespace OpenTheWindows
                     disabledReason = window.alarmReact ? "DisabledByEmergency".Translate() : "DisabledForAutoVentilation".Translate(),
                     toggleAction = delegate ()
                     {
-                        AutoFlickRequest();
+                        FlickFor(!WantSwitchOn);
                     }
                 };
-
-                //foreach (Gizmo gizmo in base.CompGetGizmosExtra())
-                //{
-                //    if (gizmo is Command_Toggle toggle)
-                //    {
-                //        toggle.isActive = () => wantSwitchOn;
-                //        toggle.toggleAction = delegate ()
-                //        {
-                //            wantSwitchOn = !wantSwitchOn;
-                //            FlickUtility.UpdateFlickDesignation(parent);
-                //        };
-                //    }
-                //}
-
             }
             yield break;
         }
