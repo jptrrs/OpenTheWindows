@@ -743,7 +743,7 @@ namespace OpenTheWindows
                 {
                     if (!siblingClear) return;
                     var b = c + bleedDirection;
-                    if (b.Walkable(map)) list.AddDistinct(b);
+                    if (b.CanBeSeenOverFast(map)) list.AddDistinct(b);
                 }
                 else
                 {
@@ -751,13 +751,13 @@ namespace OpenTheWindows
                     var right = horizontal ? IntVec3.North : IntVec3.East;
                     var leftEdge = c + left;
                     var rightEdge = c + right;
-                    if (leftEdge.Walkable(map)) list.AddDistinct(leftEdge);
-                    if (rightEdge.Walkable(map)) list.AddDistinct(rightEdge);
+                    if (leftEdge.CanBeSeenOverFast(map)) list.AddDistinct(leftEdge);
+                    if (rightEdge.CanBeSeenOverFast(map)) list.AddDistinct(rightEdge);
                 }
             }
             private bool IsClear(IntVec3 c, bool inside)
             {
-                bool result = Affected(c) && c.Walkable(map) && (inside || !map.roofGrid.Roofed(c) || c.IsTransparentRoof(map));
+                bool result = Affected(c) && c.CanBeSeenOverFast(map) && (inside || !map.roofGrid.Roofed(c) || c.IsTransparentRoof(map));
                 return result;
             }
 

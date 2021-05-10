@@ -35,7 +35,7 @@ namespace OpenTheWindows
         public static List<IntVec3> UnobstructedGhost(IntVec3 position, Rot4 rot, Map map, int maxreach, bool horizontal, bool bleedRight, bool bleedLeft)
         {
             bool southward = rot == Rot4.South || rot == Rot4.West;
-            cellTest clear = (c, b) => c.InBounds(map) && c.Walkable(map) && !map.roofGrid.Roofed(c);
+            cellTest clear = (c, b) => c.InBounds(map) && c.CanBeSeenOverFast(map) && !map.roofGrid.Roofed(c);
 
             //3. Determine clearence and max reach on each side
             Dictionary<IntVec3, int> cleared = new Dictionary<IntVec3, int>();
