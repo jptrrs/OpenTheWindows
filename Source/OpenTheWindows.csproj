@@ -67,7 +67,6 @@
     <Compile Include="HarmonyPatches\Compatibility\JobDriver_Mount_letMountParticipate.cs" />
     <Compile Include="Tools\PatchOperationFindModById.cs" />
     <Compile Include="Extensions.cs" />
-    <None Include="HarmonyPatches\Command_LabelCap.cs" />
     <Compile Include="HarmonyPatches\Compatibility\BuildableInfo_DrawGhost.cs" />
     <Compile Include="HarmonyPatches\RoomGroupTempTracker_EqualizeTemperature.cs" />
     <Compile Include="MapUpdateWatcher.cs" />
