@@ -3,10 +3,11 @@ using Verse;
 
 namespace OpenTheWindows
 {
-    [StaticConstructorOnStartup]
     public class NaturalLightOverlay : ICellBoolGiver
     {
         public static bool toggleShow = false;
+
+        public bool needsUpdate = false;
 
         protected static CellBoolDrawer drawer;
 
@@ -14,9 +15,16 @@ namespace OpenTheWindows
 
         private Map lastSeenMap;
 
-        private int nextUpdateTick;
+        private MapComp_Windows Parent;
 
-        private int updateDelay = 60;
+        private int updateDelay = 120;
+
+        public NaturalLightOverlay(MapComp_Windows parent)
+        {
+            Parent = parent;
+            lastSeenMap = parent.map;
+            drawer = new CellBoolDrawer(this, parent.map.Size.x, parent.map.Size.z);
+        }
 
         public Color Color
         {
@@ -25,6 +33,8 @@ namespace OpenTheWindows
                 return Color.white;
             }
         }
+
+        private Map map => Find.CurrentMap;
 
         public static Texture2D Icon()
         {
@@ -38,7 +48,7 @@ namespace OpenTheWindows
 
         public bool GetCellBool(int index)
         {
-            return !Find.CurrentMap.fogGrid.IsFogged(index) && this.ShowCell(index);
+            return !Find.CurrentMap.fogGrid.IsFogged(index) && ShowCell(index);
         }
 
         public Color GetCellExtraColor(int index)
@@ -49,35 +59,29 @@ namespace OpenTheWindows
         public void MakeDrawer()
         {
             drawer = new CellBoolDrawer(this, Find.CurrentMap.Size.x, Find.CurrentMap.Size.z);
+            needsUpdate = true;
         }
 
         public bool ShowCell(int index)
         {
-            return Find.CurrentMap.GetComponent<MapComp_Windows>().WindowCells.Contains(Find.CurrentMap.cellIndices.IndexToCell(index)) || !Find.CurrentMap.roofGrid.Roofed(index);
+            return map.GetComponent<MapComp_Windows>().WindowCells.Contains(map.cellIndices.IndexToCell(index)) || !map.roofGrid.Roofed(index);
         }
 
         public void Update()
         {
-            if (toggleShow)
+            if (!toggleShow) return;
+            if (Find.TickManager.TicksGame % updateDelay == 0 || Find.CurrentMap != lastSeenMap)
             {
-                if (drawer == null)
-                {
-                    MakeDrawer();
-                }
-                drawer.MarkForDraw();
-                //from heatmap
-                int ticksGame = Find.TickManager.TicksGame;
-                if (nextUpdateTick == 0 || ticksGame >= nextUpdateTick || Find.CurrentMap != lastSeenMap)
-                {
-                    drawer.SetDirty();
-                    nextUpdateTick = ticksGame + updateDelay;
-                    lastSeenMap = Find.CurrentMap;
-                }//
-                drawer.CellBoolDrawerUpdate();
-                //dirty = false;
-                return;
+                lastSeenMap = Find.CurrentMap;
+                MakeDrawer();
             }
-            drawer = null;
+            if (needsUpdate)
+            {
+                drawer.SetDirty();
+                needsUpdate = false;
+            }
+            drawer.MarkForDraw();
+            drawer.CellBoolDrawerUpdate();
         }
     }
 }

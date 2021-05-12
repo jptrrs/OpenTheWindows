@@ -82,7 +82,6 @@
     <Compile Include="HarmonyPatches\GlowGrid_GameGlowAt.cs" />
     <Compile Include="HarmonyPatches\HarmonyPatcher.cs" />
     <Compile Include="HarmonyPatches\LightingOverlay_Regenerate.cs" />
-    <Compile Include="HarmonyPatches\MapInterface_MapInterfaceUpdate.cs" />
     <Compile Include="HarmonyPatches\Compatibility\NeedBeauty_LevelFromBeauty.cs" />
     <Compile Include="HarmonyPatches\NeedOutdoors_NeedInterval.cs" />
     <Compile Include="HarmonyPatches\PlaySettings_DoPlaySettingsGlobalControls.cs" />

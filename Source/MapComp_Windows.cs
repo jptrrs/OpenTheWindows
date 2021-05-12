@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnityEngine;
 using Verse;
 
 namespace OpenTheWindows
@@ -17,19 +18,12 @@ namespace OpenTheWindows
         private Type DubsSkylights_type;
         private MethodInfo MapCompInfo;
         private HashSet<int> wrongTiles;
-
-        private bool[] skyLightGrid
-        {
-            get
-            {
-                if (DubsSkylights) return (bool[])DubsSkylights_skylightGridinfo.GetValue(MapCompInfo.Invoke(map, new[] { DubsSkylights_type }));
-                return null;
-            }
-        }
+        private NaturalLightOverlay lightOverlay;
 
         public MapComp_Windows(Map map) : base(map)
         {
             WindowCells = new HashSet<IntVec3>();
+            lightOverlay = new NaturalLightOverlay(this);
             if (DubsSkylights)
             {
                 DubsSkylights_type = AccessTools.TypeByName("Dubs_Skylight.MapComp_Skylights");
@@ -40,8 +34,17 @@ namespace OpenTheWindows
             {
                 MapUpdateWatcher.MapUpdate += MapUpdated;
             }
+
         }
 
+        private bool[] skyLightGrid
+        {
+            get
+            {
+                if (DubsSkylights) return (bool[])DubsSkylights_skylightGridinfo.GetValue(MapCompInfo.Invoke(map, new[] { DubsSkylights_type }));
+                return null;
+            }
+        }
         public void DeRegisterWindow(Building_Window window)
         {
             if (cachedWindows.Contains(window))
@@ -57,11 +60,11 @@ namespace OpenTheWindows
             if (!bypass && tile.IsTransparentRoof(map)) return;
             WindowCells.Remove(tile);
             map.glowGrid.MarkGlowGridDirty(tile);
+            lightOverlay.needsUpdate = true;
         }
 
         public void ExcludeTileRange(IEnumerable<IntVec3> tiles)
         {
-            //Log.Message($"DEBUG excluding {tiles.Count()} tiles");
             foreach (var c in tiles)
             {
                 ExcludeTile(c);
@@ -83,11 +86,11 @@ namespace OpenTheWindows
             if (WindowCells.Contains(tile)) return;
             WindowCells.Add(tile);
             map.glowGrid.MarkGlowGridDirty(tile);
+            lightOverlay.needsUpdate = true;
         }
 
         public void IncludeTileRange(IEnumerable<IntVec3> tiles)
         {
-            //Log.Message($"DEBUG including {tiles.Count()} tiles");
             foreach (var c in tiles)
             {
                 IncludeTile(c);
@@ -106,6 +109,12 @@ namespace OpenTheWindows
                 audit = false;
             }
             base.MapComponentTick();
+        }
+
+        public override void MapComponentUpdate()
+        {
+            base.MapComponentUpdate();
+            lightOverlay.Update();
         }
 
         public void MapUpdated(object sender, MapUpdateWatcher.MapUpdateInfo info)
