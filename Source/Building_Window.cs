@@ -32,7 +32,8 @@ namespace OpenTheWindows
             leakVentFactor = 0.1f;
         private bool
             leaks = false,
-            badTemperature = false,
+            badTemperatureOnce = false,
+            badTemperatureRecently = false,
             niceOutside = false;
         private CompWindow
             mainComp,
@@ -222,7 +223,7 @@ namespace OpenTheWindows
                     string autoVentStatus = "";
                     if (!AttachedRoom.UsesOutdoorTemperature)
                     {
-                        autoVentStatus = badTemperature ? "WaitingTemperatureNormalization".Translate() : "TrackingTemperature".Translate();
+                        autoVentStatus = badTemperatureRecently ? "WaitingTemperatureNormalization".Translate() : "TrackingTemperature".Translate();
                     }
                     else autoVentStatus = "CantTrackTemperature".Translate();
                     stringBuilder.Append(autoVentStatus);
@@ -453,34 +454,40 @@ namespace OpenTheWindows
         private void AutoVentControl()
         {
             int ticksGame = Find.TickManager.TicksGame;
-            if (ticksGame % (tickRareInterval * 3) != 0) return; //Checks only each 12,5 sec.
+            if ((ticksGame % (tickRareInterval * 3) != 0) && !badTemperatureOnce) return; //Checks only each 12,5s or if bad temperature on last cycle.
             float insideTemp = AttachedRoom.Temperature;
             float outsideTemp = GenTemperature.GetTemperatureForCell(Outside, Map);
             if (TargetTemp.Includes(insideTemp)) //Stand down if temperature is right.
             {
-                badTemperature = false;
-                skippedTempChecks = 0;
                 if (ventComp.WantsFlick()) //If temperature is right but a command is still pending, cancel it.
                 {
                     ventComp.FlickFor(venting);
                 }
-                if (leaks && !open && TargetTemp.Includes(outsideTemp)) //If its a simple window, check if should re-open next cycle.
+                if (leaks && !badTemperatureOnce && !open && TargetTemp.Includes(outsideTemp)) //If its a simple window, check if should re-open next cycle.
                 {
                     ShouldReOpen();
                 }
+                badTemperatureRecently = badTemperatureOnce = false;
+                skippedTempChecks = 0;
                 return;
             }
-            if (badTemperature) //Escape if acted recently.
+            if (badTemperatureRecently) //Escape if acted recently.
             {
                 if (skippedTempChecks <= maxTempChecks)
                 {
                     skippedTempChecks++;
                     return;
                 }
-                badTemperature = false;
+                badTemperatureRecently = false;
                 skippedTempChecks = 0;
             }
-            ReactToTemperature(insideTemp, outsideTemp); //Actually evaluating the situation.
+            if (badTemperatureOnce) //React only if bad temperature persists from last tickRare.
+            {
+                badTemperatureOnce = false;
+                ReactToTemperature(insideTemp, outsideTemp); //Actually evaluating the situation.
+                return;
+            }
+            badTemperatureOnce = true;
         }
 
         private bool GizmoInhibitor(Gizmo gizmo)
@@ -536,7 +543,7 @@ namespace OpenTheWindows
             }
             if (doFlick)
             {
-                badTemperature = true;
+                badTemperatureRecently = true;
                 ventComp.FlickFor(intent);
                 if (Prefs.LogVerbose)
                 {
