@@ -34,7 +34,6 @@ namespace OpenTheWindows
             {
                 MapUpdateWatcher.MapUpdate += MapUpdated;
             }
-
         }
 
         private bool[] skyLightGrid
