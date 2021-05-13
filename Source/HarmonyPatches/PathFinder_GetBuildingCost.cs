@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using RimWorld;
 using Verse;
 using Verse.AI;
 
@@ -9,34 +8,28 @@ namespace OpenTheWindows
     [HarmonyPatch(typeof(PathFinder), nameof(PathFinder.GetBuildingCost))]
     public static class PathFinder_GetBuildingCost
     {
-        public static void Postfix(Building b, TraverseParms traverseParms, Pawn pawn, ref int __result)
+        public static int Postfix(int result, Building b, TraverseParms traverseParms, Pawn pawn)
         {
             Building_Window window = b as Building_Window;
-            if (window != null)
+            if (window == null) return result;
+            switch (traverseParms.mode)
             {
-                switch (traverseParms.mode)
-                {
-                    case TraverseMode.ByPawn:
-                    case TraverseMode.PassDoors:
-                        if (traverseParms.canBash) __result = 300;
-                        else if (pawn.CurJob.attackDoorIfTargetLost)
-                        {
-                            __result = 100 + (int)(window.HitPoints * 0.2f);
-                        }
-                        else
-                        {
-                            __result = int.MaxValue;
-                        }
-                        break;
-                    case TraverseMode.NoPassClosedDoors:
-                    case TraverseMode.NoPassClosedDoorsOrWater:
-                        __result = int.MaxValue;
-                        break;
-                    case TraverseMode.PassAllDestroyableThings:
-                    case TraverseMode.PassAllDestroyableThingsNotWater:
-                        __result = 50 + (int)(window.HitPoints * 0.2f);
-                        break;
-                }
+                case TraverseMode.ByPawn:
+                case TraverseMode.PassDoors:
+                    if (traverseParms.canBash) return 300;
+                    if (pawn.CurJob?.attackDoorIfTargetLost == true || pawn.MentalState is MentalState_Manhunter)
+                    {
+                        return 100 + (int)(window.HitPoints * 0.2f);
+                    }
+                    return int.MaxValue;
+                case TraverseMode.NoPassClosedDoors:
+                case TraverseMode.NoPassClosedDoorsOrWater:
+                    return int.MaxValue;
+                case TraverseMode.PassAllDestroyableThings:
+                case TraverseMode.PassAllDestroyableThingsNotWater:
+                    return 50 + (int)(window.HitPoints * 0.2f);
+                default:
+                     return result;
             }
         }
     }

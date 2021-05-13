@@ -358,6 +358,7 @@ namespace OpenTheWindows
         }
         public override bool PawnCanOpen(Pawn p)
         {
+            //return open && p.HostileTo(this); //This makes the window traversable for hostiles! Useful?
             return false;
         }
         #endregion
