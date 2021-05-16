@@ -20,8 +20,8 @@
   <LargeOpenWindow_Frame.description>配備玻璃的大型百葉窗，可以大量通風和采光，視野也很開闊。</LargeOpenWindow_Frame.description>
 
   <!--Missing-->
-  <!--<LargeReinforcedOpenWindow.label>Huge Window</LargeReinforcedOpenWindow.label>
-  <LargeReinforcedOpenWindow.description>A tall, huge window, equipped with rotating brise-soleil. Allows in a massive volume of light.</LargeReinforcedOpenWindow.description>-->
+  <LargeReinforcedOpenWindow.label>Huge Window</LargeReinforcedOpenWindow.label>
+  <LargeReinforcedOpenWindow.description>A tall, huge window, equipped with rotating brise-soleil. Allows in a massive volume of light.</LargeReinforcedOpenWindow.description>
 
   <ReinforcedOpenWindow.label>加固窗</ReinforcedOpenWindow.label>
   <ReinforcedOpenWindow.description>配備玻璃的加固百葉窗，通風和采光可以分別調整。</ReinforcedOpenWindow.description>
@@ -35,4 +35,14 @@
   <LargeReinforcedOpenWindow_Frame.label>大型加固窗（建造中）</LargeReinforcedOpenWindow_Frame.label>
   <LargeReinforcedOpenWindow_Frame.description>配備玻璃的大型加固百葉窗，可以大量通風和采光，視野也很開闊。</LargeReinforcedOpenWindow_Frame.description>
 
+  <!--Addons-->
+  <SmartWindow.label>Smart Window</SmartWindow.label>
+  <SmartWindow.description>An automatic, self-operating, bulletproof window.</SmartWindow.description>
+
+  <LargeSmartWindow.label>LargeSmartWindow</LargeSmartWindow.label>
+  <LargeSmartWindow.description>A large automatic, self-operating, bulletproof window.</LargeSmartWindow.description>
+
+  <HugeSmartWindow.label>HugeSmartWindow</HugeSmartWindow.label>
+  <HugeSmartWindow.description>A huge automatic, self-operating, bulletproof window.</HugeSmartWindow.description>
+  
 </LanguageData>
