@@ -19,4 +19,14 @@
   <LargeReinforcedOpenWindow.label>большое прочное окно</LargeReinforcedOpenWindow.label>
   <LargeReinforcedOpenWindow.description>Большое укреплённое окно, пропускающее большое количество света и воздуха.</LargeReinforcedOpenWindow.description>
 
+  <!--Addons-->
+  <SmartWindow.label>Smart Window</SmartWindow.label>
+  <SmartWindow.description>An automatic, self-operating, bulletproof window.</SmartWindow.description>
+
+  <LargeSmartWindow.label>LargeSmartWindow</LargeSmartWindow.label>
+  <LargeSmartWindow.description>A large automatic, self-operating, bulletproof window.</LargeSmartWindow.description>
+
+  <HugeSmartWindow.label>HugeSmartWindow</HugeSmartWindow.label>
+  <HugeSmartWindow.description>A huge automatic, self-operating, bulletproof window.</HugeSmartWindow.description>
+
 </LanguageData>

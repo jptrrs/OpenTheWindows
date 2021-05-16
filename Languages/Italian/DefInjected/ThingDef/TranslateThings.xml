@@ -11,8 +11,8 @@
   <LargeOpenWindow.description>Una finestra grande con vetri e persiana, tramite cui possono passare aria e molta luce. Offre una vista.</LargeOpenWindow.description>
 
   <!--Missing-->
-  <!--<LargeReinforcedOpenWindow.label>Huge Window</LargeReinforcedOpenWindow.label>
-  <LargeReinforcedOpenWindow.description>A tall, huge window, equipped with rotating brise-soleil. Allows in a massive volume of light.</LargeReinforcedOpenWindow.description>-->
+  <LargeReinforcedOpenWindow.label>Huge Window</LargeReinforcedOpenWindow.label>
+  <LargeReinforcedOpenWindow.description>A tall, huge window, equipped with rotating brise-soleil. Allows in a massive volume of light.</LargeReinforcedOpenWindow.description>
 
   <ReinforcedOpenWindow.label>Finestra blindata</ReinforcedOpenWindow.label>
   <ReinforcedOpenWindow.description>Una finestra blindata con vetri e persiana. Controlla separatamente il passaggio di luce ed aria.</ReinforcedOpenWindow.description>
@@ -22,5 +22,15 @@
 
   <Glassworks.label>Vetreria</Glassworks.label>
   <Glassworks.description>Il vetro consente la costruzione di finestre capaci di far passare la luce e di bloccare il vento allo stesso tempo.</Glassworks.description>
+
+  <!--Addons-->
+  <SmartWindow.label>Smart Window</SmartWindow.label>
+  <SmartWindow.description>An automatic, self-operating, bulletproof window.</SmartWindow.description>
+
+  <LargeSmartWindow.label>LargeSmartWindow</LargeSmartWindow.label>
+  <LargeSmartWindow.description>A large automatic, self-operating, bulletproof window.</LargeSmartWindow.description>
+
+  <HugeSmartWindow.label>HugeSmartWindow</HugeSmartWindow.label>
+  <HugeSmartWindow.description>A huge automatic, self-operating, bulletproof window.</HugeSmartWindow.description>
   
 </LanguageData>
