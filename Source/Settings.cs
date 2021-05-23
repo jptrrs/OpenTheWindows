@@ -195,8 +195,11 @@ namespace OpenTheWindows
         {
             Scribe_Values.Look(ref IndoorsNoNaturalLightPenalty, "IndoorsNoNaturalLightPenalty", IndoorsNoNaturalLightPenaltyDefault);
             Scribe_Values.Look(ref BeautySensitivityReduction, "ModifiedBeautyImpactFactor", BeautySensitivityReductionDefault);
+            Scribe_Values.Look(ref LightTransmission, "LightTransmission", LightTransmissionDefault);
             Scribe_Values.Look(ref LinkWindows, "LinkWindows", true);
             Scribe_Values.Look(ref LinkVents, "LinkVents", true);
+            Scribe_Values.Look(ref AlarmReactDefault, "AlarmReactDefault", false);
+            Scribe_Values.Look(ref BeautyFromBuildings, "BeautyFromBuildings", false);
             Scribe_Values.Look(ref _comfortTemp, "ComfortTemp", ComfortTempDefault);
             base.ExposeData();
         }

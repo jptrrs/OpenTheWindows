@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
+  
   <!--ui-->
   <ClosedWindow>Chiusa</ClosedWindow>
-  <!--New--><EmergencyClosed>Closed by emergency</EmergencyClosed>
+  <EmergencyClosed>Closed by emergency</EmergencyClosed>
   <butVenting>, ma con passaggio d'aria.</butVenting>
   <notVenting>Senza passaggio d'aria</notVenting>
   <Facing>Affaccia a {0}.</Facing>
   <LandscapeToThe>Paesaggio a {0}</LandscapeToThe>
   <cantDetermineSides>Non è possibile determinare il lato esterno.</cantDetermineSides>
-  <!--New--><ManualCommandNote>Un colono verrà a eseguire l'operazione.</ManualCommandNote>
+  <ManualCommandNote>Un colono verrà a eseguire l'operazione.</ManualCommandNote>
   <CommandDesignateOpenCloseWindowLabel>Imposta come aperta/chiusa</CommandDesignateOpenCloseWindowLabel>
-  <!--Changed--><CommandDesignateOpenCloseWindowDesc>Imposta questa finestra per essere aperta o chiusa. A breve un colono verrà a impostare la finestra.</CommandDesignateOpenCloseWindowDesc>
+  <CommandDesignateOpenCloseWindowDesc>Imposta questa finestra per essere aperta o chiusa.</CommandDesignateOpenCloseWindowDesc>
   <CommandOpenCloseWindowLightLabel>Consenti luce</CommandOpenCloseWindowLightLabel>
-  <!--Changed--><CommandOpenCloseWindowLightDesc>Impedisci o consenti il passaggio della luce attraverso la finestra. A breve un colono verrà a impostare la finestra.</CommandOpenCloseWindowLightDesc>
+  <CommandOpenCloseWindowLightDesc>Impedisci o consenti il passaggio della luce attraverso la finestra.</CommandOpenCloseWindowLightDesc>
   <CommandOpenCloseWindowVentLabel>Consenti passaggio d'aria</CommandOpenCloseWindowVentLabel>
-  <!--Changed--><CommandOpenCloseWindowVentDesc>Impedisci o consenti il passaggio d'aria attraverso la finestra. A breve un colono verrà a impostare la finestra.</CommandOpenCloseWindowVentDesc>
-  <!--New--><CommandAutoVentilation>Ventilazione automatica</CommandAutoVentilation>
-  <!--New--><CommandAutoVentilationDesc>Impostare la finestra per l'apertura o la chiusura automatica in caso di temperatura non ideale.</CommandAutoVentilationDesc>
-  <!--New--><DisabledForAutoVentilation>Adeguamento ai parametri di ventilazione automatica attivato.</DisabledForAutoVentilation>
-  <!--New--><TrackingTemperature>Registro della temperatura attivato.</TrackingTemperature>
-  <!--New--><WaitingTemperatureNormalization>In attesa di equilibrio termico.</WaitingTemperatureNormalization>
-  <!--New--><CantTrackTemperature>La stanza adiacente non ha un tetto - impossibile registrare la temperatura.</CantTrackTemperature>
-  <!--New--><CommandCloseOnEmergency>Chiudi in caso di emergenza</CommandCloseOnEmergency>
-  <!--New--><CommandCloseOnEmergencyDesc>Imposta la finestra per la chiusura in caso di attivazione dell'allarme di emergenza.</CommandCloseOnEmergencyDesc>
-  <!--New--><DisabledByEmergency>Disattivazione del funzionamento normale in caso di emergenza.</DisabledByEmergency>
+  <CommandOpenCloseWindowVentDesc>Impedisci o consenti il passaggio d'aria attraverso la finestra.</CommandOpenCloseWindowVentDesc>
+  <CommandAutoVentilation>Ventilazione automatica</CommandAutoVentilation>
+  <CommandAutoVentilationDesc>Impostare la finestra per l'apertura o la chiusura automatica in caso di temperatura non ideale.</CommandAutoVentilationDesc>
+  <DisabledForAutoVentilation>Adeguamento ai parametri di ventilazione automatica attivato.</DisabledForAutoVentilation>
+  <TrackingTemperature>Registro della temperatura attivato.</TrackingTemperature>
+  <WaitingTemperatureNormalization>In attesa di equilibrio termico.</WaitingTemperatureNormalization>
+  <CantTrackTemperature>La stanza adiacente non ha un tetto - impossibile registrare la temperatura.</CantTrackTemperature>
+  <CommandCloseOnEmergency>Chiudi in caso di emergenza</CommandCloseOnEmergency>
+  <CommandCloseOnEmergencyDesc>Imposta la finestra per la chiusura in caso di attivazione dell'allarme di emergenza.</CommandCloseOnEmergencyDesc>
+  <DisabledByEmergency>Disattivazione del funzionamento normale in caso di emergenza.</DisabledByEmergency>
   <NaturalLightMap>Mostra luce naturale.</NaturalLightMap>
 
   <!--settings-->
@@ -33,18 +34,18 @@
   <LightTransmission>Luce trasmessa attraverso le finestre</LightTransmission>
   <LightTransmissionIncludesRoofs>inclusi i dispositivi a soffitto</LightTransmissionIncludesRoofs>
   <LightTransmissionDesc>Quantità di luce esterna che riesce ad attraversare vetri e telaio. Nella vita reale, questo valore è circa 90%.</LightTransmissionDesc>
-  <!--New--><ComfortableTemperature>Intervallo ideale di temperatura (°C)</ComfortableTemperature>
-  <!--New--><ComfortableTemperatureDesc>L'intervallo di temperatura che si desidera usare per la funziona di ventilazione automatica. L'impostazione predefinita è l'intervallo considerato dal gioco come ideale per gli esseri umani.</ComfortableTemperatureDesc>
+  <ComfortableTemperature>Intervallo ideale di temperatura (°C)</ComfortableTemperature>
+  <ComfortableTemperatureDesc>L'intervallo di temperatura che si desidera usare per la funziona di ventilazione automatica. L'impostazione predefinita è l'intervallo considerato dal gioco come ideale per gli esseri umani.</ComfortableTemperatureDesc>
   <BeautySensitivityReduction>Riduzione della sensibilità alla bellezza</BeautySensitivityReduction>
   <BeautySensitivityReductionDesc>Riduce la sensibilità alla bellezza per compensare l'aumento derivante dalla somma di "Nature is Beautiful" e la bellezza generata attraverso le finestre.</BeautySensitivityReductionDesc>
-  <!--New--><BeautyFromBuildings>Aggiunge la bellezza degli edifici per il calcolo della vista di una finestra.</BeautyFromBuildings>
-  <!--New--><BeautyFromBuildingsDesc>Se l'opzione è attivata, anche la bellezza degli edifici in vista (sculture incluse) verrà aggiunta alla statistica di bellezza della finestra, insieme a quella delle piante e degli altri oggetti.</BeautyFromBuildingsDesc>
+  <BeautyFromBuildings>Aggiunge la bellezza degli edifici per il calcolo della vista di una finestra.</BeautyFromBuildings>
+  <BeautyFromBuildingsDesc>Se l'opzione è attivata, anche la bellezza degli edifici in vista (sculture incluse) verrà aggiunta alla statistica di bellezza della finestra, insieme a quella delle piante e degli altri oggetti.</BeautyFromBuildingsDesc>
   <LinkOptionsLabel>Interferisci con la grafica delle pareti</LinkOptionsLabel>
   <RequiresRestart>richiede il riavvio</RequiresRestart>
   <LinkWindowsAndWalls>Raccordo con le finestre</LinkWindowsAndWalls>
   <LinkVentsAndWalls>Raccorda la grafica con prese d'aria e unità di refrigerazione</LinkVentsAndWalls>
   <LinkFridgesAndWalls>Collega le prese d'aria e le unità di refrigerazione</LinkFridgesAndWalls>
-  <!--New--><AlarmOptionsLabel>&lt;i&gt;Better Pawn Control&lt;/i&gt; integration</AlarmOptionsLabel>
-  <!--New--><AlarmReactDefault>Per impostazione predefinita, le finestre si chiudono in caso di emergenza</AlarmReactDefault>
+  <AlarmOptionsLabel>&lt;i&gt;Better Pawn Control&lt;/i&gt; integration</AlarmOptionsLabel>
+  <AlarmReactDefault>Per impostazione predefinita, le finestre si chiudono in caso di emergenza</AlarmReactDefault>
 
 </LanguageData>
