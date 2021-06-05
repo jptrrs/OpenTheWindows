@@ -86,17 +86,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "News", "News", "{C39B34CB-2
 		News\SmartWindows.png = News\SmartWindows.png
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patches", "Patches", "{0AE0BB6A-9F7C-46EC-93B2-788B6434AB49}"
-	ProjectSection(SolutionItems) = preProject
-		Patches\Patches.xml = Patches\Patches.xml
-		Patches\Patches_DubsSkylights.xml = Patches\Patches_DubsSkylights.xml
-		Patches\Patches_ExpandedRoofing.xml = Patches\Patches_ExpandedRoofing.xml
-		Patches\Patches_Glass+Lights.xml = Patches\Patches_Glass+Lights.xml
-		Patches\Patches_JustGlass.xml = Patches\Patches_JustGlass.xml
-		Patches\Patches_RaiseTheRoof.xml = Patches\Patches_RaiseTheRoof.xml
-		Patches\Patches_RimFridge.xml = Patches\Patches_RimFridge.xml
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Languages", "Languages", "{1A8E66A4-DE1C-4DC9-BA20-7BE6E3148076}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ChineseSimplified", "ChineseSimplified", "{F9C71215-9C7D-49B3-9643-1F1E4A794CC9}"
@@ -208,6 +197,18 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{AFCF96BC-D940-49C5-9C2B-F5B455A694AB}"
 	ProjectSection(SolutionItems) = preProject
 		Languages\Russian\Keyed\OpenTheWindows_keys.xml = Languages\Russian\Keyed\OpenTheWindows_keys.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patches", "Patches", "{7828A701-483E-49D3-9531-555AEF09E63E}"
+	ProjectSection(SolutionItems) = preProject
+		Patches\Patches.xml = Patches\Patches.xml
+		Patches\Patches_DubsSkylights.xml = Patches\Patches_DubsSkylights.xml
+		Patches\Patches_ExpandedRoofing.xml = Patches\Patches_ExpandedRoofing.xml
+		Patches\Patches_Glass+Lights.xml = Patches\Patches_Glass+Lights.xml
+		Patches\Patches_JustGlass.xml = Patches\Patches_JustGlass.xml
+		Patches\Patches_RaiseTheRoof.xml = Patches\Patches_RaiseTheRoof.xml
+		Patches\Patches_RimFridge.xml = Patches\Patches_RimFridge.xml
+		Patches\Patches_VEFurniture.xml = Patches\Patches_VEFurniture.xml
 	EndProjectSection
 EndProject
 Global

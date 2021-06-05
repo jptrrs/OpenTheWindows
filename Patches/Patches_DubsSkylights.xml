@@ -76,29 +76,29 @@
             </value>
           </li>
 
-          <!--Adding cost in steel to balance with windows-->
+          <!--Adding cost in steel to balance with windows. Skylight area must be bigger than 20 to be as efficient as reinforced windows.-->
           <li Class="PatchOperationAdd">
             <xpath>/Defs/ThingDef[defName = "SkyLightA"]/costList</xpath>
             <value>
-              <Steel>25</Steel>
+              <Steel>50</Steel> <!--9 * 5.5-->
             </value>
           </li>
           <li Class="PatchOperationAdd">
             <xpath>/Defs/ThingDef[defName = "SkyLightB"]/costList</xpath>
             <value>
-              <Steel>90</Steel>
+              <Steel>125</Steel> <!--25 * 5-->
             </value>
           </li>
           <li Class="PatchOperationAdd">
             <xpath>/Defs/ThingDef[defName = "SkyLightC"]/costList</xpath>
             <value>
-              <Steel>60</Steel>
+              <Steel>95</Steel> <!--18 * 5.3-->
             </value>
           </li>
           <li Class="PatchOperationAdd">
             <xpath>/Defs/ThingDef[defName = "SkyLightD"]/costList</xpath>
             <value>
-              <Steel>60</Steel>
+              <Steel>85</Steel> <!--16 * 5.3-->
             </value>
           </li>
 
@@ -107,7 +107,7 @@
             <xpath>/Defs/ThingDef[defName = "SkyLightE"]/costList</xpath>
             <value>
               <costList>
-                <Steel>40</Steel>
+                <Steel>65</Steel> <!--12 * 5.4-->
               </costList>
             </value>
           </li>
@@ -115,7 +115,7 @@
             <xpath>/Defs/ThingDef[defName = "SkyLightF"]/costList</xpath>
             <value>
               <costList>
-                <Steel>50</Steel>
+                <Steel>80</Steel> <!--15 * 5.3-->
               </costList>
             </value>
           </li>
@@ -123,7 +123,7 @@
             <xpath>/Defs/ThingDef[defName = "SkyLightG"]/costList</xpath>
             <value>
               <costList>
-                <Steel>75</Steel>
+                <Steel>100</Steel> <!--20 * 5-->
               </costList>
             </value>
           </li>
@@ -131,7 +131,7 @@
             <xpath>/Defs/ThingDef[defName = "SkyLightH"]/costList</xpath>
             <value>
               <costList>
-                <Steel>90</Steel>
+                <Steel>120</Steel> <!--24 * 5-->
               </costList>
             </value>
           </li>
@@ -139,7 +139,7 @@
             <xpath>/Defs/ThingDef[defName = "SkyLightI"]/costList</xpath>
             <value>
               <costList>
-                <Steel>120</Steel>
+                <Steel>150</Steel> <!--30 * 5-->
               </costList>
             </value>
           </li>
@@ -164,7 +164,7 @@
               <value>
                 <costList>
                   <Glass>1</Glass>
-                  <Steel>25</Steel>
+                  <Steel>50</Steel>
                 </costList>
               </value>
             </li>
@@ -173,7 +173,7 @@
               <value>
                 <costList>
                   <Glass>8</Glass>
-                  <Steel>90</Steel>
+                  <Steel>125</Steel>
                 </costList>
               </value>
             </li>
@@ -182,7 +182,7 @@
               <value>
                 <costList>
                   <Glass>4</Glass>
-                  <Steel>60</Steel>
+                  <Steel>95</Steel>
                 </costList>
               </value>
             </li>
@@ -191,7 +191,7 @@
               <value>
                 <costList>
                   <Glass>4</Glass>
-                  <Steel>60</Steel>
+                  <Steel>85</Steel>
                 </costList>
               </value>
             </li>
@@ -202,7 +202,7 @@
               <value>
                 <costList>
                   <Glass>2</Glass>
-                  <Steel>40</Steel>
+                  <Steel>65</Steel>
                 </costList>
               </value>
             </li>
@@ -211,7 +211,7 @@
               <value>
                 <costList>
                   <Glass>3</Glass>
-                  <Steel>50</Steel>
+                  <Steel>80</Steel>
                 </costList>
               </value>
             </li>
@@ -220,7 +220,7 @@
               <value>
                 <costList>
                   <Glass>6</Glass>
-                  <Steel>75</Steel>
+                  <Steel>100</Steel>
                 </costList>
               </value>
             </li>
@@ -229,7 +229,7 @@
               <value>
                 <costList>
                   <Glass>8</Glass>
-                  <Steel>90</Steel>
+                  <Steel>120</Steel>
                 </costList>
               </value>
             </li>
@@ -238,10 +238,10 @@
               <value>
                 <costList>
                   <Glass>12</Glass>
-                  <Steel>120</Steel>
+                  <Steel>150</Steel>
                 </costList>
               </value>
-            </li>            
+            </li>
             
             <li Class="PatchOperationRemove">
               <xpath>/Defs/RecipeDef[defName = "SmeltGlass"]</xpath>
