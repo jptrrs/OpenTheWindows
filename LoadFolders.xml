@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<loadFolders>
+	<v1.3>
+		<li>Content</li>
+		<li IfModActive="Dubwise.DubsSkylights">Mods/Dubwise.DubsSkylights</li>
+		<li IfModActive="machine.rtr">Mods/machine.rtr</li>
+		<li IfModActive="nanoce.glasslights">Mods/nanoce.glasslights</li>
+		<li IfModActive="spoden.justglass">Mods/spoden.justglass</li>
+		<li IfModActive="wit.expandedroofing">Mods/wit.expandedroofing</li>
+		<li IfModActive="malteschulze.rimmsqol">Mods/malteschulze.rimmsqol</li>
+	</v1.3>
+</loadFolders>

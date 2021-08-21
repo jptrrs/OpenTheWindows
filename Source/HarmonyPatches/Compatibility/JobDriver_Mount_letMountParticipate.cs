@@ -7,7 +7,7 @@ namespace OpenTheWindows
     {
         public static void letMountParticipate_Postfix(JobDriver __instance)
         {
-            __instance.job.canBash = false;
+            __instance.job.canBashDoors = false;
         }
     }
 }

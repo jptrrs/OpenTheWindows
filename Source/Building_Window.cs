@@ -57,7 +57,13 @@ namespace OpenTheWindows
                 return null;
             }
         }
-        public List<IntVec3> EffectArea => isFacingSet ? illuminated.Concat(view).ToList() : new List<IntVec3>();
+        public List<IntVec3> EffectArea
+		{            
+			get
+			{
+				return this.isFacingSet ? this.illuminated.Concat(this.view).ToList<IntVec3>() : new List<IntVec3>();
+			}
+		}
         public override Graphic Graphic
         {
             get
@@ -239,7 +245,7 @@ namespace OpenTheWindows
             return stringBuilder.ToString();
         }
 
-        public override void ReceiveCompSignal(string signal)
+        protected override void ReceiveCompSignal(string signal)
         {
             switch (signal)
             {
@@ -340,7 +346,6 @@ namespace OpenTheWindows
         #endregion
 
         #region adapting as door
-        public new bool openInt = false;
         public override void Draw()
         {
             if (Size == 1)
