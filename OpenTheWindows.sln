@@ -229,13 +229,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Compatibility", "Compatibil
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		1.0|Any CPU = 1.0|Any CPU
+		1.1|Any CPU = 1.1|Any CPU
+		1.2|Any CPU = 1.2|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AB5742EF-36E9-436A-9BE4-46330E1A33B0}.1.0|Any CPU.ActiveCfg = 1.0|Any CPU
-		{AB5742EF-36E9-436A-9BE4-46330E1A33B0}.1.0|Any CPU.Build.0 = 1.0|Any CPU
+		{AB5742EF-36E9-436A-9BE4-46330E1A33B0}.1.1|Any CPU.ActiveCfg = 1.1|Any CPU
+		{AB5742EF-36E9-436A-9BE4-46330E1A33B0}.1.1|Any CPU.Build.0 = 1.1|Any CPU
+		{AB5742EF-36E9-436A-9BE4-46330E1A33B0}.1.2|Any CPU.ActiveCfg = 1.2|Any CPU
+		{AB5742EF-36E9-436A-9BE4-46330E1A33B0}.1.2|Any CPU.Build.0 = 1.2|Any CPU
 		{AB5742EF-36E9-436A-9BE4-46330E1A33B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AB5742EF-36E9-436A-9BE4-46330E1A33B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB5742EF-36E9-436A-9BE4-46330E1A33B0}.Release|Any CPU.ActiveCfg = Release|Any CPU

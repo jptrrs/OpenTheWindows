@@ -4,7 +4,7 @@ using Verse.AI;
 
 namespace OpenTheWindows
 {
-    //Tweaks the windows building cost for pathfinding reasons. 1/2
+    //Tweaks the windows building cost for pathfinding reasons. 1/2 (Up to RW 1.2)
     [HarmonyPatch(typeof(PathFinder), nameof(PathFinder.GetBuildingCost))]
     public static class PathFinder_GetBuildingCost
     {
@@ -16,7 +16,7 @@ namespace OpenTheWindows
             {
                 case TraverseMode.ByPawn:
                 case TraverseMode.PassDoors:
-                    if (traverseParms.canBashDoors) return 300;
+                    if (traverseParms.canBash) return 300;
                     if (pawn.CurJob?.attackDoorIfTargetLost == true || pawn.MentalState is MentalState_Manhunter)
                     {
                         return 100 + (int)(window.HitPoints * 0.2f);

@@ -55,9 +55,6 @@
     <RimWorldPath>..\..\References\RimWorld 1.3\Assembly-CSharp_publicized.dll</RimWorldPath>
     <HugsLibPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\workshop\content\294100\818773962\v1.3\Assemblies\HugsLib.dll</HugsLibPath>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '1.1|AnyCPU'">
     <OutputPath>..\..\..\..\..\..\Program Files %28x86%29\Steam\steamapps\common\RimWorld\Mods\HumanResources\1.1\Assemblies\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -83,11 +80,8 @@
     <HugsLibPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\workshop\content\294100\818773962\v1.2\Assemblies\HugsLib.dll</HugsLibPath>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="HarmonyPatches\Compatibility\JobDriver_Mount_letMountParticipate.cs" />
-    <Compile Include="Tools\PatchOperationFindModById.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="HarmonyPatches\Compatibility\BuildableInfo_DrawGhost.cs" />
-    <Compile Include="HarmonyPatches\RoomGroupTempTracker_EqualizeTemperature.cs" />
     <Compile Include="MapUpdateWatcher.cs" />
     <Compile Include="HarmonyPatches\Building.cs" />
     <Compile Include="HarmonyPatches\Compatibility\AlertManagerProxy.cs" />
@@ -96,7 +90,6 @@
     <Compile Include="HarmonyPatches\CoverUtility_BaseBlockChance.cs" />
     <Compile Include="HarmonyPatches\GenGrid_CanBeSeenOvercs.cs" />
     <Compile Include="HarmonyPatches\Compatibility\AlertManager_LoadState.cs" />
-    <Compile Include="HarmonyPatches\PathFinder_GetBuildingCost.cs" />
     <Compile Include="HarmonyPatches\PathGrid_CalculatedCostAt.cs" />
     <Compile Include="HarmonyPatches\GlowGrid_GameGlowAt.cs" />
     <Compile Include="HarmonyPatches\HarmonyPatcher.cs" />
@@ -139,6 +132,16 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
   </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == '1.1' OR '$(Configuration)' == '1.2'">
+    <Compile Include="Legacy\RoomGroupTempTracker_EqualizeTemperature.cs" />
+    <Compile Include="Legacy\PathFinder_GetBuildingCost_RW1.2.cs" />
+    <Compile Include="Legacy\JobDriver_Mount_letMountParticipate_RW1.2.cs" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' != '1.1' AND '$(Configuration)' != '1.2'">
+    <None Include="HarmonyPatches\RoomGroupTempTracker_EqualizeTemperature.cs" />
+    <Compile Include="HarmonyPatches\PathFinder_GetBuildingCost.cs" />
+    <Compile Include="HarmonyPatches\Compatibility\JobDriver_Mount_letMountParticipate.cs" />
+  </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>
@@ -152,8 +155,15 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp_publicized">
-      <HintPath>..\..\References\RimWorld 1.2\Assembly-CSharp_publicized.dll</HintPath>
+      <HintPath>$(RimWorldPath)</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="HugsLib">
+      <HintPath>$(HugsLibPath)</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="JPTools">
+      <HintPath>..\..\JPTools\Assemblies\JPTools.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation" />
@@ -304,6 +314,7 @@
     </Reference>
     <Reference Include="UnityEngine.SubsystemsModule">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.SubsystemsModule.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.TerrainModule">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TerrainModule.dll</HintPath>
