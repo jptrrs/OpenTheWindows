@@ -211,6 +211,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patches", "Patches", "{7828
 		Patches\Patches_VEFurniture.xml = Patches\Patches_VEFurniture.xml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MangoThunder", "MangoThunder", "{912387E3-CD6C-4C1C-8969-6D5A0E424764}"
+	ProjectSection(SolutionItems) = preProject
+		Source\mango\Building_Door_Patch.cs = Source\mango\Building_Door_Patch.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HarmonyPatches", "HarmonyPatches", "{E2D7A693-30FB-447B-A666-4989562AE5D8}"
+	ProjectSection(SolutionItems) = preProject
+		Source\mango\HarmonyPatches\PathFinder_GetBuildingCost.cs = Source\mango\HarmonyPatches\PathFinder_GetBuildingCost.cs
+		Source\mango\HarmonyPatches\ThingGrid.cs = Source\mango\HarmonyPatches\ThingGrid.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Compatibility", "Compatibility", "{F4B8BB89-49AF-4748-9AE2-9ACF8F83A43A}"
+	ProjectSection(SolutionItems) = preProject
+		Source\mango\HarmonyPatches\Compatibility\JobDriver_Mount_letMountParticipate.cs = Source\mango\HarmonyPatches\Compatibility\JobDriver_Mount_letMountParticipate.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		1.0|Any CPU = 1.0|Any CPU
@@ -262,6 +278,8 @@ Global
 		{F38E875B-6601-4922-A466-4C71390F9EE6} = {FC2F75F7-D815-41E0-9196-14ECABE34555}
 		{56A8C019-4EB5-4AFD-9813-6D3D84454D42} = {FC2F75F7-D815-41E0-9196-14ECABE34555}
 		{AFCF96BC-D940-49C5-9C2B-F5B455A694AB} = {B0A48807-0D5A-43C4-AE8C-AD1A6DC774F0}
+		{E2D7A693-30FB-447B-A666-4989562AE5D8} = {912387E3-CD6C-4C1C-8969-6D5A0E424764}
+		{F4B8BB89-49AF-4748-9AE2-9ACF8F83A43A} = {E2D7A693-30FB-447B-A666-4989562AE5D8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AE23F93A-4E76-4877-B2E2-7CED627DB416}
