@@ -13,7 +13,7 @@ namespace OpenTheWindows
         {
             Map map = LightingOverlay_Regenerate.map;
             MapComp_Windows comp = LightingOverlay_Regenerate.windowComponent;
-            if (!comp.WindowCells.Contains(c)) return;
+            if (comp == null || !comp.WindowCells.Contains(c)) return;
             try
             {
                 float fromSky = map.skyManager.CurSkyGlow * OpenTheWindowsSettings.LightTransmission;

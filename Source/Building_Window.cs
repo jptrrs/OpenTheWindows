@@ -340,7 +340,6 @@ namespace OpenTheWindows
         #endregion
 
         #region adapting as door
-        public new bool openInt = false;
         public override void Draw()
         {
             if (Size == 1)

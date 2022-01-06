@@ -37,7 +37,7 @@ namespace OpenTheWindows
             bool southward = rot == Rot4.South || rot == Rot4.West;
             cellTest clear = (c, b) => c.InBounds(map) && c.CanBeSeenOverFast(map) && !map.roofGrid.Roofed(c);
 
-            //3. Determine clearence and max reach on each side
+            //3. Determine clearance and max reach on each side
             Dictionary<IntVec3, int> cleared = new Dictionary<IntVec3, int>();
             int reachFwd = 0;
             int reachBwd = 0;

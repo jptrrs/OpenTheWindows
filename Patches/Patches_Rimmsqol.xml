@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+  <Operation Class="JPTools.PatchOperationFindModById">
+    <mods>
+      <li>malteschulze.rimmsqol</li>
+    </mods>
+    <match Class="PatchOperationSequence">
+      <success>Always</success>
+      <operations>
+        <li Class="PatchOperationAdd">
+          <xpath>/Defs/ThingDef[@Name="WindowBase"]</xpath>
+          <value>
+            <designatorDropdown>WallWindows</designatorDropdown>
+          </value>
+        </li>
+        <li Class="PatchOperationAdd">
+          <xpath>/Defs</xpath>
+          <value>
+            <DesignatorDropdownGroupDef>
+              <defName>WallWindows</defName>
+            </DesignatorDropdownGroupDef>
+          </value>
+        </li>        
+      </operations>
+    </match>
+  </Operation>
+</Patch>
