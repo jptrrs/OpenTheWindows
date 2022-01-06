@@ -54,7 +54,7 @@ namespace OpenTheWindows
             }
 
             List<string> beautyMods = new List<string>() { "JPT.CustomNaturalBeauty", "zhrocks11.NatureIsBeautiful", "Meltup.BeautifulOutdoors" };
-            if (LoadedModManager.RunningModsListForReading.Any(x => x.Name.Contains("Nature is Beautiful") || beautyMods.Select(id => x.PackageIdPlayerFacing.StartsWith(id)).Any()))
+            if (LoadedModManager.RunningModsListForReading.Select(x => x.PackageIdPlayerFacing).Intersect(beautyMods).Any())
             {
                 Log.Message("[OpenTheWindows] Landscape beautification mod detected! Integrating...");
                 OpenTheWindowsSettings.IsBeautyOn = true;
