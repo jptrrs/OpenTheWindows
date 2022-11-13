@@ -35,7 +35,7 @@ namespace OpenTheWindows
         {
             if (window != null && window.open && window.isFacingSet && window.view.Count > 0)
             {
-                IEnumerable<IntVec3> view = window.view;
+                var view = window.view.ToList();
                 float result = 0;
                 List<Thing> counted = new List<Thing>();
                 foreach (IntVec3 c in view)

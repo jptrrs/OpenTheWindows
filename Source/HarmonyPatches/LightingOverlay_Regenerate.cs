@@ -14,7 +14,6 @@ namespace OpenTheWindows
         public static RoofDef[] roofRef = null;
         public static bool stateDirty = true;
         public static MapComp_Windows windowComponent = null;
-        static FieldInfo roofGridInfo = AccessTools.Field(typeof(RoofGrid), "roofGrid");
 
         [HarmonyBefore(new string[] {"raisetheroof.harmony"})]
         public static void Prefix()
@@ -23,24 +22,31 @@ namespace OpenTheWindows
             if (stateDirty || map != Find.CurrentMap)
             {
                 map = Find.CurrentMap; // cache map
-                roofRef = (RoofDef[])roofGridInfo.GetValue(map.roofGrid); // cache roofgrid
+                roofRef = map?.roofGrid?.roofGrid; // cache roofgrid
+                if (roofRef == null) return;
                 windowComponent = map.GetComponent<MapComp_Windows>(); // cache windowcomponent
                 // we are clean
                 stateDirty = false;
             }
-            foreach (IntVec3 cell in windowComponent.WindowCells)
+            if (map != null)
             {
-                var index = map.cellIndices.CellToIndex(cell);
-                changedRoofs.Add(cell, roofRef[index]);
-                roofRef[index] = null;
+                foreach (IntVec3 cell in windowComponent.WindowCells)
+                {
+                    var index = map.cellIndices.CellToIndex(cell);
+                    changedRoofs.Add(cell, roofRef[index]);
+                    roofRef[index] = null;
+                }
             }
         }
 
         public static void Postfix()
         {
-            foreach (KeyValuePair<IntVec3, RoofDef> entry in changedRoofs)
+            if (map != null)
             {
-                roofRef[map.cellIndices.CellToIndex(entry.Key)] = entry.Value;
+                foreach (KeyValuePair<IntVec3, RoofDef> entry in changedRoofs)
+                {
+                    roofRef[map.cellIndices.CellToIndex(entry.Key)] = entry.Value;
+                }
             }
         }
     }

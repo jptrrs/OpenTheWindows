@@ -53,13 +53,9 @@ namespace OpenTheWindows
                 if (!TransparentRoofs) Log.Error(roofsFailed);
             }
 
-            List<string> beautyMods = new List<string>() { "JPT.CustomNaturalBeauty", "zhrocks11.NatureIsBeautiful", "Meltup.BeautifulOutdoors" };
-            if (LoadedModManager.RunningModsListForReading.Any(x => x.Name.Contains("Nature is Beautiful") || beautyMods.Select(id => x.PackageIdPlayerFacing.StartsWith(id)).Any()))
-            {
-                Log.Message("[OpenTheWindows] Landscape beautification mod detected! Integrating...");
-                OpenTheWindowsSettings.IsBeautyOn = true;
-                Instance.Patch(AccessTools.Method(typeof(Need_Beauty), "LevelFromBeauty"), null, new HarmonyMethod(typeof(NeedBeauty_LevelFromBeauty), nameof(NeedBeauty_LevelFromBeauty.LevelFromBeauty)), null);
-            }
+            //OpenTheWindowsSettings.IsBeautyOn = true;
+            //Instance.Patch(AccessTools.Method(typeof(Need_Beauty), "LevelFromBeauty"), null, new HarmonyMethod(typeof(NeedBeauty_LevelFromBeauty), nameof(NeedBeauty_LevelFromBeauty.LevelFromBeauty)), null);
+            
 
             if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("VouLT.BetterPawnControl")))
             {

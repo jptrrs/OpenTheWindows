@@ -33,7 +33,7 @@ namespace OpenTheWindows
     {
         private const float 
             IndoorsNoNaturalLightPenaltyDefault = 3f, //indoors accelerated degradation when not under windows
-            BeautySensitivityReductionDefault = 0.25f, // zero for vanilla
+            BeautySensitivityReductionDefault = 0f, // zero for vanilla
             LightTransmissionDefault = 0.9f; // light actually transmitted through windows
 
         public static float 
@@ -42,12 +42,7 @@ namespace OpenTheWindows
             LightTransmission = LightTransmissionDefault;
 
         public static bool
-            IsBeautyOn = false,
-            BeautyFromBuildings = false,
-            LinkWindows = true,
-            LinkVents = true,
-            AlarmReactDefault = false,
-            dialogOpen = false;
+            BeautyFromBuildings, AlarmReactDefault, dialogOpen, LinkWindows = true, LinkVents = true, ShowButton = true;
 
         private static IntRange _comfortTemp;
 
@@ -130,6 +125,7 @@ namespace OpenTheWindows
             leftColumn.IntRange(ref _comfortTemp, -40, 100);
 
             //Beauty sensitivity reduction
+            /*
             if (IsBeautyOn)
             {
                 leftColumn.Gap();
@@ -139,6 +135,9 @@ namespace OpenTheWindows
                 BeautySensitivityReduction = leftColumn.Slider(BeautySensitivityReduction, 0f, 1f);
                 leftColumn.CheckboxLabeled("BeautyFromBuildings".Translate(), ref BeautyFromBuildings, "BeautyFromBuildingsDesc".Translate());
             }
+            */
+
+            leftColumn.CheckboxLabeled("ShowButton".Translate(), ref ShowButton);
 
             leftColumn.End();
             Listing_Standard rightColumn = new Listing_Standard();
@@ -194,12 +193,13 @@ namespace OpenTheWindows
         public override void ExposeData()
         {
             Scribe_Values.Look(ref IndoorsNoNaturalLightPenalty, "IndoorsNoNaturalLightPenalty", IndoorsNoNaturalLightPenaltyDefault);
-            Scribe_Values.Look(ref BeautySensitivityReduction, "ModifiedBeautyImpactFactor", BeautySensitivityReductionDefault);
+            //Scribe_Values.Look(ref BeautySensitivityReduction, "ModifiedBeautyImpactFactor", BeautySensitivityReductionDefault);
             Scribe_Values.Look(ref LightTransmission, "LightTransmission", LightTransmissionDefault);
             Scribe_Values.Look(ref LinkWindows, "LinkWindows", true);
             Scribe_Values.Look(ref LinkVents, "LinkVents", true);
+            Scribe_Values.Look(ref ShowButton, "ShowButton", true);
             Scribe_Values.Look(ref AlarmReactDefault, "AlarmReactDefault", false);
-            Scribe_Values.Look(ref BeautyFromBuildings, "BeautyFromBuildings", false);
+            //Scribe_Values.Look(ref BeautyFromBuildings, "BeautyFromBuildings", false);
             Scribe_Values.Look(ref _comfortTemp, "ComfortTemp", ComfortTempDefault);
             base.ExposeData();
         }

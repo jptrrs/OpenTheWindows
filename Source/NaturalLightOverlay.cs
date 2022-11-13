@@ -6,18 +6,11 @@ namespace OpenTheWindows
     public class NaturalLightOverlay : ICellBoolGiver
     {
         public static bool toggleShow = false;
-
         public bool needsUpdate = false;
-
         protected static CellBoolDrawer drawer;
-
-        protected float defaultOpacity;
-
-        private Map lastSeenMap;
-
-        private MapComp_Windows Parent;
-
-        private int updateDelay = 120;
+        Map lastSeenMap;
+        MapComp_Windows Parent;
+        int updateDelay = 120;
 
         public NaturalLightOverlay(MapComp_Windows parent)
         {

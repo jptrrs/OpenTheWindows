@@ -11,11 +11,9 @@ namespace OpenTheWindows
     {
         public static void Postfix(IntVec3 c, ref float __result)
         {
-            //Log.Message("B");
             Map map = LightingOverlay_Regenerate.map;
             MapComp_Windows comp = LightingOverlay_Regenerate.windowComponent;
-            if (comp == null) return;
-            if (!comp.WindowCells.Contains(c)) return;
+            if (comp == null || !comp.WindowCells.Contains(c)) return;
             try
             {
                 float fromSky = map.skyManager.CurSkyGlow * OpenTheWindowsSettings.LightTransmission;

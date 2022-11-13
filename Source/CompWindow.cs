@@ -12,7 +12,8 @@ namespace OpenTheWindows
     {
         private FieldInfo baseWantSwitchInfo = AccessTools.Field(typeof(CompFlickable), "wantSwitchOn");
         private FieldInfo baseSwitchOnIntInfo = AccessTools.Field(typeof(CompFlickable), "switchOnInt");
-        public CompProperties_Window Props
+
+        public new CompProperties_Window Props
         {
             get
             {

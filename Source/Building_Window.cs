@@ -28,7 +28,7 @@ namespace OpenTheWindows
         private const int tickRareInterval = 250;
 
         private float
-                    closedVentFactor = 0.5f,
+            closedVentFactor = 0.5f,
             leakVentFactor = 0.1f;
         private bool
             leaks = false,
@@ -57,13 +57,8 @@ namespace OpenTheWindows
                 return null;
             }
         }
-        public List<IntVec3> EffectArea
-		{            
-			get
-			{
-				return this.isFacingSet ? this.illuminated.Concat(this.view).ToList<IntVec3>() : new List<IntVec3>();
-			}
-		}
+        public string AttachedRoomName => AttachedRoom?.Role?.label ?? "undefined";
+        public List<IntVec3> EffectArea => isFacingSet ? illuminated.Concat(view).ToList() : new List<IntVec3>();
         public override Graphic Graphic
         {
             get
@@ -197,10 +192,32 @@ namespace OpenTheWindows
                             mainComp.FlickFor(false);
                             ventComp.FlickFor(false);
                         }
-                        if (!alarmReact && emergencyShut) 
+                        if (!alarmReact && emergencyShut)
                         {
                             emergencyShut = false;
                         }
+                    }
+                };
+            }
+            if (Prefs.DevMode)
+            {
+
+                yield return new Command_Action
+                {
+                    defaultLabel = "Diagnostics",
+                    action = delegate ()
+                    {
+                        Log.Warning(SelfDiagnotics());
+                    }
+                };
+                yield return new Command_Action
+                {
+                    defaultLabel = "Reset",
+                    action = delegate ()
+                    {
+                        SetScanLines();
+                        CastLight();
+                        needsUpdate = true;
                     }
                 };
             }
@@ -245,7 +262,7 @@ namespace OpenTheWindows
             return stringBuilder.ToString();
         }
 
-        protected override void ReceiveCompSignal(string signal)
+        public override void ReceiveCompSignal(string signal)
         {
             switch (signal)
             {
@@ -369,6 +386,35 @@ namespace OpenTheWindows
         #endregion
 
         #region custom
+
+        private string SelfDiagnotics()
+        {
+            var report = new StringBuilder();
+            report.Append($"[OpenTheWindows] Diagnostics for {this}:");
+            bool hasRoom = AttachedRoom != null;
+            report.AppendLine($"AttachedRoom? {hasRoom.ToStringYesNo()}");
+            if (hasRoom) report.AppendWithComma(AttachedRoomName);
+            report.AppendLine($"isFacingSet? {isFacingSet.ToStringYesNo()}");
+            report.AppendLine($"open? {open.ToStringYesNo()}");
+            report.AppendLine($"venting? {venting.ToStringYesNo()}");
+            report.AppendLine($"needsUpdate? {needsUpdate.ToStringYesNo()}");
+            if (scanLines.NullOrEmpty())
+            {
+                report.AppendLine($"No scanLines!");
+            }
+            else
+            {
+                var scanLinesCount = scanLines.Count();
+                for (int i = 0; i < scanLinesCount; i++)
+                {
+                    var line = scanLines[i];
+                    string facing = line.facingSet ? line.facing.ToString() : "indetermined";
+                    report.AppendLine($"ScanLine {i+1}: {line.clearLineReport} clear cells, facing {facing}");
+                }
+            }
+            return report.ToString();
+        }
+
         public void CastLight()
         {
             DarkenCellsCarefully();
@@ -505,6 +551,7 @@ namespace OpenTheWindows
 
         private void MapUpdateHandler(object sender, MapUpdateWatcher.MapUpdateInfo info)
         {
+            if (info.map != Map) return;
             var cell = info.center;
             bool removed = info.removed;
             bool roof = sender is RoofGrid;
@@ -557,7 +604,7 @@ namespace OpenTheWindows
                     string inside = tooHotInside ? "HOT" : "COLD";
                     string outside = tooHotOutside ? "HOT" : "COLD";
                     string reason = intent ? $"{inside} inside and outside is better" : $"{outside} outside";
-                    Log.Message($"[OpenTheWindows] {this} @ {AttachedRoom.Role.LabelCap} decided to {action} because it's too {reason}. Comfortable temperature range is {TargetTemp}.");
+                    Log.Message($"[OpenTheWindows] {this} @ {AttachedRoomName} decided to {action} because it's too {reason}. Comfortable temperature range is {TargetTemp}.");
                 }
             }
         }
@@ -579,7 +626,7 @@ namespace OpenTheWindows
                 niceOutside = false;
                 if (Prefs.LogVerbose)
                 {
-                    Log.Message($"[OpenTheWindows] {this} @ {AttachedRoom.Role.LabelCap} decided to re-open because outside doesn't look so bad. Comfortable temperature range is {TargetTemp}.");
+                    Log.Message($"[OpenTheWindows] {this} @ {AttachedRoomName} decided to re-open because outside doesn't look so bad. Comfortable temperature range is {TargetTemp}.");
                 }
                 return;
             }
@@ -642,6 +689,7 @@ namespace OpenTheWindows
             private bool siblingClear => (siblingLeft != null && leftIsSet) || (siblingRight != null && rightIsSet);
             ScanLine siblingLeft => parent.scanLines.Find(x => x.position == toLeft);
             ScanLine siblingRight => parent.scanLines.Find(x => x.position == toRight);
+            public string clearLineReport => clearLine.Count().ToString();
             public bool Affected(IntVec3 cell)
             {
                 return scanLine.Contains(cell);
@@ -664,7 +712,7 @@ namespace OpenTheWindows
                 if (updatedMap != null) map = updatedMap;
                 var actualClearCells = Unobstructed(motivator, removed);
                 clearCells = scanLine.Where(x => actualClearCells.Contains(x)).Select(x => scanLine.IndexOf(x)).ToArray();
-                //Log.Message($"DEBUG @{position} FindObstruction: {clearCells.Count()} clearCells from {replaced.Count()} before.");
+                //Log.Message($"DEBUG @{position} FindObstruction: {clearCells.Count()} clearCells.");
             }
 
             public void LineAdjust(int[] old, int[] @new)
@@ -704,7 +752,7 @@ namespace OpenTheWindows
 
             public List<IntVec3> Unobstructed(IntVec3 motivator, bool removed = false)
             {
-                //1. What is the test is?
+                //1. What is the test?
                 bool lazy = motivator == IntVec3.Zero;
                 cellTest motivated = (target, inside) => target == motivator ? removed : IsClear(target, inside);
                 cellTest clear = lazy ? IsClear : motivated;
@@ -717,7 +765,7 @@ namespace OpenTheWindows
                 if (!facingSet) return new List<IntVec3>(); //escape if unable to determine sides
                 bool southward = facing == LinkDirections.Down || facing == LinkDirections.Left;
 
-                //3. Determine clearence and max reach on each side
+                //3. Determine clearance and max reach on each side
                 Dictionary<IntVec3, int> cleared = new Dictionary<IntVec3, int>();
                 int reachFwd = 0;
                 int reachBwd = 0;
@@ -770,8 +818,7 @@ namespace OpenTheWindows
             }
             private bool IsClear(IntVec3 c, bool inside)
             {
-                bool result = Affected(c) && c.CanBeSeenOverFast(map) && (inside || !map.roofGrid.Roofed(c) || c.IsTransparentRoof(map));
-                return result;
+                return Affected(c) && c.CanBeSeenOverFast(map) && (inside || !map.roofGrid.Roofed(c) || c.IsTransparentRoof(map));
             }
 
             private bool SetFacing(bool overhangFwd, bool overhangBwd)

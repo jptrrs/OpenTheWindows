@@ -1,29 +1,28 @@
 ﻿using HarmonyLib;
-using System.Collections.Generic;
 using System.Reflection;
 using Verse;
 
 namespace OpenTheWindows
 {
     //Cleans up after invalid rooms left by despawned windows.
-    [HarmonyPatch(typeof(RoomGroupTempTracker), nameof(RoomGroupTempTracker.EqualizeTemperature))]
+    [HarmonyPatch(typeof(RoomTempTracker), nameof(RoomTempTracker.EqualizeTemperature))]
     public static class RoomGroupTempTracker_EqualizeTemperature
     {
-        private static FieldInfo roomsInfo = AccessTools.Field(typeof(RoomGroup), "rooms");
-        public static bool Prefix(RoomGroupTempTracker __instance, RoomGroup ___roomGroup)
+        private static FieldInfo roomsInfo = AccessTools.Field(typeof(Room), "rooms");
+        public static bool Prefix(RoomTempTracker __instance, Room ___room)
         {
-            List<Room> rooms = (List<Room>)roomsInfo.GetValue(___roomGroup);
-            var orphan = rooms.FirstOrFallback(x => x.RegionType == RegionType.Portal && x.Cells.EnumerableNullOrEmpty());
+            var orphan = ___room.Districts.FirstOrFallback(x => x.IsDoorway == true && x.Cells.EnumerableNullOrEmpty());
             if (orphan != null)
             {
                 Map map = orphan.Map;
-                rooms.Clear();
-                roomsInfo.SetValue(___roomGroup, rooms);
-                foreach (Region region in ___roomGroup.Regions)
+                foreach (var region in ___room.Regions)
                 {
-                    map.regionDirtyer.SetRegionDirty(region);
+                    foreach (var link in region.links)
+                    {
+                        link.Deregister(region);
+                    }
                 }
-                map.regionGrid.allRooms.Remove(orphan);
+                map.regionGrid.allRooms.Remove(___room);
                 map.regionAndRoomUpdater.TryRebuildDirtyRegionsAndRooms();
                 return false;
             }

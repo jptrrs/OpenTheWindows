@@ -4,7 +4,7 @@ using Verse;
 namespace OpenTheWindows
 {
     //Triggers the illuminated area recalculation when thing is constructed/deconstructed.
-    [HarmonyPatch(typeof(ThingGrid), "RegisterInCell")]
+    [HarmonyPatch(typeof(ThingGrid), nameof(ThingGrid.RegisterInCell))]
     public static class ThingGrid_Register
     {
         public static void Postfix(Thing t, IntVec3 c)
@@ -23,7 +23,7 @@ namespace OpenTheWindows
         }
     }
 
-    [HarmonyPatch(typeof(ThingGrid), "DeregisterInCell")]
+    [HarmonyPatch(typeof(ThingGrid), nameof(ThingGrid.DeregisterInCell))]
     public static class ThingGrid_Deregister
     {
         public static void Postfix(Thing t, IntVec3 c)

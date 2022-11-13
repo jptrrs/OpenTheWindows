@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Patch>
-	<Operation Class="JPTools.PatchOperationFindModById">
+	<Operation Class="PatchOperationFindMod">
 		<mods>
-			<li>nanoce.glasslights</li>
-			<li>spoden.justglass</li>
+			<li>Glass+Lights</li>
+			<li>Just Glass</li>
 		</mods>
 		<nomatch Class="PatchOperationSequence">
 			<success>Always</success>
@@ -130,9 +130,9 @@
 			</operations>
 		</nomatch>
 		
-		<match Class="JPTools.PatchOperationFindModById">
+		<match Class="PatchOperationFindMod">
 			<mods>
-				<li>maaxar.dubsskylights.glasslights.patch</li>
+				<li>Dubs Skylights</li>
 			</mods>
 			<nomatch Class="PatchOperationSequence">
 				<success>Always</success>

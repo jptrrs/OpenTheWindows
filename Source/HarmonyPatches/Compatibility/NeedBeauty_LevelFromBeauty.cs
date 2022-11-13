@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace OpenTheWindows
 {
+    /*
     //Modifies beauty need sensitivity. Manually patched if any landscape beautification mod is present.
     public static class NeedBeauty_LevelFromBeauty
     {
@@ -17,4 +18,5 @@ namespace OpenTheWindows
             __result = Mathf.Clamp01(baseLevel + beauty * ModifiedBeautyImpactFactor());
         }
     }
+    */
 }

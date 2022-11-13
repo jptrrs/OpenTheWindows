@@ -17,8 +17,13 @@ namespace OpenTheWindows
                 IntVec3 start = WindowUtility.FindEnd(center, rot, def.size, false);
                 IntVec3 end = WindowUtility.FindEnd(center, rot, def.size, true);
                 field = WindowUtility.GetWindowObfuscation(def.size, center, rot, currentMap, start, end).ToList();
-                GenDraw.DrawFieldEdges(field);
             }
+            else
+            {
+                var window = thing as Building_Window;
+                field = window?.EffectArea;
+            }
+            if (field != null) GenDraw.DrawFieldEdges(field);
         }
     }
 }
