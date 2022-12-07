@@ -28,7 +28,7 @@ namespace OpenTheWindows
                 // we are clean
                 stateDirty = false;
             }
-            if (map != null)
+            if (map != null && roofRef != null)
             {
                 foreach (IntVec3 cell in windowComponent.WindowCells)
                 {
@@ -41,7 +41,7 @@ namespace OpenTheWindows
 
         public static void Postfix()
         {
-            if (map != null)
+            if (map != null && roofRef != null)
             {
                 foreach (KeyValuePair<IntVec3, RoofDef> entry in changedRoofs)
                 {

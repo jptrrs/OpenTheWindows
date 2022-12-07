@@ -8,11 +8,14 @@ namespace OpenTheWindows
     [HarmonyPatch(typeof(CompFlickable), nameof(CompFlickable.PostExposeData))]
     public static class CompFlickable_PostExposeData
     {
-        public static bool Prefix(CompFlickable __instance, bool ___switchOnInt, bool ___wantSwitchOn)
+        public static bool Prefix(CompFlickable __instance)
         {
-            if (!(__instance is CompWindow compWindow)) return true;
-            if (Scribe.mode == LoadSaveMode.PostLoadInit) compWindow.SetupState();
-            return false;
+            if (Scribe.mode == LoadSaveMode.PostLoadInit && __instance is CompWindow compWindow)
+            {
+                compWindow.SetupState();
+                return false;
+            } 
+            return true;
         }
     }
 }

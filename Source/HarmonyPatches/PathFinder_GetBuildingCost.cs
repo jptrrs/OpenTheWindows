@@ -10,16 +10,15 @@ namespace OpenTheWindows
     {
         public static int Postfix(int result, Building b, TraverseParms traverseParms, Pawn pawn)
         {
-            Building_Window window = b as Building_Window;
-            if (window == null) return result;
+            if (b.def.thingClass != typeof(Building_Window)) return result;
             switch (traverseParms.mode)
             {
                 case TraverseMode.ByPawn:
                 case TraverseMode.PassDoors:
                     if (traverseParms.canBashDoors) return 300;
-                    if (pawn.CurJob?.attackDoorIfTargetLost == true || pawn.MentalState is MentalState_Manhunter)
+                    if (pawn.CurJob?.attackDoorIfTargetLost == true || (pawn.def.race.intelligence < Intelligence.Humanlike && pawn.MentalState is MentalState_Manhunter))
                     {
-                        return 100 + (int)(window.HitPoints * 0.2f);
+                        return 100 + (int)(b.HitPoints * 0.2f);
                     }
                     return int.MaxValue;
                 case TraverseMode.NoPassClosedDoors:
@@ -27,7 +26,7 @@ namespace OpenTheWindows
                     return int.MaxValue;
                 case TraverseMode.PassAllDestroyableThings:
                 case TraverseMode.PassAllDestroyableThingsNotWater:
-                    return 50 + (int)(window.HitPoints * 0.2f);
+                    return 50 + (int)(b.HitPoints * 0.2f);
                 default:
                      return result;
             }

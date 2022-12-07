@@ -9,12 +9,12 @@ namespace OpenTheWindows
     [HarmonyPatch(typeof(ThingDef), nameof(ThingDef.SpecialDisplayStats))]
     public static class ThingDef_SpecialDisplayStats
     {
-        public static void Postfix(ThingDef __instance, ref IEnumerable<StatDrawEntry> __result)
+        public static IEnumerable<StatDrawEntry> Postfix(IEnumerable<StatDrawEntry> values, ThingDef __instance)
         {
-            if (typeof(Building_Window).IsAssignableFrom(__instance.thingClass))
+            foreach (var item in values) yield return item;
+            if (__instance.thingClass == typeof(Building_Window))
             {
-                StatDrawEntry x = new StatDrawEntry(StatCategoryDefOf.Basics, "CoverEffectiveness".Translate(), WindowUtility.WindowBaseFillPercent.ToStringPercent(), "CoverEffectivenessExplanation".Translate(), 0);
-                __result = new StatDrawEntry[] { x };
+                yield return new StatDrawEntry(StatCategoryDefOf.Basics, "CoverEffectiveness".Translate(), WindowUtility.WindowBaseFillPercent.ToStringPercent(), "CoverEffectivenessExplanation".Translate(), 0);
             }
         }
     }

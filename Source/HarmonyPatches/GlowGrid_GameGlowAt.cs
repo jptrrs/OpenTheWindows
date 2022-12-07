@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using System;
-using UnityEngine;
 using Verse;
+using static OpenTheWindows.LightingOverlay_Regenerate;
 
 namespace OpenTheWindows
 {
@@ -9,24 +9,16 @@ namespace OpenTheWindows
     [HarmonyPatch(typeof(GlowGrid), nameof(GlowGrid.GameGlowAt))]
     public static class GlowGrid_GameGlowAt
     {
-        public static void Postfix(IntVec3 c, ref float __result)
+        public static float Postfix(float __result, IntVec3 c)
         {
-            Map map = LightingOverlay_Regenerate.map;
-            MapComp_Windows comp = LightingOverlay_Regenerate.windowComponent;
-            if (comp == null || !comp.WindowCells.Contains(c)) return;
-            try
+            if (windowComponent == null || !windowComponent.WindowCells.Contains(c)) return __result;
+            
+            float fromSky = map.skyManager.curSkyGlowInt * OpenTheWindowsSettings.LightTransmission;
+            if (HarmonyPatcher.RaiseTheRoof && c.Roofed(map) && c.IsTransparentRoof(map))
             {
-                float fromSky = map.skyManager.CurSkyGlow * OpenTheWindowsSettings.LightTransmission;
-                if (HarmonyPatcher.RaiseTheRoof && c.Roofed(map) && c.IsTransparentRoof(map))
-                {
-                    __result *= OpenTheWindowsSettings.LightTransmission;
-                }
-                __result = Mathf.Max(__result, fromSky);
+                __result *= OpenTheWindowsSettings.LightTransmission;
             }
-            catch (Exception e) // if you are catching err's you might as well explain them.
-            {
-                Log.Warning("Error at GlowGrid_GameGlowAt: " + e.Message);
-            }
+            return __result > fromSky ? __result : fromSky;
         }
     }
 }

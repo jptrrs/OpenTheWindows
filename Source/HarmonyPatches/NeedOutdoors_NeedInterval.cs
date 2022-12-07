@@ -20,41 +20,29 @@ namespace OpenTheWindows
             Delta_OutdoorsNoRoof = 8f,
             DeltaFactor_InBed = 0.2f;
 
-        private static PropertyInfo
-            disabledInfo = AccessTools.Property(typeof(Need_Outdoors), "Disabled"),
-            curLevelInfo = AccessTools.Property(typeof(Need_Outdoors), "CurLevel"),
-            isFrozenInfo = AccessTools.Property(typeof(Need), "IsFrozen");
-
-        private static FieldInfo 
-            pawnInfo = AccessTools.Field(typeof(Need_Outdoors), "pawn"),
-            lastEffectiveDeltaInfo = AccessTools.Field(typeof(Need_Outdoors), "lastEffectiveDelta");
-
-        private static float DeltaFactor_NoNaturalLight() => OpenTheWindowsSettings.IndoorsNoNaturalLightPenalty; //indoors accelerated degradation when not under windows
-
-        public static void Prefix(object __instance)
+        public static void Prefix(Need_Outdoors __instance)
         {
             NeedInterval(__instance);
         }
 
-        public static void NeedInterval(object __instance)
+        public static void NeedInterval(Need_Outdoors __instance)
         {
-            bool disabled = (bool)disabledInfo.GetValue(__instance, null);
-            float curLevel = (float)curLevelInfo.GetValue(__instance, null);
-            bool isFrozen = (bool)isFrozenInfo.GetValue(__instance, null);
-            Pawn pawn = (Pawn)pawnInfo.GetValue(__instance);
+            var pawn = __instance.pawn; //alias
 
-            if (disabled)
+            if (__instance.Disabled)
             {
-                curLevelInfo.SetValue(__instance, 1f, null);
+                __instance.CurLevel = 1f;
                 return;
             }
-            if (isFrozen)
+            if (__instance.IsFrozen)
             {
                 return;
             }
             float floor = Minimum_IndoorsThinRoof;
-            bool isOutdoors = !pawn.Spawned || pawn.Position.UsesOutdoorTemperature(pawn.Map);
-            RoofDef roofDef = (!pawn.Spawned) ? null : pawn.Position.GetRoof(pawn.Map);
+            bool spawned = pawn.Spawned;
+            Map map = pawn.Map;
+            bool isOutdoors = !spawned || pawn.positionInt.UsesOutdoorTemperature(map);
+            RoofDef roofDef = (!spawned) ? null : pawn.positionInt.GetRoof(map);
             float num;
             if (!isOutdoors) // indoors
             {
@@ -89,23 +77,23 @@ namespace OpenTheWindows
                 num *= DeltaFactor_InBed;
             }
             // no natural light penality:
-            if (roofDef != null && !pawn.Map.GetComponent<MapComp_Windows>().WindowCells.Contains(pawn.Position))
+            if (roofDef != null && !map.GetComponent<MapComp_Windows>().WindowCells.Contains(pawn.Position))
             {
-                if (num < 0f) num *= DeltaFactor_NoNaturalLight();
-                else num /= DeltaFactor_NoNaturalLight();
+                if (num < 0f) num *= OpenTheWindowsSettings.IndoorsNoNaturalLightPenalty;
+                else num /= OpenTheWindowsSettings.IndoorsNoNaturalLightPenalty;
             }
             //
             num *= 0.0025f;
-            float _curLevel = curLevel;
+            float curLevel = __instance.CurLevel;
             if (num < 0f)
             {
-                curLevelInfo.SetValue(__instance, Mathf.Min(curLevel, Mathf.Max(curLevel + num, floor)), null);
+                __instance.CurLevel = Mathf.Min(curLevel, Mathf.Max(curLevel + num, floor));
             }
             else
             {
-                curLevelInfo.SetValue(__instance, Mathf.Min(curLevel + num, 1f), null);
+                __instance.CurLevel = Mathf.Min(curLevel + num, 1f);
             }
-            lastEffectiveDeltaInfo.SetValue(__instance, curLevel - _curLevel);
+            __instance.lastEffectiveDelta = __instance.CurLevel - curLevel;
         }
     }
 }

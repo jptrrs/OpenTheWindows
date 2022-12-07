@@ -1,8 +1,6 @@
 ﻿using HarmonyLib;
 using RimWorld;
-using System;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 using Verse;
 
@@ -10,44 +8,23 @@ namespace OpenTheWindows
 {
     public class CompWindow : CompFlickable
     {
-        private FieldInfo baseWantSwitchInfo = AccessTools.Field(typeof(CompFlickable), "wantSwitchOn");
-        private FieldInfo baseSwitchOnIntInfo = AccessTools.Field(typeof(CompFlickable), "switchOnInt");
 
-        public new CompProperties_Window Props
-        {
-            get
-            {
-                return (CompProperties_Window)props;
-            }
-        }
+        public new CompProperties_Window Props;
 
         public bool WantSwitchOn
         {
-            get
-            {
-                return (bool)baseWantSwitchInfo.GetValue(this);
-            }
-            set
-            {
-                baseWantSwitchInfo.SetValue(this, value);
-            }
+            get { return wantSwitchOn; }
+            set { wantSwitchOn = value; }
         }
 
         public bool SwitchOnInt
         {
-            get
-            {
-                return (bool)baseSwitchOnIntInfo.GetValue(this);
-            }
-            set
-            {
-                baseSwitchOnIntInfo.SetValue(this, value);
-            }
+            get { return switchOnInt; }
+            set { switchOnInt = value; }
         }
 
-        public new string FlickedOffSignal => Props.signal + "Off";
-
-        public new string FlickedOnSignal => Props.signal + "On";
+        public new string FlickedOffSignal => Props.signal.ToString() + "Off";
+        public new string FlickedOnSignal => Props.signal.ToString() + "On";
 
         public override void Initialize(CompProperties props)
         {
@@ -57,13 +34,12 @@ namespace OpenTheWindows
 
         public void SetupState()
         {
+            Props = (CompProperties_Window)props;
             Building_Window window = parent as Building_Window;
             bool state = false;
-            if (Props.signal == "light" || Props.signal == "both") state = window.open;
-            else if (Props.signal == "air") state = window.venting;
-            WantSwitchOn = state;
-            SwitchOnInt = state;
-            SwitchIsOn = state;
+            if (Props.signal == CompProperties_Window.Signal.light || Props.signal == CompProperties_Window.Signal.both) state = window.open;
+            else if (Props.signal == CompProperties_Window.Signal.air) state = window.venting;
+            WantSwitchOn = SwitchOnInt = SwitchIsOn = state;
         }
 
         private CompPowerTrader PowerComp
@@ -127,7 +103,7 @@ namespace OpenTheWindows
             get
             {
                 Building_Window window = parent as Building_Window;
-                bool ifAutovent = (Props.signal == "air" || Props.signal == "both") && window.autoVent;
+                bool ifAutovent = (Props.signal == CompProperties_Window.Signal.air || Props.signal == CompProperties_Window.Signal.both) && window.autoVent;
                 bool ifAlarm = window.alarmReact && AlertManagerProxy.onAlert;
                 return ifAutovent || ifAlarm;
             }

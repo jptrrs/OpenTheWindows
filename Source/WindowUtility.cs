@@ -11,7 +11,7 @@ namespace OpenTheWindows
         public const int deep = 2;
         public const float WindowBaseFillPercent = 0.65f; //used on cover calculation.
 
-        public static IEnumerable<IntVec3> GetWindowObfuscation(IntVec2 size, IntVec3 center, Rot4 rot, Map map, IntVec3 start, IntVec3 end)
+        public static List<IntVec3> GetWindowObfuscation(IntVec2 size, IntVec3 center, Rot4 rot, Map map, IntVec3 start, IntVec3 end)
         {
             //base vars
             List<IntVec3> area = new List<IntVec3>();
@@ -148,14 +148,17 @@ namespace OpenTheWindows
 
         public static void FindAffectedWindows(List<Building_Window> windows, Region initial, Region ignore = null, bool recursive = true)
         {
-            foreach (Region connected in initial.links.Select(x => x.GetOtherRegion(initial)).Except(ignore))
+            foreach (RegionLink link in initial.links)
             {
+                Region connected = link.GetOtherRegion(initial);
+                if (connected == ignore) continue;
+
                 if (connected.IsDoorway)
                 {
-                    var window = connected.ListerThings.AllThings.FirstOrDefault(x => x is Building_Window);
-                    if (window != null && !windows.Contains(window))
+                    var edifice = connected.AnyCell.GetEdifice(initial.Map);
+                    if (edifice?.def.thingClass == typeof(Building_Window) && !windows.Contains(edifice))
                     {
-                        windows.Add(window as Building_Window);
+                        windows.Add(edifice as Building_Window);
                     }
                 }
                 else if (recursive) FindAffectedWindows(windows, connected, ignore, false);

@@ -10,9 +10,9 @@ namespace OpenTheWindows
     {
         public static void Postfix(WidgetRow row, bool worldView)
         {
-            if (worldView || row == null || !OpenTheWindowsSettings.ShowButton) return;
+            if (!OpenTheWindowsSettings.ShowButton || worldView || row == null) return;
 
-            row.ToggleableIcon(ref NaturalLightOverlay.toggleShow, ResourceBank.overlayIcon, NaturalLightOverlay.IconTip(), null, null);
+            row.ToggleableIcon(ref NaturalLightOverlay.toggleShow, ResourceBank.overlayIcon, NaturalLightOverlay.tooltip);
         }
     }
 }

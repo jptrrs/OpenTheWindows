@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using UnityEngine;
 using Verse;
 
 namespace OpenTheWindows
@@ -11,12 +9,11 @@ namespace OpenTheWindows
     using static HarmonyPatcher;
     public class MapComp_Windows : MapComponent
     {
-        public List<Building_Window> cachedWindows = new List<Building_Window>();
         public HashSet<IntVec3> WindowCells;
         private bool audit = false;
-        private FieldInfo DubsSkylights_skylightGridinfo;
+        private System.Reflection.FieldInfo DubsSkylights_skylightGridinfo;
         private Type DubsSkylights_type;
-        private MethodInfo MapCompInfo;
+        private System.Reflection.MethodInfo MapCompInfo;
         private HashSet<int> wrongTiles;
         private NaturalLightOverlay lightOverlay;
 
@@ -30,10 +27,7 @@ namespace OpenTheWindows
                 DubsSkylights_skylightGridinfo = AccessTools.Field(DubsSkylights_type, "SkylightGrid");
                 MapCompInfo = AccessTools.Method(typeof(Map), "GetComponent", new[] { typeof(Type) });
             }
-            if (DubsSkylights || TransparentRoofs)
-            {
-                MapUpdateWatcher.MapUpdate += MapUpdated;
-            }
+            if (DubsSkylights || TransparentRoofs) MapUpdateWatcher.MapUpdate += MapUpdated;
         }
 
         private bool[] skyLightGrid
@@ -42,13 +36,6 @@ namespace OpenTheWindows
             {
                 if (DubsSkylights) return (bool[])DubsSkylights_skylightGridinfo.GetValue(MapCompInfo.Invoke(map, new[] { DubsSkylights_type }));
                 return null;
-            }
-        }
-        public void DeRegisterWindow(Building_Window window)
-        {
-            if (cachedWindows.Contains(window))
-            {
-                cachedWindows.Remove(window);
             }
         }
 
@@ -128,14 +115,6 @@ namespace OpenTheWindows
             if (TransparentRoofs && sender is RoofGrid && info.roofDef != null && TransparentRoofsList.Contains(info.roofDef))
             {
                 ReactTransparentRoof(info);
-            }
-        }
-
-        public void RegisterWindow(Building_Window window)
-        {
-            if (!cachedWindows.Contains(window))
-            {
-                cachedWindows.Add(window);
             }
         }
 

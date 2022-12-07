@@ -6,25 +6,29 @@ namespace OpenTheWindows
 {
     //Cleans up after invalid rooms left by despawned windows.
     [HarmonyPatch(typeof(RoomTempTracker), nameof(RoomTempTracker.EqualizeTemperature))]
+    [HarmonyPriority(Priority.First)]
     public static class RoomGroupTempTracker_EqualizeTemperature
     {
-        private static FieldInfo roomsInfo = AccessTools.Field(typeof(Room), "rooms");
-        public static bool Prefix(RoomTempTracker __instance, Room ___room)
+        public static bool Prefix(RoomTempTracker __instance)
         {
-            var orphan = ___room.Districts.FirstOrFallback(x => x.IsDoorway == true && x.Cells.EnumerableNullOrEmpty());
-            if (orphan != null)
+            var length = __instance.room.districts.Count;
+            for (int i = 0; i < length; i++)
             {
-                Map map = orphan.Map;
-                foreach (var region in ___room.Regions)
+                var district = __instance.room.districts[i];
+                if (district.IsDoorway && district.CellCount == 0)
                 {
-                    foreach (var link in region.links)
+                    Map map = district.Map;
+                    foreach (var region in __instance.room.Regions)
                     {
-                        link.Deregister(region);
+                        foreach (var link in region.links)
+                        {
+                            link.Deregister(region);
+                        }
                     }
+                    map.regionGrid.allRooms.Remove(__instance.room);
+                    map.regionAndRoomUpdater.TryRebuildDirtyRegionsAndRooms();
+                    return false;
                 }
-                map.regionGrid.allRooms.Remove(___room);
-                map.regionAndRoomUpdater.TryRebuildDirtyRegionsAndRooms();
-                return false;
             }
             return true;
         }

@@ -6,11 +6,10 @@ namespace OpenTheWindows
 {
     public class OpenTheWindowsMod : Mod
     {
-        private OpenTheWindowsSettings settings;
 
         public OpenTheWindowsMod(ModContentPack content) : base(content)
         {
-            settings = GetSettings<OpenTheWindowsSettings>();
+            base.GetSettings<OpenTheWindowsSettings>();
         }
 
         public override void DoSettingsWindowContents(Rect inRect)
@@ -42,10 +41,9 @@ namespace OpenTheWindows
             LightTransmission = LightTransmissionDefault;
 
         public static bool
-            BeautyFromBuildings, AlarmReactDefault, dialogOpen, LinkWindows = true, LinkVents = true, ShowButton = true;
+            BeautyFromBuildings, AlarmReactDefault, dialogOpen, LinkWindows = true, LinkVents = true, ShowButton;
 
         private static IntRange _comfortTemp;
-
         public static IntRange ComfortTempDefault
         {
             get
@@ -124,38 +122,14 @@ namespace OpenTheWindows
             ValidateAndSetupComfortTemp();
             leftColumn.IntRange(ref _comfortTemp, -40, 100);
 
-            //Beauty sensitivity reduction
-            /*
-            if (IsBeautyOn)
-            {
-                leftColumn.Gap();
-                string label4 = $"{"BeautySensitivityReduction".Translate()}: {BeautySensitivityReduction.ToStringPercent()}";
-                string desc4 = "BeautySensitivityReductionDesc".Translate();
-                leftColumn.Label(label4, -1f, desc4);
-                BeautySensitivityReduction = leftColumn.Slider(BeautySensitivityReduction, 0f, 1f);
-                leftColumn.CheckboxLabeled("BeautyFromBuildings".Translate(), ref BeautyFromBuildings, "BeautyFromBuildingsDesc".Translate());
-            }
-            */
 
             leftColumn.CheckboxLabeled("ShowButton".Translate(), ref ShowButton);
 
             leftColumn.End();
             Listing_Standard rightColumn = new Listing_Standard();
 
-            //Wall link options
+            //======RIGHT COLUMN======
             rightColumn.Begin(rigthSide);
-            rightColumn.Label($"{"LinkOptionsLabel".Translate()} ({"RequiresRestart".Translate()}):");
-            rightColumn.GapLine();
-            rightColumn.CheckboxLabeled("LinkWindowsAndWalls".Translate(), ref LinkWindows);
-            if (LoadedModManager.RunningModsListForReading.Any(x => x.Name.Contains("RimFridge")))
-            {
-                rightColumn.CheckboxLabeled("LinkFridgesAndWalls".Translate(), ref LinkVents);
-            }
-            else
-            {
-                rightColumn.CheckboxLabeled("LinkVentsAndWalls".Translate(), ref LinkVents);
-            }
-
             //Better Pawn Control Alarm options
             if (HarmonyPatcher.BetterPawnControl)
             {
@@ -193,13 +167,11 @@ namespace OpenTheWindows
         public override void ExposeData()
         {
             Scribe_Values.Look(ref IndoorsNoNaturalLightPenalty, "IndoorsNoNaturalLightPenalty", IndoorsNoNaturalLightPenaltyDefault);
-            //Scribe_Values.Look(ref BeautySensitivityReduction, "ModifiedBeautyImpactFactor", BeautySensitivityReductionDefault);
             Scribe_Values.Look(ref LightTransmission, "LightTransmission", LightTransmissionDefault);
             Scribe_Values.Look(ref LinkWindows, "LinkWindows", true);
             Scribe_Values.Look(ref LinkVents, "LinkVents", true);
-            Scribe_Values.Look(ref ShowButton, "ShowButton", true);
-            Scribe_Values.Look(ref AlarmReactDefault, "AlarmReactDefault", false);
-            //Scribe_Values.Look(ref BeautyFromBuildings, "BeautyFromBuildings", false);
+            Scribe_Values.Look(ref ShowButton, "ShowButton");
+            Scribe_Values.Look(ref AlarmReactDefault, "AlarmReactDefault");
             Scribe_Values.Look(ref _comfortTemp, "ComfortTemp", ComfortTempDefault);
             base.ExposeData();
         }
