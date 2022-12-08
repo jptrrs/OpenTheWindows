@@ -1,7 +1,5 @@
-﻿using RimWorld;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Verse;
 
 namespace OpenTheWindows
@@ -68,7 +66,7 @@ namespace OpenTheWindows
             //5. Apply clearance.
             int obstructed = Math.Min(reachBwd,reachFwd);
             cleared.RemoveAll(x => x.Value > obstructed);
-            var result = cleared.Keys.ToList();
+            var result = new List<IntVec3>(cleared.Keys);
             List<IntVec3> bleed = new List<IntVec3>();
 
             //6. Apply Bleed
@@ -96,11 +94,7 @@ namespace OpenTheWindows
 
         public static bool ClearForward(IntVec3 position, bool horizontal, cellTest test, bool inside, int dist, out IntVec3 output)
         {
-            int cellx = position.x;
-            int cellz = position.z;
-            int deltaX = horizontal ? dist : 0;
-            int deltaZ = horizontal ? 0 : dist;
-            IntVec3 target = new IntVec3(cellx + deltaX, 0, cellz + deltaZ);
+            IntVec3 target = new IntVec3(position.x + (horizontal ? dist : 0), 0, position.z + (horizontal ? 0 : dist));
             bool result = test(target, inside);
             output = result ? target : IntVec3.Zero;
             return result;
@@ -108,20 +102,10 @@ namespace OpenTheWindows
 
         public static bool ClearBackward(IntVec3 position, bool horizontal, cellTest test, bool inside, int dist, out IntVec3 output)
         {
-            int cellx = position.x;
-            int cellz = position.z;
-            int targetX = horizontal ? Math.Max(0, cellx - dist) : cellx;
-            int targetZ = horizontal ? cellz : Math.Max(0, cellz - dist);
-            IntVec3 target = new IntVec3(targetX, 0, targetZ);
+            IntVec3 target = new IntVec3(horizontal ? Math.Max(0, position.x - dist) : position.x, 0, horizontal ? position.z : Math.Max(0, position.z - dist));
             bool result = test(target, inside);
             output = result ? target : IntVec3.Zero;
             return result;
-        }
-
-        public static void FindEnds(Building_Window window)
-        {
-            window.start = FindEnd(window.Position, window.Rotation, window.def.size, false);
-            window.end = FindEnd(window.Position, window.Rotation, window.def.size, true);
         }
 
         public static IntVec3 FindEnd(IntVec3 center, Rot4 rot, IntVec2 size, bool again)
@@ -156,9 +140,9 @@ namespace OpenTheWindows
                 if (connected.IsDoorway)
                 {
                     var edifice = connected.AnyCell.GetEdifice(initial.Map);
-                    if (edifice?.def.thingClass == typeof(Building_Window) && !windows.Contains(edifice))
+                    if (edifice?.def.thingClass == typeof(Building_Window))
                     {
-                        windows.Add(edifice as Building_Window);
+                        windows.AddDistinct(edifice as Building_Window);
                     }
                 }
                 else if (recursive) FindAffectedWindows(windows, connected, ignore, false);
@@ -171,7 +155,7 @@ namespace OpenTheWindows
             if (region == null) return;
             List<Building_Window> neighbors = new List<Building_Window>();
             FindAffectedWindows(neighbors, region);
-            neighbors.ForEach(window => window.needsUpdate = true);
+            foreach (var window in neighbors) window.needsUpdate = true;
         }
 
     }

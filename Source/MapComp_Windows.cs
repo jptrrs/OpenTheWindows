@@ -3,23 +3,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
+using static OpenTheWindows.HarmonyPatcher;
 
 namespace OpenTheWindows
 {
-    using static HarmonyPatcher;
     public class MapComp_Windows : MapComponent
     {
-        public HashSet<IntVec3> WindowCells;
-        private bool audit = false;
-        private System.Reflection.FieldInfo DubsSkylights_skylightGridinfo;
-        private Type DubsSkylights_type;
-        private System.Reflection.MethodInfo MapCompInfo;
-        private HashSet<int> wrongTiles;
-        private NaturalLightOverlay lightOverlay;
+        public HashSet<IntVec3> WindowCells = new HashSet<IntVec3>();
+        System.Reflection.FieldInfo DubsSkylights_skylightGridinfo;
+        Type DubsSkylights_type;
+        System.Reflection.MethodInfo MapCompInfo;
+        NaturalLightOverlay lightOverlay;
 
         public MapComp_Windows(Map map) : base(map)
         {
-            WindowCells = new HashSet<IntVec3>();
             lightOverlay = new NaturalLightOverlay(this);
             if (DubsSkylights)
             {
@@ -30,19 +27,15 @@ namespace OpenTheWindows
             if (DubsSkylights || TransparentRoofs) MapUpdateWatcher.MapUpdate += MapUpdated;
         }
 
-        private bool[] skyLightGrid
+        bool[] GetSkyLightGrid()
         {
-            get
-            {
-                if (DubsSkylights) return (bool[])DubsSkylights_skylightGridinfo.GetValue(MapCompInfo.Invoke(map, new[] { DubsSkylights_type }));
-                return null;
-            }
+            return (bool[])DubsSkylights_skylightGridinfo.GetValue(MapCompInfo.Invoke(map, new[] { DubsSkylights_type }));
         }
 
         public void ExcludeTile(IntVec3 tile, bool bypass = false)
         {
             if (!WindowCells.Contains(tile)) return;
-            if (DubsSkylights && skyLightGrid[map.cellIndices.CellToIndex(tile)]) return;
+            if (DubsSkylights && GetSkyLightGrid()[map.cellIndices.CellToIndex(tile)]) return;
             if (!bypass && tile.IsTransparentRoof(map)) return;
             WindowCells.Remove(tile);
             map.glowGrid.MarkGlowGridDirty(tile);
@@ -51,18 +44,18 @@ namespace OpenTheWindows
 
         public void ExcludeTileRange(IEnumerable<IntVec3> tiles)
         {
-            foreach (var c in tiles)
-            {
-                ExcludeTile(c);
-            }
+            foreach (var c in tiles) ExcludeTile(c);
         }
 
         public override void FinalizeInit()
         {
             if (DubsSkylights)
             {
-                wrongTiles = map.AllCells.Select(x => map.cellIndices.CellToIndex(x)).Where(i => skyLightGrid[i]).ToHashSet();
-                audit = !wrongTiles.EnumerableNullOrEmpty();
+                var wrongTiles = map.AllCells.Select(x => map.cellIndices.CellToIndex(x)).Where(i => GetSkyLightGrid()[i]);
+                foreach (var index in wrongTiles)
+                {
+                    map.glowGrid.MarkGlowGridDirty(map.cellIndices.IndexToCell(index));
+                }
             }
             base.FinalizeInit();
         }
@@ -77,30 +70,13 @@ namespace OpenTheWindows
 
         public void IncludeTileRange(IEnumerable<IntVec3> tiles)
         {
-            foreach (var c in tiles)
-            {
-                IncludeTile(c);
-            }
-        }
-
-        public override void MapComponentTick()
-        {
-            if (audit)
-            {
-                foreach (int idx in wrongTiles)
-                {
-                    map.glowGrid.MarkGlowGridDirty(map.cellIndices.IndexToCell(idx));
-                }
-                wrongTiles.Clear();
-                audit = false;
-            }
-            base.MapComponentTick();
+            foreach (var c in tiles) IncludeTile(c);
         }
 
         public override void MapComponentUpdate()
         {
             base.MapComponentUpdate();
-            lightOverlay.Update();
+            if (NaturalLightOverlay.toggleShow) lightOverlay.Update();
         }
 
         public void MapUpdated(object sender, MapUpdateWatcher.MapUpdateInfo info)
@@ -108,42 +84,24 @@ namespace OpenTheWindows
             if (info.map != map) return;
             if (DubsSkylights && sender.GetType() == Building_Skylight)
             {
-                Thing thing = sender as Thing;
-                var tiles = thing.OccupiedRect().ExpandedBy(1).Cells;
-                ReactSkylights(info, tiles);
+                //ReactSkylights
+                var tiles = ((Thing)sender).OccupiedRect().ExpandedBy(1).Cells;
+                if (info.removed)
+                {
+                    ExcludeTileRange(tiles);
+                    WindowUtility.ResetWindowsAround(map, info.center);
+                }
+                else IncludeTileRange(tiles);
             }
             if (TransparentRoofs && sender is RoofGrid && info.roofDef != null && TransparentRoofsList.Contains(info.roofDef))
             {
-                ReactTransparentRoof(info);
-            }
-        }
-
-        private void ReactSkylights(MapUpdateWatcher.MapUpdateInfo info, IEnumerable<IntVec3> tiles)
-        {
-            if (info.removed)
-            {
-                ExcludeTileRange(tiles);
-                WindowUtility.ResetWindowsAround(map, info.center);
-            }
-            else
-            {
-                IncludeTileRange(tiles);
-            }
-        }
-
-        private void ReactTransparentRoof(MapUpdateWatcher.MapUpdateInfo info)
-        {
-            if (TransparentRoofsList.Contains(info.roofDef))
-            {
+                //ReactTransparentRoof
                 if (info.removed)
                 {
                     ExcludeTile(info.center, true);
                     WindowUtility.ResetWindowsAround(map, info.center);
                 }
-                else
-                {
-                    IncludeTile(info.center);
-                }
+                else IncludeTile(info.center);
             }
         }
     }

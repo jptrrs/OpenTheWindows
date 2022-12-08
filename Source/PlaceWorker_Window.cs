@@ -1,6 +1,5 @@
 ﻿using RimWorld;
 using System.Collections.Generic;
-//using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -10,7 +9,7 @@ namespace OpenTheWindows
     {
         public override void DrawGhost(ThingDef def, IntVec3 center, Rot4 rot, Color ghostCol, Thing thing = null)
         {
-            List<IntVec3> field;
+            List<IntVec3> field = new List<IntVec3>();
             if (thing == null || thing is Blueprint)
             {
                 IntVec3 start = WindowUtility.FindEnd(center, rot, def.size, false);
@@ -19,8 +18,12 @@ namespace OpenTheWindows
             }
             else
             {
-                var window = thing as Building_Window;
-                field = window?.EffectArea;
+                Building_Window window = thing as Building_Window;
+                if (window?.isFacingSet ?? false)
+                {
+                    field.AddRange(window.illuminated);
+                    field.AddRange(window.view);
+                }
             }
             if (field != null) GenDraw.DrawFieldEdges(field);
         }

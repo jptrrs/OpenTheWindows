@@ -1,8 +1,7 @@
 ﻿using HarmonyLib;
-using RimWorld;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Globalization; 
 using Verse;
 
 namespace OpenTheWindows
@@ -10,79 +9,71 @@ namespace OpenTheWindows
     [StaticConstructorOnStartup]
     public static class HarmonyPatcher
     {
-        public static readonly Type patchType = typeof(HarmonyPatcher);
         public static Harmony _instance = null;
-        public static bool
-            BetterPawnControl = false,
-            Blueprints = false,
-            DubsSkylights = false,
-            RaiseTheRoof = false;
-        public static Type
-            Building_Skylight,
-            LocksType;
+        public static bool BetterPawnControl, Blueprints, DubsSkylights, RaiseTheRoof;
+        public static Type Building_Skylight, LocksType;
         public static List<RoofDef> TransparentRoofsList = new List<RoofDef>();
-        const string roofsFailed = "[OpenTheWindows] ...but no roofs detected! Integration failed.";
         static HarmonyPatcher()
         {
             Instance.PatchAll();
-            //Harmony.DEBUG = true;
 
-            if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("Dubwise.DubsSkylights")))
+            var list = LoadedModManager.RunningModsListForReading;
+            int length = list.Count;
+            for (int i = 0; i < length; i++)
             {
-                Log.Message("[OpenTheWindows] Dubs Skylights detected! Integrating...");
-                DubsSkylights = true;
-                Instance.Patch(AccessTools.Method("Dubs_Skylight.Patch_GameGlowAt:Postfix"), new HarmonyMethod(patchType, nameof(Patch_Inhibitor_Prefix)), null, null);
-                Instance.Patch(AccessTools.Method("Dubs_Skylight.Patch_SectionLayer_LightingOverlay_Regenerate:Prefix"), new HarmonyMethod(patchType, nameof(Patch_Inhibitor_Prefix)), null, null);
-                Instance.Patch(AccessTools.Method("Dubs_Skylight.Patch_SectionLayer_LightingOverlay_Regenerate:Postfix"), new HarmonyMethod(patchType, nameof(Patch_Inhibitor_Prefix)), null, null);
-                Building_Skylight = AccessTools.TypeByName("Dubs_Skylight.Building_skyLight");
-            }
-
-            if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("wit.expandedroofing")))
-            {
-                Log.Message("[OpenTheWindows] Expanded Roofing detected! Integrating...");
-                TransparentRoofsList.Add(DefDatabase<RoofDef>.GetNamed("RoofTransparent"));
-                if (!TransparentRoofs) Log.Error(roofsFailed);
-            }
-
-            //if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("machine.rtr")))
-            if (AccessTools.TypeByName("RaiseTheRoof.Patches") is Type rtrType)
-            {
-                Log.Message($"[OpenTheWindows] Raise the roof detected! Integrating...");
-                RaiseTheRoof = true;
-                TransparentRoofsList.AddRange(DefDatabase<RoofDef>.AllDefsListForReading.Where(x => x.defName.StartsWith("RTR_RoofTransparent")));
-                if (!TransparentRoofs) Log.Error(roofsFailed);
-            }
-
-            //OpenTheWindowsSettings.IsBeautyOn = true;
-            //Instance.Patch(AccessTools.Method(typeof(Need_Beauty), "LevelFromBeauty"), null, new HarmonyMethod(typeof(NeedBeauty_LevelFromBeauty), nameof(NeedBeauty_LevelFromBeauty.LevelFromBeauty)), null);
-            
-
-            if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("VouLT.BetterPawnControl")))
-            {
-                Log.Message("[OpenTheWindows] Better Pawn Control detected! Integrating...");
-                BetterPawnControl = true;
-                Type AlertManagerType = AccessTools.TypeByName("BetterPawnControl.AlertManager");
-                Instance.Patch(AccessTools.Method(AlertManagerType, "LoadState"), null, new HarmonyMethod(typeof(AlertManager_LoadState), nameof(AlertManager_LoadState.LoadState_Postfix)));
-                Instance.CreateReversePatcher(AccessTools.PropertyGetter(AlertManagerType, "OnAlert"), new HarmonyMethod(AccessTools.Method(typeof(AlertManagerProxy), nameof(AlertManagerProxy.OnAlert)))).Patch();
-            }
-
-            if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("fluffy.blueprints")))
-            {
-                Log.Message("[OpenTheWindows] Blueprints detected! Adapting...");
-                Blueprints = true;
-                Instance.Patch(AccessTools.Method("Blueprints.BuildableInfo:DrawGhost"), new HarmonyMethod(typeof(BuildableInfo_DrawGhost), nameof(BuildableInfo_DrawGhost.DrawGhost_Prefix)), new HarmonyMethod(typeof(BuildableInfo_DrawGhost), nameof(BuildableInfo_DrawGhost.DrawGhost_Postfix)));
-            }
-
-            if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("avius.locks")))
-            {
-                Log.Message("[OpenTheWindows] Locks detected! Adapting...");
-                LocksType = AccessTools.TypeByName("Locks.LockGizmo");
-            }
-
-            if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("roolo.giddyupcore")))
-            {
-                Log.Message("[OpenTheWindows] Giddy-up! detected! Adapting...");
-                Instance.Patch(AccessTools.Method("GiddyUpCore.Jobs.JobDriver_Mount:letMountParticipate"), null, new HarmonyMethod(typeof(JobDriver_Mount_letMountParticipate), nameof(JobDriver_Mount_letMountParticipate.letMountParticipate_Postfix)));
+                string name = list[i].packageIdPlayerFacingInt;
+                if (name == "Dubwise.DubsSkylights")
+                {
+                    DubsSkylights = true;
+                    if (Prefs.DevMode) Log.Message("[OpenTheWindows] Dubs Skylights detected! Integrating...");
+                    Instance.Patch(AccessTools.Method("Dubs_Skylight.Patch_GameGlowAt:Postfix"), new HarmonyMethod(typeof(HarmonyPatcher), nameof(Patch_Inhibitor_Prefix)), null, null);
+                    Instance.Patch(AccessTools.Method("Dubs_Skylight.Patch_SectionLayer_LightingOverlay_Regenerate:Prefix"), new HarmonyMethod(typeof(HarmonyPatcher), nameof(Patch_Inhibitor_Prefix)), null, null);
+                    Instance.Patch(AccessTools.Method("Dubs_Skylight.Patch_SectionLayer_LightingOverlay_Regenerate:Postfix"), new HarmonyMethod(typeof(HarmonyPatcher), nameof(Patch_Inhibitor_Prefix)), null, null);
+                    Building_Skylight = AccessTools.TypeByName("Dubs_Skylight.Building_skyLight");
+                }
+                else if (name == "wit.expandedroofing")
+                {
+                    if (Prefs.DevMode) Log.Message("[OpenTheWindows] Expanded Roofing detected! Integrating...");
+                    TransparentRoofsList.Add(DefDatabase<RoofDef>.GetNamed("RoofTransparent"));
+                    if (Prefs.DevMode && !TransparentRoofs) Log.Error("[OpenTheWindows] ...but no roofs detected! Integration failed.");
+                }
+                else if (name == "VouLT.BetterPawnControl")
+                {
+                    if (Prefs.DevMode) Log.Message("[OpenTheWindows] Better Pawn Control detected! Integrating...");
+                    BetterPawnControl = true;
+                    Type AlertManagerType = AccessTools.TypeByName("BetterPawnControl.AlertManager");
+                    Instance.Patch(AccessTools.Method(AlertManagerType, "LoadState"), null, new HarmonyMethod(typeof(AlertManager_LoadState), nameof(AlertManager_LoadState.LoadState_Postfix)));
+                    Instance.CreateReversePatcher(AccessTools.PropertyGetter(AlertManagerType, "OnAlert"), new HarmonyMethod(AccessTools.Method(typeof(AlertManagerProxy), nameof(AlertManagerProxy.OnAlert)))).Patch();
+                }
+                else if (name == "fluffy.blueprints")
+                {
+                    if (Prefs.DevMode) Log.Message("[OpenTheWindows] Blueprints detected! Adapting...");
+                    Blueprints = true;
+                    Instance.Patch(AccessTools.Method("Blueprints.BuildableInfo:DrawGhost"), new HarmonyMethod(typeof(BuildableInfo_DrawGhost), nameof(BuildableInfo_DrawGhost.DrawGhost_Prefix)), new HarmonyMethod(typeof(BuildableInfo_DrawGhost), nameof(BuildableInfo_DrawGhost.DrawGhost_Postfix)));
+                }
+                else if (name == "avius.locks")
+                {
+                    if (Prefs.DevMode) Log.Message("[OpenTheWindows] Locks detected! Adapting...");
+                    LocksType = AccessTools.TypeByName("Locks.LockGizmo");
+                }
+                else if (name == "roolo.giddyupcore")
+                {
+                    if (Prefs.DevMode) Log.Message("[OpenTheWindows] Giddy-up! detected! Adapting...");
+                    Instance.Patch(AccessTools.Method("GiddyUpCore.Jobs.JobDriver_Mount:letMountParticipate"), null, new HarmonyMethod(typeof(JobDriver_Mount_letMountParticipate), nameof(JobDriver_Mount_letMountParticipate.letMountParticipate_Postfix)));
+                }
+                else if (name == "machine.rtr")
+                {
+                    if (Prefs.DevMode) Log.Message("[OpenTheWindows] Raise the roof detected! Integrating...");
+                    RaiseTheRoof = true;
+                    CompareInfo ci = CultureInfo.CurrentCulture.CompareInfo;
+                    var length2 = DefDatabase<RoofDef>.DefCount;
+                    for (int k = 0; k < length2; k++)
+                    {
+                        var def = DefDatabase<RoofDef>.AllDefsListForReading[k];
+                        if (ci.IsPrefix(def.defName, "RTR_RoofTransparent")) TransparentRoofsList.Add(def);
+                    }
+                    if (Prefs.DevMode && !TransparentRoofs) Log.Error("[OpenTheWindows] ...but no roofs detected! Integration failed.");
+                }
             }
         }
 
@@ -90,8 +81,7 @@ namespace OpenTheWindows
         {
             get
             {
-                if (_instance == null)
-                    _instance = new Harmony("JPT.OpenTheWindows");
+                if (_instance == null) _instance = new Harmony("JPT.OpenTheWindows");
                 return _instance;
             }
         }

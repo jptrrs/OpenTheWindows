@@ -1,6 +1,7 @@
 ﻿using RimWorld;
 using UnityEngine;
 using Verse;
+using static OpenTheWindows.OpenTheWindowsSettings;
 
 namespace OpenTheWindows
 {
@@ -13,75 +14,6 @@ namespace OpenTheWindows
         }
 
         public override void DoSettingsWindowContents(Rect inRect)
-        {
-            OpenTheWindowsSettings.DoWindowContents(inRect);
-        }
-
-        public override string SettingsCategory()
-        {
-            return "OpenTheWindows".Translate();
-        }
-
-        public override void WriteSettings()
-        {
-            base.WriteSettings();
-        }
-    }
-
-    public class OpenTheWindowsSettings : ModSettings
-    {
-        private const float 
-            IndoorsNoNaturalLightPenaltyDefault = 3f, //indoors accelerated degradation when not under windows
-            BeautySensitivityReductionDefault = 0f, // zero for vanilla
-            LightTransmissionDefault = 0.9f; // light actually transmitted through windows
-
-        public static float 
-            IndoorsNoNaturalLightPenalty = IndoorsNoNaturalLightPenaltyDefault,
-            BeautySensitivityReduction = BeautySensitivityReductionDefault,
-            LightTransmission = LightTransmissionDefault;
-
-        public static bool
-            BeautyFromBuildings, AlarmReactDefault, dialogOpen, LinkWindows = true, LinkVents = true, ShowButton;
-
-        private static IntRange _comfortTemp;
-        public static IntRange ComfortTempDefault
-        {
-            get
-            {
-                if (PlayDataLoader.Loaded)
-                {
-                    return new IntRange((int)ThingDefOf.Human.GetStatValueAbstract(StatDefOf.ComfyTemperatureMin), (int)ThingDefOf.Human.GetStatValueAbstract(StatDefOf.ComfyTemperatureMax));
-                }
-                return IntRange.zero;
-            }
-        }
-
-        public static IntRange ComfortTemp
-        {
-            get
-            {
-                if (_comfortTemp == IntRange.zero)
-                {
-                    return ValidateAndSetupComfortTemp();
-                }
-                return _comfortTemp;
-            }
-            set
-            {
-                _comfortTemp = value;
-            }
-        }
-
-        private static IntRange ValidateAndSetupComfortTemp()
-        {
-            if (_comfortTemp == IntRange.zero && (!dialogOpen || (dialogOpen && !Input.GetMouseButton(0))))
-            {
-                _comfortTemp = ComfortTempDefault;
-            }
-            return _comfortTemp;
-        }
-
-        public static void DoWindowContents(Rect inRect)
         {
             dialogOpen = true;
             float padding = 15f;
@@ -152,28 +84,74 @@ namespace OpenTheWindows
             dialogOpen = false;
         }
 
-        private static void Reset()
+        public static void Reset()
         {
             IndoorsNoNaturalLightPenalty = IndoorsNoNaturalLightPenaltyDefault;
             BeautySensitivityReduction = BeautySensitivityReductionDefault;
             LightTransmission = LightTransmissionDefault;
-            LinkWindows = true;
-            LinkVents = true;
             AlarmReactDefault = false;
-            BeautyFromBuildings = false;
-            ComfortTemp = ComfortTempDefault;
+            ComfortTemp = ComfortTempDefault();
+        }
+
+        public override string SettingsCategory()
+        {
+            return "OpenTheWindows".Translate();
+        }
+
+        public override void WriteSettings()
+        {
+            base.WriteSettings();
+        }
+    }
+
+    public class OpenTheWindowsSettings : ModSettings
+    {
+        public static IntRange ComfortTempDefault()
+        {
+            return PlayDataLoader.Loaded ? 
+            new IntRange((int)ThingDefOf.Human.GetStatValueAbstract(StatDefOf.ComfyTemperatureMin), (int)ThingDefOf.Human.GetStatValueAbstract(StatDefOf.ComfyTemperatureMax)) : IntRange.zero;
+        }
+
+        public static IntRange ComfortTemp
+        {
+            get
+            {
+                if (_comfortTemp == IntRange.zero) return ValidateAndSetupComfortTemp();
+                return _comfortTemp;
+            }
+            set { _comfortTemp = value; }
+        }
+
+        public static IntRange ValidateAndSetupComfortTemp()
+        {
+            if (_comfortTemp == IntRange.zero && (!dialogOpen || (dialogOpen && !Input.GetMouseButton(0))))
+            {
+                _comfortTemp = ComfortTempDefault();
+            }
+            return _comfortTemp;
         }
 
         public override void ExposeData()
         {
             Scribe_Values.Look(ref IndoorsNoNaturalLightPenalty, "IndoorsNoNaturalLightPenalty", IndoorsNoNaturalLightPenaltyDefault);
             Scribe_Values.Look(ref LightTransmission, "LightTransmission", LightTransmissionDefault);
-            Scribe_Values.Look(ref LinkWindows, "LinkWindows", true);
-            Scribe_Values.Look(ref LinkVents, "LinkVents", true);
             Scribe_Values.Look(ref ShowButton, "ShowButton");
             Scribe_Values.Look(ref AlarmReactDefault, "AlarmReactDefault");
-            Scribe_Values.Look(ref _comfortTemp, "ComfortTemp", ComfortTempDefault);
+            Scribe_Values.Look(ref _comfortTemp, "ComfortTemp", ComfortTempDefault());
             base.ExposeData();
         }
+
+        public const float 
+            IndoorsNoNaturalLightPenaltyDefault = 3f, //indoors accelerated degradation when not under windows
+            BeautySensitivityReductionDefault = 0f, // zero for vanilla
+            LightTransmissionDefault = 0.5f; // light actually transmitted through windows
+
+        public static float 
+            IndoorsNoNaturalLightPenalty = IndoorsNoNaturalLightPenaltyDefault,
+            BeautySensitivityReduction = BeautySensitivityReductionDefault,
+            LightTransmission = LightTransmissionDefault;
+
+        public static bool AlarmReactDefault, dialogOpen, ShowButton;
+        public static IntRange _comfortTemp;
     }
 }

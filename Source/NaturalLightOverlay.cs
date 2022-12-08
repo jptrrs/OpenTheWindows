@@ -39,7 +39,6 @@ namespace OpenTheWindows
         int ticker = 0;
         public void Update()
         {
-            if (!toggleShow) return;
             if (Find.CurrentMap.uniqueID != lastSeenMap.uniqueID)
             {
                 lastSeenMap = Find.CurrentMap;
