@@ -18,16 +18,69 @@ namespace OpenTheWindows
         float closedVentFactor = 0.5f, leakVentFactor = 0.1f, VentRate;
         CompWindow mainComp, ventComp;
         List<ScanLine> scanLines = new List<ScanLine>();
-        int skippedTempChecks, maxTempChecks = 4, ticker, rareTicks, windowSize;
+        int skippedTempChecks, maxTempChecks = 4, rareTicks, windowSize;
 
         public override Graphic Graphic
         {
-            get { return mainComp.CurrentGraphic; }
+            get {  return mainComp.CurrentGraphic; }
         }
         public Building_Window()
         {
             MapUpdateWatcher.MapUpdate += MapUpdateHandler;
             if (HarmonyPatcher.BetterPawnControl) AlertManager_LoadState.Alarm += EmergencyShutOff; // register with an event, handler must match template signature
+
+            void MapUpdateHandler(object sender, MapUpdateWatcher.MapUpdateInfo info)
+            {
+                if (info.map != Map) return;
+                IntVec3 cell = info.center;
+                bool removed = info.removed;
+                bool roof = sender is RoofGrid;
+                if (isFacingSet && roof && cell.IsInterior(this))
+                {
+                    bool contains = false;
+                    foreach (var item in GenAdj.CellsAdjacentCardinal(this))
+                    {
+                        if (item == cell)
+                        {
+                            contains = true;
+                            break;
+                        }
+                    }
+                    if (!contains) return;
+                }
+                bool unsureFace = false;
+                var length = scanLines.Count;
+                for (int i = 0; i < length; i++)
+                {
+                    var scanLine = scanLines[i];
+                    if (scanLine.Affected(cell))
+                    {
+                        IntVec3 motivator = roof ? IntVec3.Zero : cell;
+                        var line = scanLine;
+                        bool before = line.facingSet;
+                        line.FindObstruction(motivator, removed, info.map);
+                        unsureFace |= line.facingSet != before;
+                        needsUpdate = true;
+                    }
+                }
+                if (unsureFace) isFacingSet = false;
+            }
+
+            void EmergencyShutOff(object sender, bool danger) // event handler
+            {
+                bool mustclose = danger && alarmReact && open;
+                bool mustopen = !danger && emergencyShut;
+                if (mustclose || mustopen)
+                {
+                    mainComp.FlickFor(!open);
+                    ventComp.FlickFor(!venting);
+                    emergencyShut = !emergencyShut;
+                    return;
+                }
+                if (!alarmReact) return;
+                if (mainComp.WantsFlick() && mainComp.wantSwitchOn == danger) mainComp.FlickFor(!danger);
+                if (ventComp.WantsFlick() && ventComp.wantSwitchOn == danger) ventComp.FlickFor(!danger);
+            }
         }
 
         #region vanilla overrides
@@ -129,6 +182,41 @@ namespace OpenTheWindows
                     }
                 };
             }
+
+            string SelfDiagnotics()
+            {
+                var report = new StringBuilder();
+                report.Append($"[Windows] Diagnostics for {this}:");
+                bool hasRoom = AttachedRoom != null;
+                report.AppendLine($"AttachedRoom? {hasRoom.ToStringYesNo()}");
+                if (hasRoom) report.AppendWithComma(AttachedRoomName());
+                report.AppendLine($"isFacingSet? {isFacingSet.ToStringYesNo()}");
+                report.AppendLine($"open? {open.ToStringYesNo()}");
+                report.AppendLine($"venting? {venting.ToStringYesNo()}");
+                report.AppendLine($"needsUpdate? {needsUpdate.ToStringYesNo()}");
+                if (scanLines.NullOrEmpty())
+                {
+                    report.AppendLine($"No scanLines!");
+                }
+                else
+                {
+                    var scanLinesCount = scanLines.Count;
+                    for (int i = 0; i < scanLinesCount; i++)
+                    {
+                        var line = scanLines[i];
+                        string facing = line.facingSet ? line.facing.ToString() : "indetermined";
+                        //report.AppendLine($"ScanLine {i+1}: {line.clearLineReport} clear cells, facing {facing}");
+                    }
+                }
+                return report.ToString();
+            }
+
+            bool GizmoInhibitor(Gizmo gizmo)
+            {
+                return
+                    (gizmo is Command_Toggle toggle && toggle.icon == TexCommand.HoldOpen) ||
+                    (HarmonyPatcher.LocksType != null && gizmo.GetType() == HarmonyPatcher.LocksType);
+            }
         }
         public override string GetInspectString()
         {
@@ -168,6 +256,33 @@ namespace OpenTheWindows
                 stringBuilder.Append("cantDetermineSides".Translate());
             }
             return stringBuilder.ToString();
+
+            Direction8Way FacingCardinal()
+            {
+                Direction8Way dir = new Direction8Way() { };
+                switch (Facing)
+                {
+                    case LinkDirections.Up:
+                        dir = Direction8Way.North;
+                        break;
+
+                    case LinkDirections.Right:
+                        dir = Direction8Way.East;
+                        break;
+
+                    case LinkDirections.Down:
+                        dir = Direction8Way.South;
+                        break;
+
+                    case LinkDirections.Left:
+                        dir = Direction8Way.West;
+                        break;
+
+                    case LinkDirections.None:
+                        break;
+                }
+                return dir;
+            }
         }
         public override void ReceiveCompSignal(string signal)
         {
@@ -241,17 +356,19 @@ namespace OpenTheWindows
             SetScanLines();
 
             //Cache whether or not there are comps to tick
-            compsToTick = this.comps?.Any(x => x.GetType() != typeof(CompWindow)) ?? false;
+            compsToTick = this.comps?.Any(x => x is not CompWindow) ?? false;
+        }
+        public override void Notify_ColorChanged()
+        {
+            mainComp.offGraphic = null; //Let it regenerate with the new color
+            base.Notify_ColorChanged();
         }
         public override void Tick()
         {
             if (compsToTick)
 			{
-                int length = this.comps.Count;
-                for (int i = 0; i < length; i++)
-                {
-                    this.comps[i].CompTick();
-                }
+                var compsList = this.comps;
+                for (int i = compsList.Count; i-- > 0;) compsList[i].CompTick();
 			}
             if (needsUpdate)
             {
@@ -260,10 +377,49 @@ namespace OpenTheWindows
                 Map.GetComponent<MapComp_Windows>().IncludeTileRange(illuminated);
                 needsUpdate = false;
             }
-            if (++ticker == 250)
+            if (Current.gameInt.tickManager.ticksGameInt % 250 == 0) TickRare();
+
+            void CheckFacing()
             {
-                ticker = 0;
-                TickRare();
+                bool before = isFacingSet;
+                LinkDirections fwdDir;
+                LinkDirections bwdDir;
+                if (Rotation.IsHorizontal)
+                {
+                    fwdDir = LinkDirections.Right;
+                    bwdDir = LinkDirections.Left;
+                }
+                else
+                {
+                    fwdDir = LinkDirections.Up;
+                    bwdDir = LinkDirections.Down;
+                }
+                int fwdVotes = 0, bwdVotes = 0;
+
+                for (int i = scanLines.Count; i-- > 0;)
+                {
+                    var line = scanLines[i];
+                    if (!line.facingSet) continue;
+                    if (line.facing == fwdDir) fwdVotes++;
+                    if (line.facing == bwdDir) bwdVotes++;
+                }
+                if (fwdVotes != bwdVotes)
+                {
+                    Facing = fwdVotes > bwdVotes ? fwdDir : bwdDir;
+                    isFacingSet = true;
+                }
+                else
+                {
+                    isFacingSet = false;
+                    //Reset
+                    for (int j = scanLines.Count; j-- > 0;)
+                    {
+                        var line = scanLines[j];
+                        line.clearCells = new int[] { };
+                        line.facingSet = false;
+                    }
+                }
+                if (!needsUpdate && isFacingSet != before) needsUpdate = true;
             }
         }
         public override void TickRare()
@@ -286,12 +442,115 @@ namespace OpenTheWindows
             }
             if (compsToTick)
 			{
-                int length = this.comps.Count;
-                for (int i = 0; i < length; i++)
-                {
-                    this.comps[i].CompTickRare();
-                }
+                var compsList = this.comps;
+                for (int i = compsList.Count; i-- > 0;) compsList[i].CompTickRare();
 			}
+
+            void AutoVentControl()
+            {
+                if (++rareTicks == 3 && !badTemperatureOnce) {
+                    rareTicks = 0;
+                    return; //Checks only each 12,5s or if bad temperature on last cycle.
+                }
+                float insideTemp = AttachedRoom().Temperature;
+                float outsideTemp = GenTemperature.GetTemperatureForCell(OutsideCell(), Map);
+                if (OpenTheWindowsSettings.ComfortTemp.Includes(insideTemp)) //Stand down if temperature is right.
+                {
+                    if (ventComp.WantsFlick()) //If temperature is right but a command is still pending, cancel it.
+                    {
+                        ventComp.FlickFor(venting);
+                    }
+                    if (leaks && !badTemperatureOnce && !open && OpenTheWindowsSettings.ComfortTemp.Includes(outsideTemp)) //If its a simple window, check if should re-open next cycle.
+                    {
+                        ShouldReOpen();
+                    }
+                    badTemperatureRecently = badTemperatureOnce = false;
+                    skippedTempChecks = 0;
+                    return;
+                }
+                if (badTemperatureRecently) //Escape if acted recently.
+                {
+                    if (skippedTempChecks <= maxTempChecks)
+                    {
+                        skippedTempChecks++;
+                        return;
+                    }
+                    badTemperatureRecently = false;
+                    skippedTempChecks = 0;
+                }
+                if (badTemperatureOnce) //React only if bad temperature persists from last tickRare.
+                {
+                    badTemperatureOnce = false;
+                    ReactToTemperature(insideTemp, outsideTemp); //Actually evaluating the situation.
+                    return;
+                }
+                badTemperatureOnce = true;
+
+                IntVec3 OutsideCell()
+                {
+                    switch (Facing)
+                    {
+                        case LinkDirections.Up: return Position + IntVec3.North;
+                        case LinkDirections.Right: return Position + IntVec3.East;
+                        case LinkDirections.Down: return Position + IntVec3.South;
+                        case LinkDirections.Left: return Position + IntVec3.West;
+                        case LinkDirections.None: return IntVec3.Zero;
+                        default: return IntVec3.Zero;
+                    }
+                }
+
+                void ShouldReOpen()
+                {
+                    if (niceOutside)
+                    {
+                        mainComp.FlickFor(true);
+                        niceOutside = false;
+                        if (Prefs.LogVerbose)
+                        {
+                            Log.Message($"[Windows] {this} @ {AttachedRoomName()} decided to re-open because outside doesn't look so bad. Comfortable temperature range is {OpenTheWindowsSettings.ComfortTemp}.");
+                        }
+                        return;
+                    }
+                    niceOutside = true;
+                }
+
+                void ReactToTemperature(float insideTemp, float outsideTemp)
+                {
+                    bool
+                        colderOutside = insideTemp > outsideTemp,
+                        colderInside = insideTemp < outsideTemp,
+                        tooHotInside = insideTemp > OpenTheWindowsSettings.ComfortTemp.max,
+                        tooColdInside = insideTemp < OpenTheWindowsSettings.ComfortTemp.min,
+                        tooHotOutside = outsideTemp > OpenTheWindowsSettings.ComfortTemp.max,
+                        tooColdOutside = outsideTemp < OpenTheWindowsSettings.ComfortTemp.min,
+                        doFlick = false,
+                        intent;
+                    if (niceOutside && (tooColdOutside || tooColdInside)) niceOutside = false;
+                    if (!venting) //open if...
+                    {
+                        doFlick = (tooHotInside && colderOutside) || (tooColdInside && colderInside && !tooColdOutside);
+                        intent = true;
+                    }
+                    else //close if...
+                    {
+                        doFlick = (tooHotInside && tooHotOutside) || (tooColdInside && tooColdOutside);
+                        intent = false;
+                    }
+                    if (doFlick)
+                    {
+                        badTemperatureRecently = true;
+                        ventComp.FlickFor(intent);
+                        if (Prefs.LogVerbose)
+                        {
+                            string action = intent ? "open" : "close";
+                            string inside = tooHotInside ? "HOT" : "COLD";
+                            string outside = tooHotOutside ? "HOT" : "COLD";
+                            string reason = intent ? $"{inside} inside and outside is better" : $"{outside} outside";
+                            Log.Message($"[Windows] {this} @ {AttachedRoomName()} decided to {action} because it's too {reason}. Comfortable temperature range is {OpenTheWindowsSettings.ComfortTemp}.");
+                        }
+                    }
+                }
+            }
         }
         #endregion
 
@@ -316,8 +575,6 @@ namespace OpenTheWindows
             return false;
         }
 
-        #region custom
-
         IntVec3 InsideCell()
         {
             switch (Facing)
@@ -326,18 +583,6 @@ namespace OpenTheWindows
                 case LinkDirections.Right: return Position + IntVec3.West;
                 case LinkDirections.Down: return Position + IntVec3.North;
                 case LinkDirections.Left: return Position + IntVec3.East;
-                case LinkDirections.None: return IntVec3.Zero;
-                default: return IntVec3.Zero;
-            }
-        }
-        IntVec3 OutsideCell()
-        {
-            switch (Facing)
-            {
-                case LinkDirections.Up: return Position + IntVec3.North;
-                case LinkDirections.Right: return Position + IntVec3.East;
-                case LinkDirections.Down: return Position + IntVec3.South;
-                case LinkDirections.Left: return Position + IntVec3.West;
                 case LinkDirections.None: return IntVec3.Zero;
                 default: return IntVec3.Zero;
             }
@@ -351,34 +596,7 @@ namespace OpenTheWindows
             var cell = InsideCell();
             return (isFacingSet & cell != IntVec3.Zero) ? cell.GetRoom(Map) : null;
         }
-        string SelfDiagnotics()
-        {
-            var report = new StringBuilder();
-            report.Append($"[OpenTheWindows] Diagnostics for {this}:");
-            bool hasRoom = AttachedRoom != null;
-            report.AppendLine($"AttachedRoom? {hasRoom.ToStringYesNo()}");
-            if (hasRoom) report.AppendWithComma(AttachedRoomName());
-            report.AppendLine($"isFacingSet? {isFacingSet.ToStringYesNo()}");
-            report.AppendLine($"open? {open.ToStringYesNo()}");
-            report.AppendLine($"venting? {venting.ToStringYesNo()}");
-            report.AppendLine($"needsUpdate? {needsUpdate.ToStringYesNo()}");
-            if (scanLines.NullOrEmpty())
-            {
-                report.AppendLine($"No scanLines!");
-            }
-            else
-            {
-                var scanLinesCount = scanLines.Count;
-                for (int i = 0; i < scanLinesCount; i++)
-                {
-                    var line = scanLines[i];
-                    string facing = line.facingSet ? line.facing.ToString() : "indetermined";
-                    //report.AppendLine($"ScanLine {i+1}: {line.clearLineReport} clear cells, facing {facing}");
-                }
-            }
-            return report.ToString();
-        }
-        public void CastLight()
+        void CastLight()
         {
             DarkenCellsCarefully();
             view.Clear();
@@ -390,48 +608,22 @@ namespace OpenTheWindows
                 }
             }
         }
-        public void CheckFacing()
-        {
-            bool before = isFacingSet;
-            LinkDirections fwdDir = Rotation.IsHorizontal ? LinkDirections.Right : LinkDirections.Up;
-            LinkDirections bwdDir = Rotation.IsHorizontal ? LinkDirections.Left : LinkDirections.Down;
-            int fwdVotes = 0;
-            int bwdVotes = 0;
-            foreach (var line in scanLines)
-            {
-                if (!line.facingSet) continue;
-                if (line.facing == fwdDir) fwdVotes++;
-                if (line.facing == bwdDir) bwdVotes++;
-            }
-            if (fwdVotes != bwdVotes)
-            {
-                Facing = fwdVotes > bwdVotes ? fwdDir : bwdDir;
-                isFacingSet = true;
-            }
-            else
-            {
-                isFacingSet = false;
-                //Reset
-                foreach (var line in scanLines)
-                {
-                    line.clearCells = new int[] { };
-                    line.facingSet = false;
-                }
-            }
-            if (!needsUpdate && isFacingSet != before) needsUpdate = true;
-        }
-        public void DarkenCellsCarefully()
+        void DarkenCellsCarefully()
         {
             if (!illuminated.NullOrEmpty())
             {
                 List<IntVec3> affected = new List<IntVec3>(illuminated);
-                foreach (var item in Neighbors())
+                var neighbors = Neighbors();
+                if (neighbors != null)
                 {
-                    if (item != this && item.open && !item.illuminated.EnumerableNullOrEmpty())
+                    foreach (var item in neighbors)
                     {
-                        foreach (var cell in item.illuminated)
+                        if (item != this && item.open && item.illuminated != null)
                         {
-                            if (affected.Contains(cell)) affected.Remove(cell);
+                            foreach (var cell in item.illuminated)
+                            {
+                                if (affected.Contains(cell)) affected.Remove(cell);
+                            }
                         }
                     }
                 }
@@ -442,159 +634,16 @@ namespace OpenTheWindows
                 //Update internal data
                 illuminated.Clear();
             }
-        }
-        public Direction8Way FacingCardinal()
-        {
-            Direction8Way dir = new Direction8Way() { };
-            switch (Facing)
-            {
-                case LinkDirections.Up:
-                    dir = Direction8Way.North;
-                    break;
 
-                case LinkDirections.Right:
-                    dir = Direction8Way.East;
-                    break;
+            List<Building_Window> Neighbors()
+            {
+                if (!isFacingSet) return null;
+                Region region = Map.regionGrid.GetValidRegionAt(InsideCell());
+                if (region == null) return null;
 
-                case LinkDirections.Down:
-                    dir = Direction8Way.South;
-                    break;
-
-                case LinkDirections.Left:
-                    dir = Direction8Way.West;
-                    break;
-
-                case LinkDirections.None:
-                    break;
-            }
-            return dir;
-        }
-        public List<Building_Window> Neighbors()
-        {
-            if (!isFacingSet) return null;
-            Region region = Map.regionGrid.GetValidRegionAt(InsideCell());
-            if (region == null) return null;
-
-            List<Building_Window> result = new List<Building_Window>();
-            FindAffectedWindows(result, region, this.GetRegion());
-            return result;
-        }
-        void AutoVentControl()
-        {
-            if (++rareTicks == 3 && !badTemperatureOnce) {
-                rareTicks = 0;
-                return; //Checks only each 12,5s or if bad temperature on last cycle.
-            }
-            float insideTemp = AttachedRoom().Temperature;
-            float outsideTemp = GenTemperature.GetTemperatureForCell(OutsideCell(), Map);
-            if (OpenTheWindowsSettings.ComfortTemp.Includes(insideTemp)) //Stand down if temperature is right.
-            {
-                if (ventComp.WantsFlick()) //If temperature is right but a command is still pending, cancel it.
-                {
-                    ventComp.FlickFor(venting);
-                }
-                if (leaks && !badTemperatureOnce && !open && OpenTheWindowsSettings.ComfortTemp.Includes(outsideTemp)) //If its a simple window, check if should re-open next cycle.
-                {
-                    ShouldReOpen();
-                }
-                badTemperatureRecently = badTemperatureOnce = false;
-                skippedTempChecks = 0;
-                return;
-            }
-            if (badTemperatureRecently) //Escape if acted recently.
-            {
-                if (skippedTempChecks <= maxTempChecks)
-                {
-                    skippedTempChecks++;
-                    return;
-                }
-                badTemperatureRecently = false;
-                skippedTempChecks = 0;
-            }
-            if (badTemperatureOnce) //React only if bad temperature persists from last tickRare.
-            {
-                badTemperatureOnce = false;
-                ReactToTemperature(insideTemp, outsideTemp); //Actually evaluating the situation.
-                return;
-            }
-            badTemperatureOnce = true;
-        }
-        bool GizmoInhibitor(Gizmo gizmo)
-        {
-            return
-                (gizmo is Command_Toggle toggle && toggle.icon == TexCommand.HoldOpen) ||
-                (HarmonyPatcher.LocksType != null && gizmo.GetType() == HarmonyPatcher.LocksType);
-        }
-        void MapUpdateHandler(object sender, MapUpdateWatcher.MapUpdateInfo info)
-        {
-            if (info.map != Map) return;
-            IntVec3 cell = info.center;
-            bool removed = info.removed;
-            bool roof = sender is RoofGrid;
-            if (isFacingSet && roof && cell.IsInterior(this))
-            {
-                bool contains = false;
-                foreach (var item in GenAdj.CellsAdjacentCardinal(this))
-                {
-                    if (item == cell)
-                    {
-                        contains = true;
-                        break;
-                    }
-                }
-                if (!contains) return;
-            }
-            bool unsureFace = false;
-            var length = scanLines.Count;
-            for (int i = 0; i < length; i++)
-            {
-                var scanLine = scanLines[i];
-                if (scanLine.Affected(cell))
-                {
-                    IntVec3 motivator = roof ? IntVec3.Zero : cell;
-                    var line = scanLine;
-                    bool before = line.facingSet;
-                    line.FindObstruction(motivator, removed, info.map);
-                    unsureFace |= line.facingSet != before;
-                    needsUpdate = true;
-                }
-            }
-            if (unsureFace) isFacingSet = false;
-        }
-        void ReactToTemperature(float insideTemp, float outsideTemp)
-        {
-            bool
-                colderOutside = insideTemp > outsideTemp,
-                colderInside = insideTemp < outsideTemp,
-                tooHotInside = insideTemp > OpenTheWindowsSettings.ComfortTemp.max,
-                tooColdInside = insideTemp < OpenTheWindowsSettings.ComfortTemp.min,
-                tooHotOutside = outsideTemp > OpenTheWindowsSettings.ComfortTemp.max,
-                tooColdOutside = outsideTemp < OpenTheWindowsSettings.ComfortTemp.min,
-                doFlick = false,
-                intent;
-            if (niceOutside && (tooColdOutside || tooColdInside)) niceOutside = false;
-            if (!venting) //open if...
-            {
-                doFlick = (tooHotInside && colderOutside) || (tooColdInside && colderInside && !tooColdOutside);
-                intent = true;
-            }
-            else //close if...
-            {
-                doFlick = (tooHotInside && tooHotOutside) || (tooColdInside && tooColdOutside);
-                intent = false;
-            }
-            if (doFlick)
-            {
-                badTemperatureRecently = true;
-                ventComp.FlickFor(intent);
-                if (Prefs.LogVerbose)
-                {
-                    string action = intent ? "open" : "close";
-                    string inside = tooHotInside ? "HOT" : "COLD";
-                    string outside = tooHotOutside ? "HOT" : "COLD";
-                    string reason = intent ? $"{inside} inside and outside is better" : $"{outside} outside";
-                    Log.Message($"[OpenTheWindows] {this} @ {AttachedRoomName()} decided to {action} because it's too {reason}. Comfortable temperature range is {OpenTheWindowsSettings.ComfortTemp}.");
-                }
+                List<Building_Window> result = new List<Building_Window>();
+                FindAffectedWindows(result, region, this.GetRegion());
+                return result;
             }
         }
         void SetScanLines()
@@ -605,41 +654,7 @@ namespace OpenTheWindows
                 scanLines.Add(new ScanLine(this, c));
             }
         }
-        void ShouldReOpen()
-        {
-            if (niceOutside)
-            {
-                mainComp.FlickFor(true);
-                niceOutside = false;
-                if (Prefs.LogVerbose)
-                {
-                    Log.Message($"[OpenTheWindows] {this} @ {AttachedRoomName()} decided to re-open because outside doesn't look so bad. Comfortable temperature range is {OpenTheWindowsSettings.ComfortTemp}.");
-                }
-                return;
-            }
-            niceOutside = true;
-        }
-        #endregion
-
-        #region adapting to Better Pawn Control
-        public void EmergencyShutOff(object sender, bool danger) // event handler
-        {
-            bool mustclose = danger && alarmReact && open;
-            bool mustopen = !danger && emergencyShut;
-            if (mustclose || mustopen)
-            {
-                mainComp.FlickFor(!open);
-                ventComp.FlickFor(!venting);
-                emergencyShut = !emergencyShut;
-                return;
-            }
-            if (!alarmReact) return;
-            if (mainComp.WantsFlick() && mainComp.wantSwitchOn == danger) mainComp.FlickFor(!danger);
-            if (ventComp.WantsFlick() && ventComp.wantSwitchOn == danger) ventComp.FlickFor(!danger);
-        }
-        #endregion
-
-        #region nested
+    
         class ScanLine
         {
             public LinkDirections facing;
@@ -809,6 +824,5 @@ namespace OpenTheWindows
                 return isStart || isEnd;
             }
         }
-        #endregion
     }
 }

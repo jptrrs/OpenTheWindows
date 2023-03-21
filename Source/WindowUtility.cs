@@ -21,8 +21,18 @@ namespace OpenTheWindows
             foreach (IntVec3 c in GenAdj.OccupiedRect(center, rot, size))
             {
                 if (!c.InBounds(map)) break;
-                var right = rot.IsHorizontal ? IntVec3.North : IntVec3.East;
-                var left = rot.IsHorizontal ? IntVec3.South : IntVec3.West;
+                IntVec3 right;
+                IntVec3 left;
+                if (rot.IsHorizontal)
+                {
+                    right = IntVec3.North;
+                    left = IntVec3.South;
+                }
+                else
+                {
+                    right = IntVec3.East;
+                    left = IntVec3.West;
+                }
                 area.AddRange(UnobstructedGhost(c, rot, map, maxReach, rot.IsHorizontal, !large || c + right == start, !large || c + left == end));
             }
             return area;
@@ -37,8 +47,7 @@ namespace OpenTheWindows
 
             //3. Determine clearance and max reach on each side
             Dictionary<IntVec3, int> cleared = new Dictionary<IntVec3, int>();
-            int reachFwd = 0;
-            int reachBwd = 0;
+            int reachFwd = 0, reachBwd = 0;
 
             //forward (walks North/East)
             for (int i = 1; i <= maxreach; i++)
@@ -70,21 +79,20 @@ namespace OpenTheWindows
             List<IntVec3> bleed = new List<IntVec3>();
 
             //6. Apply Bleed
+            var isHorizontal = rot.IsHorizontal;
             if (bleedRight)
             {
-                IntVec3 dir = rot.IsHorizontal ? IntVec3.North : IntVec3.East;
-                foreach (var cell in result)
+                for (int i = result.Count; i-- > 0;)
                 {
-                    var edge = cell + dir;
+                    var edge = result[i] + (isHorizontal ? IntVec3.North : IntVec3.East);
                     if (clear(edge, false)) bleed.Add(edge);
                 }
             }
             if (bleedLeft)
             {
-                IntVec3 dir = rot.IsHorizontal ? IntVec3.South : IntVec3.West;
-                foreach (var cell in result)
+                for (int i = result.Count; i-- > 0;)
                 {
-                    var edge = cell + dir;
+                    var edge = result[i] + (isHorizontal ? IntVec3.South : IntVec3.West);
                     if (clear(edge, false)) bleed.Add(edge);
                 }
             }
@@ -132,18 +140,17 @@ namespace OpenTheWindows
 
         public static void FindAffectedWindows(List<Building_Window> windows, Region initial, Region ignore = null, bool recursive = true)
         {
-            foreach (RegionLink link in initial.links)
+            var map = initial.Map;
+            var links = initial.links;
+            for (int i = links.Count; i-- > 0;)
             {
-                Region connected = link.GetOtherRegion(initial);
+                Region connected = links[i].GetOtherRegion(initial);
                 if (connected == ignore) continue;
 
                 if (connected.IsDoorway)
                 {
-                    var edifice = connected.AnyCell.GetEdifice(initial.Map);
-                    if (edifice?.def.thingClass == typeof(Building_Window))
-                    {
-                        windows.AddDistinct(edifice as Building_Window);
-                    }
+                    var edifice = connected.AnyCell.GetEdifice(map);
+                    if (edifice is Building_Window window) windows.AddDistinct(window);
                 }
                 else if (recursive) FindAffectedWindows(windows, connected, ignore, false);
             }

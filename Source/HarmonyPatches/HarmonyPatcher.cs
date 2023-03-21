@@ -25,7 +25,7 @@ namespace OpenTheWindows
                 if (name == "Dubwise.DubsSkylights")
                 {
                     DubsSkylights = true;
-                    if (Prefs.DevMode) Log.Message("[OpenTheWindows] Dubs Skylights detected! Integrating...");
+                    if (Prefs.DevMode) Log.Message("[Windows] Dubs Skylights detected! Integrating...");
                     Instance.Patch(AccessTools.Method("Dubs_Skylight.Patch_GameGlowAt:Postfix"), new HarmonyMethod(typeof(HarmonyPatcher), nameof(Patch_Inhibitor_Prefix)), null, null);
                     Instance.Patch(AccessTools.Method("Dubs_Skylight.Patch_SectionLayer_LightingOverlay_Regenerate:Prefix"), new HarmonyMethod(typeof(HarmonyPatcher), nameof(Patch_Inhibitor_Prefix)), null, null);
                     Instance.Patch(AccessTools.Method("Dubs_Skylight.Patch_SectionLayer_LightingOverlay_Regenerate:Postfix"), new HarmonyMethod(typeof(HarmonyPatcher), nameof(Patch_Inhibitor_Prefix)), null, null);
@@ -33,46 +33,44 @@ namespace OpenTheWindows
                 }
                 else if (name == "wit.expandedroofing")
                 {
-                    if (Prefs.DevMode) Log.Message("[OpenTheWindows] Expanded Roofing detected! Integrating...");
+                    if (Prefs.DevMode) Log.Message("[Windows] Expanded Roofing detected! Integrating...");
                     TransparentRoofsList.Add(DefDatabase<RoofDef>.GetNamed("RoofTransparent"));
-                    if (Prefs.DevMode && !TransparentRoofs) Log.Error("[OpenTheWindows] ...but no roofs detected! Integration failed.");
+                    if (Prefs.DevMode && !TransparentRoofs) Log.Error("[Windows] ...but no roofs detected! Integration failed.");
                 }
                 else if (name == "VouLT.BetterPawnControl")
                 {
-                    if (Prefs.DevMode) Log.Message("[OpenTheWindows] Better Pawn Control detected! Integrating...");
+                    if (Prefs.DevMode) Log.Message("[Windows] Better Pawn Control detected! Integrating...");
                     BetterPawnControl = true;
                     Type AlertManagerType = AccessTools.TypeByName("BetterPawnControl.AlertManager");
                     Instance.Patch(AccessTools.Method(AlertManagerType, "LoadState"), null, new HarmonyMethod(typeof(AlertManager_LoadState), nameof(AlertManager_LoadState.LoadState_Postfix)));
                     Instance.CreateReversePatcher(AccessTools.PropertyGetter(AlertManagerType, "OnAlert"), new HarmonyMethod(AccessTools.Method(typeof(AlertManagerProxy), nameof(AlertManagerProxy.OnAlert)))).Patch();
                 }
-                else if (name == "fluffy.blueprints")
-                {
-                    if (Prefs.DevMode) Log.Message("[OpenTheWindows] Blueprints detected! Adapting...");
-                    Blueprints = true;
-                    Instance.Patch(AccessTools.Method("Blueprints.BuildableInfo:DrawGhost"), new HarmonyMethod(typeof(BuildableInfo_DrawGhost), nameof(BuildableInfo_DrawGhost.DrawGhost_Prefix)), new HarmonyMethod(typeof(BuildableInfo_DrawGhost), nameof(BuildableInfo_DrawGhost.DrawGhost_Postfix)));
-                }
                 else if (name == "avius.locks")
                 {
-                    if (Prefs.DevMode) Log.Message("[OpenTheWindows] Locks detected! Adapting...");
+                    if (Prefs.DevMode) Log.Message("[Windows] Locks detected! Adapting...");
                     LocksType = AccessTools.TypeByName("Locks.LockGizmo");
                 }
                 else if (name == "roolo.giddyupcore")
                 {
-                    if (Prefs.DevMode) Log.Message("[OpenTheWindows] Giddy-up! detected! Adapting...");
+                    if (Prefs.DevMode) Log.Message("[Windows] Giddy-up! detected! Adapting...");
                     Instance.Patch(AccessTools.Method("GiddyUpCore.Jobs.JobDriver_Mount:letMountParticipate"), null, new HarmonyMethod(typeof(JobDriver_Mount_letMountParticipate), nameof(JobDriver_Mount_letMountParticipate.letMountParticipate_Postfix)));
+                }
+                else if (name == "Owlchemist.GiddyUp")
+                {
+                    if (Prefs.DevMode) Log.Message("[Windows] Giddy-up 2 detected! Adapting...");
+                    Instance.Patch(AccessTools.Method("GiddyUp.Jobs.JobDriver_Mount:LetMountParticipate"), null, new HarmonyMethod(typeof(JobDriver_Mount_letMountParticipate), nameof(JobDriver_Mount_letMountParticipate.letMountParticipate_Postfix)));
                 }
                 else if (name == "machine.rtr")
                 {
-                    if (Prefs.DevMode) Log.Message("[OpenTheWindows] Raise the roof detected! Integrating...");
+                    if (Prefs.DevMode) Log.Message("[Windows] Raise the roof detected! Integrating...");
                     RaiseTheRoof = true;
                     CompareInfo ci = CultureInfo.CurrentCulture.CompareInfo;
-                    var length2 = DefDatabase<RoofDef>.DefCount;
-                    for (int k = 0; k < length2; k++)
+                    for (int k = DefDatabase<RoofDef>.defsList.Count; k-- > 0;)
                     {
-                        var def = DefDatabase<RoofDef>.AllDefsListForReading[k];
+                        var def = DefDatabase<RoofDef>.defsList[k];
                         if (ci.IsPrefix(def.defName, "RTR_RoofTransparent")) TransparentRoofsList.Add(def);
                     }
-                    if (Prefs.DevMode && !TransparentRoofs) Log.Error("[OpenTheWindows] ...but no roofs detected! Integration failed.");
+                    if (Prefs.DevMode && !TransparentRoofs) Log.Error("[Windows] ...but no roofs detected! Integration failed.");
                 }
             }
         }

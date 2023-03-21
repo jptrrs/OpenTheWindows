@@ -10,7 +10,7 @@ namespace OpenTheWindows
     {
         public static int Postfix(int result, Building b, TraverseParms traverseParms, Pawn pawn)
         {
-            if (b.def.thingClass != typeof(Building_Window)) return result;
+            if (b is not Building_Window) return result;
             switch (traverseParms.mode)
             {
                 case TraverseMode.ByPawn:

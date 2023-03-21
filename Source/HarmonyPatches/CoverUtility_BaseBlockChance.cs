@@ -13,7 +13,7 @@ namespace OpenTheWindows
     {
         public static float Postfix(float __result, Thing thing)
         {
-            return thing.def.thingClass == typeof(Building_Window) && !FlickUtility.WantsToBeOn(thing) ? WindowBaseFillPercent : __result;
+            return thing is Building_Window && !FlickUtility.WantsToBeOn(thing) ? WindowBaseFillPercent : __result;
         }
     }
 
@@ -25,5 +25,4 @@ namespace OpenTheWindows
             return def.thingClass == typeof(Building_Window) ? WindowBaseFillPercent : __result;
         }
     }
-
 }

@@ -11,7 +11,7 @@ namespace OpenTheWindows
     {
         public static bool Postfix(bool __result, Building b)
         {
-            return (b.def.thingClass == typeof(Building_Window) && FlickUtility.WantsToBeOn(b)) ? true : __result;
+            return (b is Building_Window && FlickUtility.WantsToBeOn(b)) ? true : __result;
         }
     }
 }

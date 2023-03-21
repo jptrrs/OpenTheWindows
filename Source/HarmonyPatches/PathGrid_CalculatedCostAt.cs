@@ -12,28 +12,25 @@ namespace OpenTheWindows
     {
         public static int Postfix(int __result, PathGrid __instance, IntVec3 c, bool perceivedStatic, IntVec3 prevCell)
         {
-            if (__result == 10000 && c.GetEdifice(__instance.map)?.def.thingClass == typeof(Building_Window))
+            Map map = __instance.map;
+            if (__result == 10000 && c.GetEdifice(map) is Building_Window)
             {
                 int cost = 10;
                 if (perceivedStatic)
                 {
+                    var thingGrid = map.thingGrid;
                     for (int j = 0; j < 9; j++)
                     {
                         IntVec3 intVec = GenAdj.AdjacentCellsAndInside[j];
                         IntVec3 c2 = c + intVec;
-                        if (c2.InBounds(__instance.map))
+                        if (c2.InBounds(map))
                         {
-                            List<Thing> list = __instance.map.thingGrid.ThingsListAtFast(c2);
-                            var length = list.Count;
-                            for (int k = 0; k < length; k++)
+                            List<Thing> list = thingGrid.ThingsListAtFast(c2);
+                            for (int k = list.Count; k-- > 0;)
                             {
-                                var thing = list[k];
-                                if (thing.def.thingClass == typeof(Fire))
+                                if (list[k] is Fire fire && fire.parent == null)
                                 {
-                                    if (((Fire)thing).parent == null)
-                                    {
-                                        return (intVec.x == 0 && intVec.z == 0) ? cost += 1000 : cost += 150;
-                                    }
+                                    return (intVec.x == 0 && intVec.z == 0) ? cost += 1000 : cost += 150;
                                 } 
                             }
                         }
