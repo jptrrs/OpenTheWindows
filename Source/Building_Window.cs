@@ -11,14 +11,26 @@ namespace OpenTheWindows
     public class Building_Window : Building_Door
     {
         public LinkDirections Facing;
-        public bool isFacingSet, open = true, venting, needsUpdate = true, autoVent, alarmReact = OpenTheWindowsSettings.AlarmReactDefault, 
-            emergencyShut, leaks, badTemperatureOnce, badTemperatureRecently, niceOutside, compsToTick;
+        public bool isFacingSet,
+            open = true,
+            venting,
+            needsUpdate = true,
+            autoVent,
+            alarmReact = OpenTheWindowsSettings.AlarmReactDefault, 
+            emergencyShut,
+            leaks,
+            badTemperatureOnce,
+            badTemperatureRecently,
+            niceOutside,
+            compsToTick;
         public IntVec3 start, end;
         public List<IntVec3> view = new List<IntVec3>(), illuminated = new List<IntVec3>();
         float closedVentFactor = 0.5f, leakVentFactor = 0.1f, VentRate;
         CompWindow mainComp, ventComp;
         List<ScanLine> scanLines = new List<ScanLine>();
-        int skippedTempChecks, maxTempChecks = 4, rareTicks, windowSize;
+        int skippedTempChecks, maxTempChecks = 4, rareTicks, windowSize, hashInterval;
+        CellRect occupiedRect;
+        Room temperatureReference;
 
         public override Graphic Graphic
         {
@@ -325,8 +337,11 @@ namespace OpenTheWindows
             base.SpawnSetup(map, respawningAfterLoad);
 
             //Cache variables
+            occupiedRect = GenAdj.OccupiedRect(Position, Rotation, def.size);
             windowSize = Math.Max(def.size.x, def.size.z);
             VentRate = windowSize * 14f;
+
+            hashInterval = this.thingIDNumber % 200;
 
             //light & ventilation comps:
             var listOfComps = GetComps<CompWindow>();
@@ -377,7 +392,7 @@ namespace OpenTheWindows
                 Map.GetComponent<MapComp_Windows>().IncludeTileRange(illuminated);
                 needsUpdate = false;
             }
-            if (Current.gameInt.tickManager.ticksGameInt % 250 == 0) TickRare();
+            if (Current.gameInt.tickManager.ticksGameInt % 250 == hashInterval) TickRare();
 
             void CheckFacing()
             {
@@ -426,6 +441,7 @@ namespace OpenTheWindows
         {
             if (Spawned)
             {
+                UpdateWindowTemperature();
                 if (venting)
                 {
                     float vent = open ? VentRate : VentRate * closedVentFactor;
@@ -448,8 +464,8 @@ namespace OpenTheWindows
 
             void AutoVentControl()
             {
-                if (++rareTicks == 3 && !badTemperatureOnce) {
-                    rareTicks = 0;
+                if (rareTicks-- == 0 && !badTemperatureOnce) {
+                    rareTicks = 3;
                     return; //Checks only each 12,5s or if bad temperature on last cycle.
                 }
                 float insideTemp = AttachedRoom().Temperature;
@@ -485,7 +501,7 @@ namespace OpenTheWindows
                     return;
                 }
                 badTemperatureOnce = true;
-
+                
                 IntVec3 OutsideCell()
                 {
                     switch (Facing)
@@ -575,6 +591,31 @@ namespace OpenTheWindows
             return false;
         }
 
+        bool GetTemperatureReference(out Room room)
+        {
+            Map map = Map;
+            room = null;
+            foreach (var cell in GenAdj.CellsAdjacentCardinal(this))
+            {
+                if (occupiedRect.Contains(cell)) continue;
+                room = cell.GetRoom(map);
+                if (room == null) continue;
+                break;
+            }
+            return room != null;
+        }
+        
+        void UpdateWindowTemperature()
+        {
+            if (temperatureReference == null && !GetTemperatureReference(out temperatureReference)) return;
+            Map map = Map;
+            
+            foreach (IntVec3 c in occupiedRect)
+            {
+                c.GetRoom(map).Temperature = temperatureReference.Temperature;
+            }
+        }
+
         IntVec3 InsideCell()
         {
             switch (Facing)
@@ -602,9 +643,9 @@ namespace OpenTheWindows
             view.Clear();
             if (open && isFacingSet)
             {
-                foreach (var line in scanLines)
+                for (int i = scanLines.Count; i-- > 0;)
                 {
-                    line.CastLight();
+                    scanLines[i].CastLight();
                 }
             }
         }
@@ -616,13 +657,15 @@ namespace OpenTheWindows
                 var neighbors = Neighbors();
                 if (neighbors != null)
                 {
-                    foreach (var item in neighbors)
+                    for (int i = neighbors.Count; i-- > 0;)
                     {
+                        var item = neighbors[i];
                         if (item != this && item.open && item.illuminated != null)
                         {
-                            foreach (var cell in item.illuminated)
+                            var illuminated = item.illuminated;
+                            for (int j = illuminated.Count; j-- > 0;)
                             {
-                                if (affected.Contains(cell)) affected.Remove(cell);
+                                affected.Remove(illuminated[j]);
                             }
                         }
                     }
@@ -649,7 +692,7 @@ namespace OpenTheWindows
         void SetScanLines()
         {
             scanLines.Clear();
-            foreach (IntVec3 c in GenAdj.OccupiedRect(Position, Rotation, def.size))
+            foreach (IntVec3 c in occupiedRect)
             {
                 scanLines.Add(new ScanLine(this, c));
             }

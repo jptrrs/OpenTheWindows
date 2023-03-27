@@ -15,12 +15,12 @@ namespace OpenTheWindows
         public static MapComp_Windows windowComponent = null;
 
         [HarmonyBefore(new string[] {"raisetheroof.harmony"})]
-        public static void Prefix()
+        public static void Prefix(SectionLayer_LightingOverlay __instance)
         {
             changedRoofs = new Dictionary<IntVec3, RoofDef>();
-            if (stateDirty || map != Find.CurrentMap)
+            if (stateDirty || map != __instance.Map)
             {
-                map = Find.CurrentMap; // cache map
+                map = __instance.Map; // cache map
                 roofRef = map?.roofGrid?.roofGrid; // cache roofgrid
                 if (roofRef == null) return;
                 windowComponent = map.GetComponent<MapComp_Windows>(); // cache windowcomponent

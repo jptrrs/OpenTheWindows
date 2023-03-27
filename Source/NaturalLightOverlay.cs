@@ -36,7 +36,6 @@ namespace OpenTheWindows
             return green;
         }
 
-        int ticker = 0;
         public void Update()
         {
             if (Find.CurrentMap.uniqueID != lastSeenMap.uniqueID)
@@ -45,9 +44,8 @@ namespace OpenTheWindows
                 drawer = new CellBoolDrawer(this, lastSeenMap.Size.x, lastSeenMap.Size.z);
                 needsUpdate = true;
             }
-            if (ticker++ == 250)
+            if (Current.gameInt.tickManager.ticksGameInt % 250 == 0)
             {
-                ticker = 0;
                 needsUpdate = true;
             }
             if (needsUpdate)
