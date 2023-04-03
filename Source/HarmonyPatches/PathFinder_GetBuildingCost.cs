@@ -16,7 +16,7 @@ namespace OpenTheWindows
                 case TraverseMode.ByPawn:
                 case TraverseMode.PassDoors:
                     if (traverseParms.canBashDoors) return 300;
-                    if (pawn.CurJob?.attackDoorIfTargetLost == true || (pawn.def.race.intelligence < Intelligence.Humanlike && pawn.MentalState is MentalState_Manhunter))
+                    if (pawn != null && (pawn.CurJob?.attackDoorIfTargetLost == true || (pawn.def.race.intelligence < Intelligence.Humanlike && pawn.MentalState is MentalState_Manhunter)))
                     {
                         return 100 + (int)(b.HitPoints * 0.2f);
                     }

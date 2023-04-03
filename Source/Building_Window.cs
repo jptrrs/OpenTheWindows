@@ -570,22 +570,6 @@ namespace OpenTheWindows
         }
         #endregion
 
-        //Note: this doesn't appear to ever run
-        public override void Draw()
-        {
-            if (windowSize == 1)
-            {
-                Rot4 current = Rotation;
-                base.Draw();
-                if (current != Rotation)
-                {
-                    SetScanLines();
-                    isFacingSet = false;
-                    needsUpdate = true;
-                }
-            }
-            else Comps_PostDraw();
-        }
         public override bool PawnCanOpen(Pawn p)
         {
             return false;
@@ -612,7 +596,8 @@ namespace OpenTheWindows
             
             foreach (IntVec3 c in occupiedRect)
             {
-                c.GetRoom(map).Temperature = temperatureReference.Temperature;
+                var room = c.GetRoom(map);
+                if (room != null) room.Temperature = temperatureReference.Temperature;
             }
         }
 
