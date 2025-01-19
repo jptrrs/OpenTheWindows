@@ -8,6 +8,7 @@ using Verse;
 
 namespace OpenTheWindows
 {
+    //Changed in RW 1.5
     using static WindowUtility;
     public class Building_Window : Building_Door
     {
@@ -138,7 +139,7 @@ namespace OpenTheWindows
             {
                 Map.thingGrid.Deregister(this, false);
                 Map.linkGrid.Notify_LinkerCreatedOrDestroyed(this);
-                Map.mapDrawer.MapMeshDirty(Position, (ulong)MapMeshFlagDefOf.Things, true, false);
+                Map.mapDrawer.MapMeshDirty(Position, MapMeshFlag.Things, true, false);
             }
             base.DeSpawn(mode);
         }
@@ -168,7 +169,7 @@ namespace OpenTheWindows
                 defaultLabel = "CommandAutoVentilation".Translate(),
                 defaultDesc = "CommandAutoVentilationDesc".Translate(),
                 isActive = () => autoVent,
-                Disabled = alarmReact && AlertManagerProxy.onAlert,
+                disabled = alarmReact && AlertManagerProxy.onAlert,
                 disabledReason = "DisabledByEmergency".Translate(),
                 toggleAction = delegate ()
                 {
@@ -262,7 +263,7 @@ namespace OpenTheWindows
             return stringBuilder.ToString();
         }
 
-        protected override void ReceiveCompSignal(string signal)
+        public override void ReceiveCompSignal(string signal)
         {
             switch (signal)
             {
@@ -321,7 +322,7 @@ namespace OpenTheWindows
             if (OpenTheWindowsSettings.LinkWindows)
             {
                 map.linkGrid.Notify_LinkerCreatedOrDestroyed(this);
-                map.mapDrawer.MapMeshDirty(Position, (ulong)MapMeshFlagDefOf.Things, true, false);
+                map.mapDrawer.MapMeshDirty(Position, MapMeshFlag.Things, true, false);
             }
         }
         public override void Tick()
@@ -363,12 +364,12 @@ namespace OpenTheWindows
         #endregion
 
         #region adapting as door
-        protected override void DrawAt(Vector3 drawLoc, bool flip = false)
+        public override void Draw()
         {
             if (Size == 1)
             {
                 Rot4 current = Rotation;
-                base.DrawAt(drawLoc, flip);
+                base.Draw();
                 if (current != Rotation)
                 {
                     SetScanLines();
@@ -704,8 +705,8 @@ namespace OpenTheWindows
                     relevant.AddDistinct(cell);
                     if (bleeds) AddBleed(cell, relevant);
                 }
-                Log.Message($"DEBUG @{position} CastLight: {clearCells.Count()} clearCells / {parent.illuminated.Count()} interior.");
-            } 
+                //Log.Message($"DEBUG @{position} CastLight: {clearCells.Count()} clearCells / {count} interior.");
+            }
 
             public void FindObstruction(IntVec3 motivator, bool removed = false, Map updatedMap = null)
             {

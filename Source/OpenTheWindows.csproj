@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Krafs.Publicizer.2.3.0\build\Krafs.Publicizer.props" Condition="Exists('..\packages\Krafs.Publicizer.2.3.0\build\Krafs.Publicizer.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -26,7 +27,6 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -79,19 +79,43 @@
     <RimWorldPath>..\..\References\RimWorld 1.2\Assembly-CSharp_publicized.dll</RimWorldPath>
     <HugsLibPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\workshop\content\294100\818773962\v1.2\Assemblies\HugsLib.dll</HugsLibPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '1.3|AnyCPU'">
+    <OutputPath>..\1.3\Assemblies\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <WarningLevel>0</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>none</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '1.4|AnyCPU'">
+    <OutputPath>..\1.4\Assemblies\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <WarningLevel>0</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>none</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '1.5|AnyCPU'">
+    <OutputPath>..\1.5\Assemblies\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <WarningLevel>0</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>none</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
     <Compile Include="HarmonyPatches\Compatibility\BuildableInfo_DrawGhost.cs" />
     <Compile Include="MapUpdateWatcher.cs" />
-    <Compile Include="HarmonyPatches\Building.cs" />
     <Compile Include="HarmonyPatches\Compatibility\AlertManagerProxy.cs" />
-    <Compile Include="HarmonyPatches\CompFlickable_SwitchIsOn.cs" />
     <Compile Include="HarmonyPatches\CompFlickable_PostExposeData.cs" />
     <Compile Include="HarmonyPatches\CoverUtility_BaseBlockChance.cs" />
     <Compile Include="HarmonyPatches\GenGrid_CanBeSeenOvercs.cs" />
     <Compile Include="HarmonyPatches\Compatibility\AlertManager_LoadState.cs" />
     <Compile Include="HarmonyPatches\PathGrid_CalculatedCostAt.cs" />
-    <Compile Include="HarmonyPatches\GlowGrid_GameGlowAt.cs" />
     <Compile Include="HarmonyPatches\HarmonyPatcher.cs" />
     <Compile Include="HarmonyPatches\LightingOverlay_Regenerate.cs" />
     <Compile Include="HarmonyPatches\Compatibility\NeedBeauty_LevelFromBeauty.cs" />
@@ -101,16 +125,11 @@
     <Compile Include="HarmonyPatches\ThingDef_SpecialDisplayStats.cs" />
     <Compile Include="HarmonyPatches\ThingGrid.cs" />
     <Compile Include="NaturalLightOverlay.cs" />
-    <Compile Include="CompWindow.cs" />
     <Compile Include="CompProperties_Window.cs" />
-    <Compile Include="MapComp_Windows.cs" />
-    <Compile Include="Building_Window.cs" />
     <Compile Include="PlaceWorker_Window.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScanLine.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="StatPart_Landscape.cs" />
-    <Compile Include="WindowUtility.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -142,6 +161,26 @@
     <Compile Include="HarmonyPatches\PathFinder_GetBuildingCost.cs" />
     <Compile Include="HarmonyPatches\Compatibility\JobDriver_Mount_letMountParticipate.cs" />
   </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' != '1.5'">
+    <Compile Include="Legacy\Building_Window_RW1.4.cs" />
+    <Compile Include="Legacy\GlowGrid_GameGlowAt_RW1.4.cs" />
+    <Compile Include="Legacy\CompWindow_RW1.4.cs" />
+    <Compile Include="Legacy\MapComp_Windows_RW1.4.cs" />
+    <Compile Include="Legacy\StatPart_Landscape_RW1.4.cs" />
+    <Compile Include="Legacy\WindowUtility_RW1.4.cs" />
+    <Compile Include="Legacy\Building_RW1.4.cs" />
+    <Compile Include="Legacy\CompFlickable_SwitchIsOn_RW1.4.cs" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == '1.5'">
+    <Compile Include="Building_Window.cs" />
+    <Compile Include="HarmonyPatches\GlowGrid_GroundGlowAt.cs" />
+    <Compile Include="CompWindow.cs" />
+    <Compile Include="MapComp_Windows.cs" />
+    <Compile Include="StatPart_Landscape.cs" />
+    <Compile Include="WindowUtility.cs" />
+    <Compile Include="HarmonyPatches\Building.cs" />
+    <Compile Include="HarmonyPatches\CompFlickable_SwitchIsOn.cs" />
+  </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>
@@ -150,20 +189,25 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="0Harmony, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lib.Harmony.2.0.1\lib\net472\0Harmony.dll</HintPath>
+    <Reference Include="0Harmony, Version=2.3.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lib.Harmony.2.3.3\lib\net472\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Assembly-CSharp_publicized">
-      <HintPath>$(RimWorldPath)</HintPath>
+    <Reference Include="Assembly-CSharp, Version=1.5.9102.32373, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="HugsLib">
-      <HintPath>$(HugsLibPath)</HintPath>
+    <Publicize Include="Assembly-CSharp" />
+    <Reference Include="HugsLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\UnlimitedHugs.Rimworld.HugsLib.11.0.3\lib\net472\HugsLib.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="JPTools">
-      <HintPath>..\..\JPTools\Assemblies\JPTools.dll</HintPath>
+    <Reference Include="JPTools" Condition="'$(Configuration)' != '1.4' AND '$(Configuration)' != '1.5'">
+      <HintPath>..\..\JPTools\1.1\Assemblies\JPTools.dll</HintPath>
+    </Reference>
+    <Reference Include="JPTools" Condition="'$(Configuration)' == '1.4' OR '$(Configuration)' == '1.5'">
+      <HintPath>..\..\JPTools\1.4\Assemblies\JPTools.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation" />
@@ -420,7 +464,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!--Script to copy files to RimWorld's mod folder after build-->
   <PropertyGroup>
-    <ModFolder>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods</ModFolder>
+    <ModFolder>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods</ModFolder>
   </PropertyGroup>
   <Target Name="ModFiles" AfterTargets="Build">
     <ItemGroup>
@@ -451,4 +495,12 @@
     <Copy SourceFiles="..\LICENSE" DestinationFolder="$(ModFolder)\$(SolutionName)\" SkipUnchangedFiles="true" />
     <Message Text="Mod files updated." Importance="High" />
   </Target>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Krafs.Publicizer.2.3.0\build\Krafs.Publicizer.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Krafs.Publicizer.2.3.0\build\Krafs.Publicizer.props'))" />
+    <Error Condition="!Exists('..\packages\Krafs.Publicizer.2.3.0\build\Krafs.Publicizer.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Krafs.Publicizer.2.3.0\build\Krafs.Publicizer.targets'))" />
+  </Target>
+  <Import Project="..\packages\Krafs.Publicizer.2.3.0\build\Krafs.Publicizer.targets" Condition="Exists('..\packages\Krafs.Publicizer.2.3.0\build\Krafs.Publicizer.targets')" />
 </Project>

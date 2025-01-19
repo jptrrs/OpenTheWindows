@@ -28,7 +28,7 @@ namespace OpenTheWindows
                 }
                 if (parent.Spawned)
                 {
-                    parent.Map.mapDrawer.MapMeshDirty(parent.Position, (ulong)MapMeshFlagDefOf.Things | (ulong)MapMeshFlagDefOf.Buildings);
+                    parent.Map.mapDrawer.MapMeshDirty(parent.Position, MapMeshFlag.Things | MapMeshFlag.Buildings);
                 }
                 return false;
             }

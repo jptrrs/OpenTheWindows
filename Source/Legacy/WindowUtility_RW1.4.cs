@@ -143,7 +143,7 @@ namespace OpenTheWindows
                 adjust = new IntVec3(delta, 0, 1);
             }
             LinkDirections dir = again ? dirB : dirA;
-            return GenAdj.CellsAdjacentAlongEdge(center + adjust, rot, size, (int)dir).FirstOrFallback();
+            return GenAdj.CellsAdjacentAlongEdge(center + adjust, rot, size, dir).FirstOrFallback();
         }
 
         public static void FindAffectedWindows(List<Building_Window> windows, Region initial, Region ignore = null, bool recursive = true)

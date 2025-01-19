@@ -111,7 +111,7 @@ namespace OpenTheWindows
                     defaultLabel = Props.commandLabelKey.Translate(),
                     defaultDesc = Props.commandDescKey.Translate() + ManualNote,
                     isActive = () => WantSwitchOn,
-                    Disabled = GizmoDisable,
+                    disabled = GizmoDisable,
                     disabledReason = window.alarmReact ? "DisabledByEmergency".Translate() : "DisabledForAutoVentilation".Translate(),
                     toggleAction = delegate ()
                     {

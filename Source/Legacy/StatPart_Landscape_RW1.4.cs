@@ -42,7 +42,7 @@ namespace OpenTheWindows
                 {
                     var things = window.Map.thingGrid.ThingsListAt(c).Except(counted);
                     var skipped = things.Where(FilterOut);
-                    result += BeautyUtility.CellBeauty(c, window.Map, new HashSet<Thing>(skipped.Union(counted)));
+                    result += BeautyUtility.CellBeauty(c, window.Map, skipped.Union(counted).ToList());
                     counted.AddRange(things);
                 }
                 return result;

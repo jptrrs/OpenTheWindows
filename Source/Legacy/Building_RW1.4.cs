@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using RimWorld;
 using Verse;
 
 namespace OpenTheWindows
@@ -15,7 +14,7 @@ namespace OpenTheWindows
             if (__instance.def.graphicData != null && __instance.def.graphicData.linkType == LinkDrawerType.None && __instance.def.graphicData.linkFlags == (LinkFlags.Rock | LinkFlags.Wall))
             {
                 map.linkGrid.Notify_LinkerCreatedOrDestroyed(__instance);
-                map.mapDrawer.MapMeshDirty(__instance.Position, (ulong)MapMeshFlagDefOf.Things, true, false);
+                map.mapDrawer.MapMeshDirty(__instance.Position, MapMeshFlag.Things, true, false);
             }
         }
     }
@@ -32,7 +31,7 @@ namespace OpenTheWindows
                 Map map = __instance.Map;
                 map.thingGrid.Deregister(__instance, false);
                 map.linkGrid.Notify_LinkerCreatedOrDestroyed(__instance);
-                map.mapDrawer.MapMeshDirty(__instance.Position, (ulong)MapMeshFlagDefOf.Things, true, false);
+                map.mapDrawer.MapMeshDirty(__instance.Position, MapMeshFlag.Things, true, false);
             }
         }
     }

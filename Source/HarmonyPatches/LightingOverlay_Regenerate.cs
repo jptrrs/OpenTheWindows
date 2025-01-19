@@ -9,6 +9,54 @@ namespace OpenTheWindows
     [HarmonyPatch(typeof(SectionLayer_LightingOverlay), nameof(SectionLayer_LightingOverlay.Regenerate))]
     public static class LightingOverlay_Regenerate
     {
+        //public static void Prefix(SectionLayer_LightingOverlay __instance, ref int[] __state)
+        //{
+        //    Map map = __instance.Map;
+        //    MapComp_Windows mapComp;
+        //    MapComp_Windows mapComp2;
+        //    if (MapComp_Windows.LightComps.TryGetValue(map.uniqueID, out mapComp))
+        //    {
+        //        mapComp2 = mapComp;
+        //    }
+        //    else
+        //    {
+        //        mapComp2 = map.GetComponent<MapComp_Skylights>();
+        //    }
+        //    __state = mapComp2.SectionCells(__instance.section);
+        //    foreach (int num in __state)
+        //    {
+        //        if (mapComp2.SkylightGrid[num])
+        //        {
+        //            mapComp2.roofGridCopy[num] = map.roofGrid.roofGrid[num];
+        //            map.roofGrid.roofGrid[num] = null;
+        //        }
+        //    }
+        //}
+
+        //public static void Postfix(SectionLayer_LightingOverlay __instance, int[] __state)
+        //{
+        //    Map map = __instance.Map;
+        //    MapComp_Skylights mapComp_Skylights;
+        //    MapComp_Skylights mapComp_Skylights2;
+        //    if (MapComp_Skylights.LightComps.TryGetValue(map.uniqueID, out mapComp_Skylights))
+        //    {
+        //        mapComp_Skylights2 = mapComp_Skylights;
+        //    }
+        //    else
+        //    {
+        //        mapComp_Skylights2 = map.GetComponent<MapComp_Skylights>();
+        //    }
+        //    foreach (int num in __state)
+        //    {
+        //        if (mapComp_Skylights2.SkylightGrid[num])
+        //        {
+        //            map.roofGrid.roofGrid[num] = mapComp_Skylights2.roofGridCopy[num];
+        //        }
+        //    }
+        //}
+
+
+
         public static Dictionary<IntVec3, RoofDef> changedRoofs;
         public static Map map = null;
         public static RoofDef[] roofRef = null;
@@ -42,6 +90,7 @@ namespace OpenTheWindows
             {
                 roofRef[map.cellIndices.CellToIndex(entry.Key)] = entry.Value;
             }
+            Log.Message("LightingOverlay_Regenerate skipped " + changedRoofs.Count + " cells.");
         }
     }
 }
