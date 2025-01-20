@@ -262,7 +262,7 @@ namespace OpenTheWindows
             return stringBuilder.ToString();
         }
 
-        protected override void ReceiveCompSignal(string signal)
+        public override void ReceiveCompSignal(string signal)
         {
             switch (signal)
             {
@@ -363,11 +363,11 @@ namespace OpenTheWindows
         #endregion
 
         #region adapting as door
-        protected override void DrawAt(Vector3 drawLoc, bool flip = false)
+        public override void DrawAt(Vector3 drawLoc, bool flip = false)
         {
             if (Size == 1)
             {
-                Rot4 current = Rotation;
+                Rot4 current = Rotation; 
                 base.DrawAt(drawLoc, flip);
                 if (current != Rotation)
                 {

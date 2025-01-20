@@ -8,6 +8,7 @@ using Verse;
 
 namespace OpenTheWindows
 {
+    //Changed in RW 1.5
     using static HarmonyPatcher;
     public class MapComp_Windows : MapComponent
     {

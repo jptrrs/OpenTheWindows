@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ using Verse;
 namespace OpenTheWindows
 {
     using static HarmonyPatcher;
+
     public class MapComp_Windows : MapComponent
     {
         public List<Building_Window> cachedWindows = new List<Building_Window>();
@@ -44,6 +46,7 @@ namespace OpenTheWindows
                 return null;
             }
         }
+
         public void DeRegisterWindow(Building_Window window)
         {
             if (cachedWindows.Contains(window))
@@ -59,6 +62,7 @@ namespace OpenTheWindows
             if (!bypass && tile.IsTransparentRoof(map)) return;
             WindowCells.Remove(tile);
             map.glowGrid.DirtyCache(tile);
+            map.mapDrawer.MapMeshDirty(tile, MapMeshFlagDefOf.Roofs);
             lightOverlay.needsUpdate = true;
         }
 
@@ -85,6 +89,7 @@ namespace OpenTheWindows
             if (WindowCells.Contains(tile)) return;
             WindowCells.Add(tile);
             map.glowGrid.DirtyCache(tile);
+            map.mapDrawer.MapMeshDirty(tile, MapMeshFlagDefOf.Roofs);
             lightOverlay.needsUpdate = true;
         }
 

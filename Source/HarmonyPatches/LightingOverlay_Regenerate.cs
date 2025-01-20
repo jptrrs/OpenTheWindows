@@ -90,7 +90,6 @@ namespace OpenTheWindows
             {
                 roofRef[map.cellIndices.CellToIndex(entry.Key)] = entry.Value;
             }
-            Log.Message("LightingOverlay_Regenerate skipped " + changedRoofs.Count + " cells.");
         }
     }
 }
