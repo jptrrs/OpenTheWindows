@@ -82,29 +82,31 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '1.3|AnyCPU'">
     <OutputPath>..\1.3\Assemblies\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <WarningLevel>0</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>7.3</LangVersion>
-    <ErrorReport>none</ErrorReport>
+    <ErrorReport>prompt</ErrorReport>
+    <RimWorldPath>..\..\..\..\refs\RW\RW1.3.3287.dll</RimWorldPath>
+    <HugsLibPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\workshop\content\294100\818773962\v1.4\Assemblies\HugsLib.dll</HugsLibPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '1.4|AnyCPU'">
     <OutputPath>..\1.4\Assemblies\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <WarningLevel>0</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>7.3</LangVersion>
     <ErrorReport>none</ErrorReport>
+    <RimWorldPath>..\..\..\..\refs\RW\RW1.4.3901.dll</RimWorldPath>
+    <HugsLibPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\workshop\content\294100\818773962\v1.4\Assemblies\HugsLib.dll</HugsLibPath>
+    <ModsPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods</ModsPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '1.5|AnyCPU'">
     <OutputPath>..\1.5\Assemblies\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <WarningLevel>0</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>7.3</LangVersion>
     <ErrorReport>none</ErrorReport>
+    <RimWorldPath>..\..\..\..\refs\RW\RW1.5.9102.dll</RimWorldPath>
+    <HugsLibPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\workshop\content\294100\818773962\v1.5\Assemblies\HugsLib.dll</HugsLibPath>
+    <ModsPath>..\..\..\..\..\..\..\Games\RimWorld\Mods</ModsPath>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
@@ -189,12 +191,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="0Harmony, Version=2.3.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lib.Harmony.2.3.3\lib\net472\0Harmony.dll</HintPath>
+    <Reference Include="RimWorld">
+      <HintPath>$(RimWorldPath)</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+    <Reference Include="0Harmony, Version=2.3.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lib.Harmony.2.3.3\lib\net472\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Publicize Include="Assembly-CSharp" />
@@ -463,7 +465,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!--Script to copy files to RimWorld's mod folder after build-->
   <PropertyGroup>
-    <ModFolder>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods</ModFolder>
+    <ModFolder>$(ModsPath)</ModFolder>
   </PropertyGroup>
   <Target Name="ModFiles" AfterTargets="Build">
     <ItemGroup>
