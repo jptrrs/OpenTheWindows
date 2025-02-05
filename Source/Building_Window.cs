@@ -704,7 +704,6 @@ namespace OpenTheWindows
                     relevant.AddDistinct(cell);
                     if (bleeds) AddBleed(cell, relevant);
                 }
-                Log.Message($"DEBUG @{position} CastLight: {clearCells.Count()} clearCells / {parent.illuminated.Count()} interior.");
             } 
 
             public void FindObstruction(IntVec3 motivator, bool removed = false, Map updatedMap = null)
