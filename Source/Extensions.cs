@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace OpenTheWindows
@@ -46,6 +47,27 @@ namespace OpenTheWindows
         {
             if (!HarmonyPatcher.TransparentRoofs) return false;
             return HarmonyPatcher.TransparentRoofsList.Contains(map.roofGrid.RoofAt(cell));
+        }
+
+        //Adapted from Dubs Skylights
+        public static int[] SectionCells(this Section section)
+        {
+            int[] array;
+            CellRect cellRect = section.CellRect;
+            List<int> list = new List<int>();
+            Map map = section.map;
+            foreach (IntVec3 cell in cellRect)
+            {
+                list.Add(map.cellIndices.CellToIndex(cell));
+            }
+            foreach (IntVec3 cell in from c in cellRect.AdjacentCells
+                                     where c.InBounds(map)
+                                     select c)
+            {
+                list.Add(section.map.cellIndices.CellToIndex(cell));
+            }
+            array = list.ToArray();
+            return array;
         }
     }
 }

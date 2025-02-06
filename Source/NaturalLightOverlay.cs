@@ -64,7 +64,7 @@ namespace OpenTheWindows
 
         public bool ShowCell(int index)
         {
-            return map.GetComponent<MapComp_Windows>().WindowCells.Contains(map.cellIndices.IndexToCell(index)) || !map.roofGrid.Roofed(index);
+            return map.GetComponent<MapComp_Windows>().WindowCells.Contains(index) || !map.roofGrid.Roofed(index);
         }
 
         public void Update()

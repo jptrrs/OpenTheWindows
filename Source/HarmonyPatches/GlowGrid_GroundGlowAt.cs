@@ -9,15 +9,15 @@ namespace OpenTheWindows
     [HarmonyPatch(typeof(GlowGrid), nameof(GlowGrid.GroundGlowAt))]
     public static class GlowGrid_GroundGlowAt
     {
-        public static void Postfix(IntVec3 c, ref float __result)
+        public static void Postfix(IntVec3 c, Map ___map, ref float __result)
         {
-            Map map = LightingOverlay_Regenerate.map;
-            MapComp_Windows comp = LightingOverlay_Regenerate.windowComponent;
-            if (comp == null || !comp.WindowCells.Contains(c)) return;
+            //Map map = LightingOverlay_Regenerate.map;
+            MapComp_Windows comp = LightingOverlay_Regenerate.windowsMapComponent;
+            if (comp == null || !comp.IsUnderWindow(c)) return;
             try
             {
-                float fromSky = map.skyManager.CurSkyGlow * OpenTheWindowsSettings.LightTransmission;
-                if (HarmonyPatcher.RaiseTheRoof && c.Roofed(map) && c.IsTransparentRoof(map))
+                float fromSky = ___map.skyManager.CurSkyGlow * OpenTheWindowsSettings.LightTransmission;
+                if (HarmonyPatcher.RaiseTheRoof && c.Roofed(___map) && c.IsTransparentRoof(___map))
                 {
                     __result *= OpenTheWindowsSettings.LightTransmission;
                 }

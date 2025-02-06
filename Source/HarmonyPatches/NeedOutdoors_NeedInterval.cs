@@ -89,7 +89,7 @@ namespace OpenTheWindows
                 num *= DeltaFactor_InBed;
             }
             // no natural light penality:
-            if (roofDef != null && !pawn.Map.GetComponent<MapComp_Windows>().WindowCells.Contains(pawn.Position))
+            if (roofDef != null && !pawn.Map.GetComponent<MapComp_Windows>().IsUnderWindow(pawn.Position))
             {
                 if (num < 0f) num *= DeltaFactor_NoNaturalLight();
                 else num /= DeltaFactor_NoNaturalLight();
