@@ -22,12 +22,21 @@ namespace OpenTheWindows
         private MethodInfo MapCompInfo;
         private HashSet<int> wrongTiles;
         private NaturalLightOverlay lightOverlay;
-        public Dictionary<Section, int[]> SectionCellsCache = new Dictionary<Section, int[]>();
-        //public static Dictionary<int, MapComp_Windows> WindowsMapComps = new Dictionary<int, MapComp_Windows>();
+        public Dictionary<Section, int[]> SectionCellsCache;
+        public static Dictionary<int, MapComp_Windows> MapCompsCache = new Dictionary<int, MapComp_Windows>();
 
         public MapComp_Windows(Map map) : base(map)
         {
+            if (MapCompsCache.ContainsKey(map.uniqueID))
+            {
+                MapCompsCache[map.uniqueID] = this;
+            }
+            else
+            {
+                MapCompsCache.Add(map.uniqueID, this);
+            }
             WindowCells = new HashSet<int>();
+            SectionCellsCache = new Dictionary<Section, int[]>();
             lightOverlay = new NaturalLightOverlay(this);
             if (DubsSkylights)
             {
@@ -126,6 +135,12 @@ namespace OpenTheWindows
             lightOverlay.Update();
         }
 
+        public override void MapRemoved()
+        {
+            MapCompsCache.Remove(map.uniqueID);
+            base.MapRemoved();
+        }
+
         public void MapUpdated(object sender, MapUpdateWatcher.MapUpdateInfo info)
         {
             if (info.map != map) return;
@@ -189,6 +204,7 @@ namespace OpenTheWindows
 
         public bool IsUnderWindow(IntVec3 cell)
         {
+            if (WindowCells.NullOrEmpty()) return false;
             return WindowCells.Contains(map.cellIndices.CellToIndex(cell));
         }
     }

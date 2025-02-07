@@ -11,25 +11,37 @@ namespace OpenTheWindows
     public static class LightingOverlay_Regenerate
     {
         public static MapComp_Windows windowsMapComponent = null;
-        static int lastMapID;
-        static RoofDef[] roofRef = null;
-        static bool stateDirty = true;
-        static FieldInfo roofGridInfo = AccessTools.Field(typeof(RoofGrid), "roofGrid");
+        //static int lastMapID;
+        //static RoofDef[] roofRef = null;
+        public static bool stateDirty = true;
+        //static FieldInfo roofGridInfo = AccessTools.Field(typeof(RoofGrid), "roofGrid");
 
         [HarmonyBefore(new string[] { "raisetheroof.harmony" })]
         public static void Prefix(SectionLayer_LightingOverlay __instance, ref Dictionary<int, RoofDef> __state)
         {
             Map map = __instance.Map;
-            __state = new Dictionary<int, RoofDef>();
-            if (stateDirty || lastMapID != map.uniqueID) //Build cache if necessary
+            MapComp_Windows cachedComp;
+            MapComp_Windows actualComp;
+            if (MapComp_Windows.MapCompsCache.TryGetValue(map.uniqueID, out cachedComp))
             {
-                lastMapID = map.uniqueID;
-                roofRef = (RoofDef[])roofGridInfo.GetValue(map.roofGrid);
-                windowsMapComponent = map.GetComponent<MapComp_Windows>();
-                stateDirty = false;
+                actualComp = cachedComp;
             }
-            int[] sectionCells = windowsMapComponent.GetCachedSectionCells(__instance.section);
-            foreach (int num in windowsMapComponent.WindowCells.Intersect(sectionCells))
+            else
+            {
+                actualComp = map.GetComponent<MapComp_Windows>();
+            }
+            __state = new Dictionary<int, RoofDef>();
+            //windowsMapComponent = map.GetComponent<MapComp_Windows>();
+            //if (stateDirty || lastMapID != map.uniqueID) //Build cache if necessary
+            //{
+            //    lastMapID = map.uniqueID;
+            //    roofRef = (RoofDef[])roofGridInfo.GetValue(map.roofGrid);
+            //    //windowsMapComponent = map.GetComponent<MapComp_Windows>();
+            //    stateDirty = false;
+            //}
+            int[] sectionCells = actualComp.GetCachedSectionCells(__instance.section);
+            RoofDef[] roofRef = map.roofGrid.roofGrid;
+            foreach (int num in actualComp.WindowCells.Intersect(sectionCells))
             {
                 __state.Add(num, roofRef[num]);
                 roofRef[num] = null;
@@ -41,7 +53,8 @@ namespace OpenTheWindows
             Map map = __instance.Map;
             foreach (var entry in __state)
             {
-                roofRef[entry.Key] = entry.Value;
+                map.roofGrid.roofGrid[entry.Key] = entry.Value;
+                //roofRef[entry.Key] = entry.Value;
             }
         }
     }
