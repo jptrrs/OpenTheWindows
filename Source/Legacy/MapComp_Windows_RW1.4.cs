@@ -13,17 +13,28 @@ namespace OpenTheWindows
     public class MapComp_Windows : MapComponent
     {
         public List<Building_Window> cachedWindows = new List<Building_Window>();
-        public HashSet<IntVec3> WindowCells;
+        public HashSet<int> WindowCells;
         private bool audit = false;
         private FieldInfo DubsSkylights_skylightGridinfo;
         private Type DubsSkylights_type;
         private MethodInfo MapCompInfo;
         private HashSet<int> wrongTiles;
         private NaturalLightOverlay lightOverlay;
+        public Dictionary<Section, int[]> SectionCellsCache;
+        public static Dictionary<int, MapComp_Windows> MapCompsCache = new Dictionary<int, MapComp_Windows>();
 
         public MapComp_Windows(Map map) : base(map)
         {
-            WindowCells = new HashSet<IntVec3>();
+            if (MapCompsCache.ContainsKey(map.uniqueID))
+            {
+                MapCompsCache[map.uniqueID] = this;
+            }
+            else
+            {
+                MapCompsCache.Add(map.uniqueID, this);
+            }
+            WindowCells = new HashSet<int>();
+            SectionCellsCache = new Dictionary<Section, int[]>();
             lightOverlay = new NaturalLightOverlay(this);
             if (DubsSkylights)
             {
@@ -45,6 +56,7 @@ namespace OpenTheWindows
                 return null;
             }
         }
+
         public void DeRegisterWindow(Building_Window window)
         {
             if (cachedWindows.Contains(window))
@@ -55,10 +67,11 @@ namespace OpenTheWindows
 
         public void ExcludeTile(IntVec3 tile, bool bypass = false)
         {
-            if (!WindowCells.Contains(tile)) return;
+            int index = map.cellIndices.CellToIndex(tile);
+            if (!WindowCells.Contains(index)) return;
             if (DubsSkylights && skyLightGrid[map.cellIndices.CellToIndex(tile)]) return;
             if (!bypass && tile.IsTransparentRoof(map)) return;
-            WindowCells.Remove(tile);
+            WindowCells.Remove(index);
             map.glowGrid.MarkGlowGridDirty(tile);
             lightOverlay.needsUpdate = true;
         }
@@ -83,8 +96,9 @@ namespace OpenTheWindows
 
         public void IncludeTile(IntVec3 tile)
         {
-            if (WindowCells.Contains(tile)) return;
-            WindowCells.Add(tile);
+            int index = map.cellIndices.CellToIndex(tile);
+            if (WindowCells.Contains(index)) return;
+            WindowCells.Add(index);
             map.glowGrid.MarkGlowGridDirty(tile);
             lightOverlay.needsUpdate = true;
         }
@@ -115,6 +129,12 @@ namespace OpenTheWindows
         {
             base.MapComponentUpdate();
             lightOverlay.Update();
+        }
+
+        public override void MapRemoved()
+        {
+            MapCompsCache.Remove(map.uniqueID);
+            base.MapRemoved();
         }
 
         public void MapUpdated(object sender, MapUpdateWatcher.MapUpdateInfo info)
@@ -167,6 +187,20 @@ namespace OpenTheWindows
                     IncludeTile(info.center);
                 }
             }
+        }
+
+        public int[] GetCachedSectionCells(Section section)
+        {
+            int[] array;
+            if (SectionCellsCache.TryGetValue(section, out array)) return array;
+            array = section.SectionCells();
+            SectionCellsCache.Add(section, array);
+            return array;
+        }
+
+        public bool IsUnderWindow(IntVec3 cell)
+        {
+            return WindowCells.Contains(map.cellIndices.CellToIndex(cell));
         }
     }
 }

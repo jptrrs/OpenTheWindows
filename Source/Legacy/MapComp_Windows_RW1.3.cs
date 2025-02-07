@@ -1,40 +1,29 @@
 ﻿using HarmonyLib;
-using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnityEngine;
 using Verse;
 
 namespace OpenTheWindows
 {
+    //Changed in RW 1.4
     using static HarmonyPatcher;
-
     public class MapComp_Windows : MapComponent
     {
-        public static Dictionary<int, MapComp_Windows> MapCompsCache = new Dictionary<int, MapComp_Windows>();
         public List<Building_Window> cachedWindows = new List<Building_Window>();
-        public Dictionary<Section, int[]> SectionCellsCache;
-        public HashSet<int> WindowCells;
+        public HashSet<IntVec3> WindowCells;
         private bool audit = false;
         private FieldInfo DubsSkylights_skylightGridinfo;
         private Type DubsSkylights_type;
-        private NaturalLightOverlay lightOverlay;
         private MethodInfo MapCompInfo;
         private HashSet<int> wrongTiles;
+        private NaturalLightOverlay lightOverlay;
 
         public MapComp_Windows(Map map) : base(map)
         {
-            if (MapCompsCache.ContainsKey(map.uniqueID))
-            {
-                MapCompsCache[map.uniqueID] = this;
-            }
-            else
-            {
-                MapCompsCache.Add(map.uniqueID, this);
-            }
-            WindowCells = new HashSet<int>();
-            SectionCellsCache = new Dictionary<Section, int[]>();
+            WindowCells = new HashSet<IntVec3>();
             lightOverlay = new NaturalLightOverlay(this);
             if (DubsSkylights)
             {
@@ -56,7 +45,6 @@ namespace OpenTheWindows
                 return null;
             }
         }
-
         public void DeRegisterWindow(Building_Window window)
         {
             if (cachedWindows.Contains(window))
@@ -67,13 +55,11 @@ namespace OpenTheWindows
 
         public void ExcludeTile(IntVec3 tile, bool bypass = false)
         {
-            int index = map.cellIndices.CellToIndex(tile);
-            if (!WindowCells.Contains(index)) return;
+            if (!WindowCells.Contains(tile)) return;
             if (DubsSkylights && skyLightGrid[map.cellIndices.CellToIndex(tile)]) return;
             if (!bypass && tile.IsTransparentRoof(map)) return;
-            WindowCells.Remove(index);
-            map.glowGrid.DirtyCache(tile);
-            map.mapDrawer.MapMeshDirty(tile, MapMeshFlagDefOf.Roofs);
+            WindowCells.Remove(tile);
+            map.glowGrid.MarkGlowGridDirty(tile);
             lightOverlay.needsUpdate = true;
         }
 
@@ -95,22 +81,11 @@ namespace OpenTheWindows
             base.FinalizeInit();
         }
 
-        public int[] GetCachedSectionCells(Section section)
-        {
-            int[] array;
-            if (SectionCellsCache.TryGetValue(section, out array)) return array;
-            array = section.SectionCells();
-            SectionCellsCache.Add(section, array);
-            return array;
-        }
-
         public void IncludeTile(IntVec3 tile)
         {
-            int index = map.cellIndices.CellToIndex(tile);
-            if (WindowCells.Contains(index)) return;
-            WindowCells.Add(index);
-            map.glowGrid.DirtyCache(tile);
-            map.mapDrawer.MapMeshDirty(tile, MapMeshFlagDefOf.Roofs);
+            if (WindowCells.Contains(tile)) return;
+            WindowCells.Add(tile);
+            map.glowGrid.MarkGlowGridDirty(tile);
             lightOverlay.needsUpdate = true;
         }
 
@@ -122,19 +97,13 @@ namespace OpenTheWindows
             }
         }
 
-        public bool IsUnderWindow(IntVec3 cell)
-        {
-            if (WindowCells.NullOrEmpty()) return false;
-            return WindowCells.Contains(map.cellIndices.CellToIndex(cell));
-        }
-
         public override void MapComponentTick()
         {
             if (audit)
             {
                 foreach (int idx in wrongTiles)
                 {
-                    map.glowGrid.DirtyCache(map.cellIndices.IndexToCell(idx));
+                    map.glowGrid.MarkGlowGridDirty(map.cellIndices.IndexToCell(idx));
                 }
                 wrongTiles.Clear();
                 audit = false;
@@ -146,12 +115,6 @@ namespace OpenTheWindows
         {
             base.MapComponentUpdate();
             lightOverlay.Update();
-        }
-
-        public override void MapRemoved()
-        {
-            MapCompsCache.Remove(map.uniqueID);
-            base.MapRemoved();
         }
 
         public void MapUpdated(object sender, MapUpdateWatcher.MapUpdateInfo info)

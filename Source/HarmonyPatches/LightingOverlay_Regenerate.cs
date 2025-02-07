@@ -10,12 +10,6 @@ namespace OpenTheWindows
     [HarmonyPatch(typeof(SectionLayer_LightingOverlay), nameof(SectionLayer_LightingOverlay.Regenerate))]
     public static class LightingOverlay_Regenerate
     {
-        public static MapComp_Windows windowsMapComponent = null;
-        //static int lastMapID;
-        //static RoofDef[] roofRef = null;
-        public static bool stateDirty = true;
-        //static FieldInfo roofGridInfo = AccessTools.Field(typeof(RoofGrid), "roofGrid");
-
         [HarmonyBefore(new string[] { "raisetheroof.harmony" })]
         public static void Prefix(SectionLayer_LightingOverlay __instance, ref Dictionary<int, RoofDef> __state)
         {
@@ -30,17 +24,9 @@ namespace OpenTheWindows
             {
                 actualComp = map.GetComponent<MapComp_Windows>();
             }
-            __state = new Dictionary<int, RoofDef>();
-            //windowsMapComponent = map.GetComponent<MapComp_Windows>();
-            //if (stateDirty || lastMapID != map.uniqueID) //Build cache if necessary
-            //{
-            //    lastMapID = map.uniqueID;
-            //    roofRef = (RoofDef[])roofGridInfo.GetValue(map.roofGrid);
-            //    //windowsMapComponent = map.GetComponent<MapComp_Windows>();
-            //    stateDirty = false;
-            //}
             int[] sectionCells = actualComp.GetCachedSectionCells(__instance.section);
             RoofDef[] roofRef = map.roofGrid.roofGrid;
+            __state = new Dictionary<int, RoofDef>();
             foreach (int num in actualComp.WindowCells.Intersect(sectionCells))
             {
                 __state.Add(num, roofRef[num]);
@@ -54,7 +40,6 @@ namespace OpenTheWindows
             foreach (var entry in __state)
             {
                 map.roofGrid.roofGrid[entry.Key] = entry.Value;
-                //roofRef[entry.Key] = entry.Value;
             }
         }
     }

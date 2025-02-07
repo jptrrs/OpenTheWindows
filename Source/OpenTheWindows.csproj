@@ -162,21 +162,27 @@
     <Compile Include="HarmonyPatches\PathFinder_GetBuildingCost.cs" />
     <Compile Include="HarmonyPatches\Compatibility\JobDriver_Mount_letMountParticipate.cs" />
   </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == '1.1' OR '$(Configuration)' == '1.2' OR '$(Configuration)' == '1.3'">
+    <Compile Include="Legacy\MapComp_Windows_RW1.3.cs" />
+    <Compile Include="Legacy\GlowGrid_GameGlowAt_RW1.3.cs" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == '1.4'">
+    <Compile Include="Legacy\GlowGrid_GameGlowAt_RW1.4.cs" />
+    <Compile Include="Legacy\MapComp_Windows_RW1.4.cs" />
+  </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' != '1.5'">
     <Compile Include="Legacy\Building_Window_RW1.4.cs" />
-    <Compile Include="Legacy\GlowGrid_GameGlowAt_RW1.4.cs" />
     <Compile Include="Legacy\CompWindow_RW1.4.cs" />
-    <Compile Include="Legacy\MapComp_Windows_RW1.4.cs" />
     <Compile Include="Legacy\StatPart_Landscape_RW1.4.cs" />
     <Compile Include="Legacy\WindowUtility_RW1.4.cs" />
     <Compile Include="Legacy\Building_RW1.4.cs" />
     <Compile Include="Legacy\CompFlickable_SwitchIsOn_RW1.4.cs" />
   </ItemGroup>
-  <ItemGroup Condition="'$(Configuration)' == '1.5'">
+  <ItemGroup Condition="'$(Configuration)' != '1.1' AND '$(Configuration)' != '1.2' AND '$(Configuration)' != '1.3' AND '$(Configuration)' != '1.4'">
+    <Compile Include="MapComp_Windows.cs" />
     <Compile Include="Building_Window.cs" />
     <Compile Include="HarmonyPatches\GlowGrid_GroundGlowAt.cs" />
     <Compile Include="CompWindow.cs" />
-    <Compile Include="MapComp_Windows.cs" />
     <Compile Include="StatPart_Landscape.cs" />
     <Compile Include="WindowUtility.cs" />
     <Compile Include="HarmonyPatches\Building.cs" />
