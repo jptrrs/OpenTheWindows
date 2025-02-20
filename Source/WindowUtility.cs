@@ -128,23 +128,41 @@ namespace OpenTheWindows
         {
             LinkDirections dirA;
             LinkDirections dirB;
-            IntVec3 adjust;
-            int delta = again ? +1 : -1;
             if (rot.IsHorizontal)
             {
                 dirA = LinkDirections.Up;
                 dirB = LinkDirections.Down;
-                adjust = new IntVec3(1, 0, delta);
             }
             else
             {
                 dirA = LinkDirections.Right;
                 dirB = LinkDirections.Left;
-                adjust = new IntVec3(delta, 0, 1);
             }
-            LinkDirections dir = again ? dirB : dirA;
-            return GenAdj.CellsAdjacentAlongEdge(center + adjust, rot, size, (int)dir).FirstOrFallback();
+            LinkDirections dir = again ? dirB : dirA; 
+            return NextAdjacentCell(center, rot, size, dir); //Vanilla GenAdj.CellsAdjacentAlongEdge is a mess!
         }
+
+        public static IntVec3 NextAdjacentCell(IntVec3 center, Rot4 rot, IntVec2 size, LinkDirections dir)
+        {
+            GenAdj.AdjustForRotation(ref center, ref size, rot);
+            int minX = center.x - (size.x - 1) / 2;
+            int maxX = minX + size.x - 1;
+            int minZ = center.z - (size.z - 1) / 2;
+            int maxZ = minZ + size.z - 1;
+            switch (dir)
+            {
+                case LinkDirections.Up:
+                    return new IntVec3(minX, center.y, maxZ + 1);
+                case LinkDirections.Down:
+                    return new IntVec3(minX, center.y, minZ - 1);
+                case LinkDirections.Right:
+                    return new IntVec3(maxX + 1, center.y, minZ);
+                case LinkDirections.Left:
+                    return new IntVec3(minX - 1, center.y, minZ);
+            }
+            return center;
+        }
+
 
         public static void FindAffectedWindows(List<Building_Window> windows, Region initial, Region ignore = null, bool recursive = true)
         {

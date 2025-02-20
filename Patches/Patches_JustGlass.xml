@@ -13,6 +13,13 @@
 				</li>-->
 				
 				<li Class="PatchOperationReplace">
+					<xpath>Defs/RecipeDef[defName = "MakeGlass"]/researchPrerequisite</xpath>
+					<value>
+            <researchPrerequisite>Glassworks</researchPrerequisite>
+					</value>				
+				</li>
+       
+				<li Class="PatchOperationReplace">
 					<xpath>Defs/ThingDef[defName = "OpenWindow"]/costList</xpath>
 					<value>
 						<costList>
@@ -58,7 +65,7 @@
           </value>
         </li>
         
-        <li Class="PatchOperationReplace">
+        <!--<li Class="PatchOperationReplace">
           <xpath>Defs/ThingDef[@ParentName="WindowBase"]/researchPrerequisites/li[.="Glassworks"]</xpath>
           <value>
             <li>GlassworksResearch</li>
@@ -67,7 +74,7 @@
 
         <li Class="PatchOperationRemove">
           <xpath>Defs/ResearchProjectDef[defName = "Glassworks"]</xpath>
-        </li>
+        </li>-->
 
 			</operations>
 		</match> 

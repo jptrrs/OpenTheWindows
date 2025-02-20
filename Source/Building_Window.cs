@@ -833,7 +833,11 @@ namespace OpenTheWindows
 
             private bool ShouldBleed()
             {
-                if (!parent.large) return true;
+                if (!parent.large)
+                {
+                    Log.Message($"No bleed for {parent} @ {position}!");
+                    return true;
+                }
                 var startDir = horizontal ? IntVec3.North : IntVec3.East;
                 var endDir = horizontal ? IntVec3.South : IntVec3.West;
                 toRight = position + startDir;
