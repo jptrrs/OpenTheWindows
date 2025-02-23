@@ -1,9 +1,5 @@
-﻿using HarmonyLib;
-using RimWorld;
-using System;
+﻿using RimWorld;
 using System.Collections.Generic;
-using System.Reflection;
-using UnityEngine;
 using Verse;
 
 namespace OpenTheWindows
@@ -23,18 +19,7 @@ namespace OpenTheWindows
             SetupState();
         }
 
-        //public void SetupState()
-        //{
-        //    Building_Window window = parent as Building_Window;
-        //    bool state = false;
-        //    if (Props.signal == "light" || Props.signal == "both") state = window.open;
-        //    else if (Props.signal == "air") state = window.venting;
-        //    WantSwitchOn = state;
-        //    SwitchOnInt = state;
-        //    SwitchIsOn = state;
-        //}
-
-        //by Owlchemist
+        //fetched from Owlchemist's
         public void SetupState()
         {
             Props = (CompProperties_Window)props;
@@ -62,20 +47,6 @@ namespace OpenTheWindows
             }
         }
 
-        //public void FlickFor(bool request)
-        //{
-        //    if (SwitchIsOn != request || WantsFlick())
-        //    {
-        //        WantSwitchOn = request;
-        //        if (Powered)
-        //        {
-        //            DoFlick();
-        //            return;
-        //        }
-        //        FlickUtility.UpdateFlickDesignation(parent);
-        //    }
-        //}
-
         public void FlickFor(bool request)
         {
             if (switchOnInt != request || WantsFlick())
@@ -91,29 +62,6 @@ namespace OpenTheWindows
         }
 
         public string ManualNote => Props.automated ? "" : $" {"ManualCommandNote".Translate()}";
-
-        //public override IEnumerable<Gizmo> CompGetGizmosExtra()
-        //{
-        //    if (parent.Faction == Faction.OfPlayer)
-        //    {
-        //        Building_Window window = parent as Building_Window;
-        //        yield return new Command_Toggle()
-        //        {
-        //            hotKey = KeyBindingDefOf.Command_TogglePower,
-        //            icon = (Texture2D)AccessTools.Property(typeof(CompFlickable), "CommandTex").GetValue(this),
-        //            defaultLabel = Props.commandLabelKey.Translate(),
-        //            defaultDesc = Props.commandDescKey.Translate() + ManualNote,
-        //            isActive = () => WantSwitchOn,
-        //            Disabled = GizmoDisable,
-        //            disabledReason = window.alarmReact ? "DisabledByEmergency".Translate() : "DisabledForAutoVentilation".Translate(),
-        //            toggleAction = delegate ()
-        //            {
-        //                FlickFor(!WantSwitchOn);
-        //            }
-        //        };
-        //    }
-        //    yield break;
-        //}
 
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {
@@ -135,16 +83,5 @@ namespace OpenTheWindows
                 };
             }
         }
-
-        //private bool GizmoDisable
-        //{
-        //    get
-        //    {
-        //        Building_Window window = parent as Building_Window;
-        //        bool ifAutovent = (Props.signal == "air" || Props.signal == "both") && window.autoVent;
-        //        bool ifAlarm = window.alarmReact && AlertManagerProxy.onAlert;
-        //        return ifAutovent || ifAlarm;
-        //    }
-        //}
     }
 }

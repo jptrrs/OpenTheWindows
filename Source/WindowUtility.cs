@@ -1,5 +1,4 @@
-﻿using RimWorld;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
@@ -118,24 +117,6 @@ namespace OpenTheWindows
             return result;
         }
 
-        ////with Owlchemist
-        //public static bool ClearForward(IntVec3 position, bool horizontal, cellTest test, bool inside, int dist, out IntVec3 output)
-        //{
-        //    IntVec3 target = new IntVec3(position.x + (horizontal ? dist : 0), 0, position.z + (horizontal ? 0 : dist));
-        //    bool result = test(target, inside);
-        //    output = result ? target : IntVec3.Zero;
-        //    return result;
-        //}
-
-        ////with Owlchemist
-        //public static bool ClearBackward(IntVec3 position, bool horizontal, cellTest test, bool inside, int dist, out IntVec3 output)
-        //{
-        //    IntVec3 target = new IntVec3(horizontal ? Math.Max(0, position.x - dist) : position.x, 0, horizontal ? position.z : Math.Max(0, position.z - dist));
-        //    bool result = test(target, inside);
-        //    output = result ? target : IntVec3.Zero;
-        //    return result;
-        //}
-
         public static void FindEnds(Building_Window window)
         {
             window.start = FindEnd(window.Position, window.Rotation, window.def.size, false);
@@ -181,24 +162,7 @@ namespace OpenTheWindows
             return center;
         }
 
-
-        //public static void FindAffectedWindows(List<Building_Window> windows, Region initial, Region ignore = null, bool recursive = true)
-        //{
-        //    foreach (Region connected in initial.links.Select(x => x.GetOtherRegion(initial)).Except(ignore))
-        //    {
-        //        if (connected.IsDoorway)
-        //        {
-        //            var window = connected.ListerThings.AllThings.FirstOrDefault(x => x is Building_Window);
-        //            if (window != null && !windows.Contains(window))
-        //            {
-        //                windows.Add(window as Building_Window);
-        //            }
-        //        }
-        //        else if (recursive) FindAffectedWindows(windows, connected, ignore, false);
-        //    }
-        //}
-
-        //with Owlchemist
+        //fetched from Owlchemist's
         public static void FindAffectedWindows(List<Building_Window> windows, Region initial, Region ignore = null, bool recursive = true)
         {
             var map = initial.Map;

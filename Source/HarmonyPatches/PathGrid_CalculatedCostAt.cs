@@ -7,7 +7,7 @@ using Verse.AI;
 namespace OpenTheWindows
 {
     //Tweaks the windows building cost for pathfinding reasons. 2/2
-    //with Owlchemist
+    //fetched from Owlchemist's
     [HarmonyPatch(typeof(PathGrid), nameof(PathGrid.CalculatedCostAt))]
     public static class PathGrid_CalculatedCostAt
     {

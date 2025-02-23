@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using RimWorld;
-using System.Reflection;
 using UnityEngine;
 using Verse;
 
@@ -19,15 +18,6 @@ namespace OpenTheWindows
             Delta_IndoorsNoRoof = 5f,
             Delta_OutdoorsNoRoof = 8f,
             DeltaFactor_InBed = 0.2f;
-
-        //private static PropertyInfo
-        //    disabledInfo = AccessTools.Property(typeof(Need_Outdoors), "Disabled"),
-        //    curLevelInfo = AccessTools.Property(typeof(Need_Outdoors), "CurLevel"),
-        //    isFrozenInfo = AccessTools.Property(typeof(Need), "IsFrozen");
-
-        //private static FieldInfo 
-        //    pawnInfo = AccessTools.Field(typeof(Need_Outdoors), "pawn"),
-        //    lastEffectiveDeltaInfo = AccessTools.Field(typeof(Need_Outdoors), "lastEffectiveDelta");
 
         private static float DeltaFactor_NoNaturalLight() => OpenTheWindowsSettings.IndoorsNoNaturalLightPenalty; //indoors accelerated degradation when not under windows
 

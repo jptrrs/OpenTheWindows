@@ -69,13 +69,6 @@ namespace OpenTheWindows
         {
             int index = map.cellIndices.CellToIndex(tile);
             ExcludeTile(index, bypass);
-            //if (!WindowCells.Contains(index)) return;
-            //if (DubsSkylights && skyLightGrid[map.cellIndices.CellToIndex(tile)]) return;
-            //if (!bypass && tile.IsTransparentRoof(map)) return;
-            //WindowCells.Remove(index);
-            //map.glowGrid.DirtyCache(tile);
-            //map.mapDrawer.MapMeshDirty(tile, MapMeshFlagDefOf.Roofs);
-            //lightOverlay.needsUpdate = true;
         }
 
         public void ExcludeTile(int index, bool bypass = false)
@@ -86,14 +79,6 @@ namespace OpenTheWindows
             WindowCells.Remove(index);
             UpdateMapAt(index);
         }
-
-        //public void ExcludeTileRange(IEnumerable<IntVec3> tiles)
-        //{
-        //    foreach (var c in tiles)
-        //    {
-        //        ExcludeTile(c);
-        //    }
-        //}
 
         public void ExcludeTileRange(List<int> tiles)
         {
@@ -126,11 +111,6 @@ namespace OpenTheWindows
         {
             int index = map.cellIndices.CellToIndex(tile);
             IncludeTile(index);
-            //if (WindowCells.Contains(index)) return;
-            //WindowCells.Add(index);
-            //map.glowGrid.DirtyCache(tile);
-            //map.mapDrawer.MapMeshDirty(tile, MapMeshFlagDefOf.Roofs);
-            //lightOverlay.needsUpdate = true;
         }
 
         public void IncludeTile(int index)
@@ -139,14 +119,6 @@ namespace OpenTheWindows
             WindowCells.Add(index);
             UpdateMapAt(index);
         }
-
-        //public void IncludeTileRange(IEnumerable<IntVec3> tiles)
-        //{
-        //    foreach (var c in tiles)
-        //    {
-        //        IncludeTile(c);
-        //    }
-        //}
 
         public void IncludeTileRange(List<int> tiles)
         {
@@ -248,6 +220,5 @@ namespace OpenTheWindows
             map.mapDrawer.MapMeshDirty(tile, MapMeshFlagDefOf.Roofs);
             lightOverlay.needsUpdate = true;
         }
-
     }
 }
