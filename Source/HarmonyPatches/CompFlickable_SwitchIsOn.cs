@@ -16,7 +16,7 @@ namespace OpenTheWindows
                 {
                     return false;
                 }
-                compWindow.SwitchOnInt = value;
+                compWindow.switchOnInt = value;
                 var parent = compWindow.parent;
                 if (___switchOnInt)
                 {

@@ -8,8 +8,6 @@ namespace OpenTheWindows
     [HarmonyPatch(typeof(RoofGrid), nameof(RoofGrid.SetRoof))]
     public static class RoofGrid_SetRoof
     {
-        static FieldInfo MapInfo = AccessTools.Field(typeof(RoofGrid), "map");
-
         public static void Prefix(RoofGrid __instance, IntVec3 c, out RoofDef __state)
         {
             __state = HarmonyPatcher.TransparentRoofs ? __instance.RoofAt(c) : null;
@@ -25,7 +23,7 @@ namespace OpenTheWindows
                 center = c,
                 removed = removing,
                 roofDef = defToPass,
-                map = (Map)MapInfo.GetValue(__instance)
+                map = __instance.map
             };
             MapUpdateWatcher.OnMapUpdate(__instance, info);
         }

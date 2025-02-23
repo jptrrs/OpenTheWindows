@@ -9,7 +9,8 @@ namespace OpenTheWindows
             compClass = typeof(CompWindow);
         }
 
-        public string signal = "";
+        public Signal signal = Signal.light;
+        public enum Signal { light, air, both };
         public bool automated = false;
     }
 }
