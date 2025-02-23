@@ -68,20 +68,38 @@ namespace OpenTheWindows
         public void ExcludeTile(IntVec3 tile, bool bypass = false)
         {
             int index = map.cellIndices.CellToIndex(tile);
-            if (!WindowCells.Contains(index)) return;
-            if (DubsSkylights && skyLightGrid[map.cellIndices.CellToIndex(tile)]) return;
-            if (!bypass && tile.IsTransparentRoof(map)) return;
-            WindowCells.Remove(index);
-            map.glowGrid.DirtyCache(tile);
-            map.mapDrawer.MapMeshDirty(tile, MapMeshFlagDefOf.Roofs);
-            lightOverlay.needsUpdate = true;
+            ExcludeTile(index, bypass);
+            //if (!WindowCells.Contains(index)) return;
+            //if (DubsSkylights && skyLightGrid[map.cellIndices.CellToIndex(tile)]) return;
+            //if (!bypass && tile.IsTransparentRoof(map)) return;
+            //WindowCells.Remove(index);
+            //map.glowGrid.DirtyCache(tile);
+            //map.mapDrawer.MapMeshDirty(tile, MapMeshFlagDefOf.Roofs);
+            //lightOverlay.needsUpdate = true;
         }
 
-        public void ExcludeTileRange(IEnumerable<IntVec3> tiles)
+        public void ExcludeTile(int index, bool bypass = false)
         {
-            foreach (var c in tiles)
+            if (!WindowCells.Contains(index)) return;
+            if (DubsSkylights && skyLightGrid[index]) return;
+            if (!bypass && map.IsTransparentRoof(index)) return;
+            WindowCells.Remove(index);
+            UpdateMapAt(index);
+        }
+
+        //public void ExcludeTileRange(IEnumerable<IntVec3> tiles)
+        //{
+        //    foreach (var c in tiles)
+        //    {
+        //        ExcludeTile(c);
+        //    }
+        //}
+
+        public void ExcludeTileRange(List<int> tiles)
+        {
+            foreach (var i in tiles)
             {
-                ExcludeTile(c);
+                ExcludeTile(i);
             }
         }
 
@@ -107,18 +125,34 @@ namespace OpenTheWindows
         public void IncludeTile(IntVec3 tile)
         {
             int index = map.cellIndices.CellToIndex(tile);
-            if (WindowCells.Contains(index)) return;
-            WindowCells.Add(index);
-            map.glowGrid.DirtyCache(tile);
-            map.mapDrawer.MapMeshDirty(tile, MapMeshFlagDefOf.Roofs);
-            lightOverlay.needsUpdate = true;
+            IncludeTile(index);
+            //if (WindowCells.Contains(index)) return;
+            //WindowCells.Add(index);
+            //map.glowGrid.DirtyCache(tile);
+            //map.mapDrawer.MapMeshDirty(tile, MapMeshFlagDefOf.Roofs);
+            //lightOverlay.needsUpdate = true;
         }
 
-        public void IncludeTileRange(IEnumerable<IntVec3> tiles)
+        public void IncludeTile(int index)
         {
-            foreach (var c in tiles)
+            if (WindowCells.Contains(index)) return;
+            WindowCells.Add(index);
+            UpdateMapAt(index);
+        }
+
+        //public void IncludeTileRange(IEnumerable<IntVec3> tiles)
+        //{
+        //    foreach (var c in tiles)
+        //    {
+        //        IncludeTile(c);
+        //    }
+        //}
+
+        public void IncludeTileRange(List<int> tiles)
+        {
+            foreach (var i in tiles)
             {
-                IncludeTile(c);
+                IncludeTile(i);
             }
         }
 
@@ -179,14 +213,15 @@ namespace OpenTheWindows
 
         private void ReactSkylights(MapUpdateWatcher.MapUpdateInfo info, IEnumerable<IntVec3> tiles)
         {
+            List<int> cells = tiles.Select(x => map.cellIndices.CellToIndex(x)).ToList();
             if (info.removed)
             {
-                ExcludeTileRange(tiles);
+                ExcludeTileRange(cells);
                 WindowUtility.ResetWindowsAround(map, info.center);
             }
             else
             {
-                IncludeTileRange(tiles);
+                IncludeTileRange(cells);
             }
         }
 
@@ -205,5 +240,14 @@ namespace OpenTheWindows
                 }
             }
         }
+
+        private void UpdateMapAt(int index)
+        {
+            IntVec3 tile = map.cellIndices.IndexToCell(index);
+            map.glowGrid.DirtyCache(tile);
+            map.mapDrawer.MapMeshDirty(tile, MapMeshFlagDefOf.Roofs);
+            lightOverlay.needsUpdate = true;
+        }
+
     }
 }

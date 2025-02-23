@@ -16,27 +16,46 @@ namespace OpenTheWindows
             return num <= range.max && num >= range.max;
         }
 
-        public static bool IsInterior(this IntVec3 cell, Building_Window window)
+        //public static bool IsInterior(this IntVec3 cell, Building_Window window)
+        //{
+        //    return cell.IsInterior(window.Position, window.Facing);
+        //}
+
+        //public static bool IsInterior(this IntVec3 cell, IntVec3 origin, LinkDirections facing)
+        //{
+        //    switch (facing)
+        //    {
+        //        case LinkDirections.Up:
+        //            return cell.z < origin.z;
+        //        case LinkDirections.Right:
+        //            return cell.x < origin.x;
+        //        case LinkDirections.Down:
+        //            return cell.z > origin.z;
+        //        case LinkDirections.Left:
+        //            return cell.x > origin.x;
+        //        case LinkDirections.None:
+        //            return false;
+        //    }
+        //    return false;
+        //}
+
+        public static bool IsInterior(this int cell, Building_Window window)
         {
-            return cell.IsInterior(window.Position, window.Facing);
+            return cell.IsInterior(window.PositionIdx, window.Facing);
         }
 
-        public static bool IsInterior(this IntVec3 cell, IntVec3 origin, LinkDirections facing)
+        public static bool IsInterior(this int cell, int origin, LinkDirections facing)
         {
             switch (facing)
             {
                 case LinkDirections.Up:
-                    if (cell.z < origin.z) return true;
-                    break;
+                    return cell < origin;
                 case LinkDirections.Right:
-                    if (cell.x < origin.x) return true;
-                    break;
+                    return cell < origin;
                 case LinkDirections.Down:
-                    if (cell.z > origin.z) return true;
-                    break;
+                    return cell > origin;
                 case LinkDirections.Left:
-                    if (cell.x > origin.x) return true;
-                    break;
+                    return cell > origin;
                 case LinkDirections.None:
                     return false;
             }
@@ -47,6 +66,12 @@ namespace OpenTheWindows
         {
             if (!HarmonyPatcher.TransparentRoofs) return false;
             return HarmonyPatcher.TransparentRoofsList.Contains(map.roofGrid.RoofAt(cell));
+        }
+
+        public static bool IsTransparentRoof(this Map map, int index)
+        {
+            if (!HarmonyPatcher.TransparentRoofs) return false;
+            return HarmonyPatcher.TransparentRoofsList.Contains(map.roofGrid.RoofAt(index));
         }
 
         //Adapted from Dubs Skylights

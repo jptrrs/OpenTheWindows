@@ -94,48 +94,47 @@ namespace OpenTheWindows
             return result;
         }
 
-        //public static bool ClearForward(IntVec3 position, bool horizontal, cellTest test, bool inside, int dist, out IntVec3 output)
-        //{
-        //    int cellx = position.x;
-        //    int cellz = position.z;
-        //    int deltaX = horizontal ? dist : 0;
-        //    int deltaZ = horizontal ? 0 : dist;
-        //    IntVec3 target = new IntVec3(cellx + deltaX, 0, cellz + deltaZ);
-        //    bool result = test(target, inside);
-        //    output = result ? target : IntVec3.Zero;
-        //    return result;
-        //}
-
-        //public static bool ClearBackward(IntVec3 position, bool horizontal, cellTest test, bool inside, int dist, out IntVec3 output)
-        //{
-        //    int cellx = position.x;
-        //    int cellz = position.z;
-        //    int targetX = horizontal ? Math.Max(0, cellx - dist) : cellx;
-        //    int targetZ = horizontal ? cellz : Math.Max(0, cellz - dist);
-        //    IntVec3 target = new IntVec3(targetX, 0, targetZ);
-        //    bool result = test(target, inside);
-        //    output = result ? target : IntVec3.Zero;
-        //    return result;
-        //}
-
-
-        //with Owlchemist
         public static bool ClearForward(IntVec3 position, bool horizontal, cellTest test, bool inside, int dist, out IntVec3 output)
         {
-            IntVec3 target = new IntVec3(position.x + (horizontal ? dist : 0), 0, position.z + (horizontal ? 0 : dist));
+            int cellx = position.x;
+            int cellz = position.z;
+            int deltaX = horizontal ? dist : 0;
+            int deltaZ = horizontal ? 0 : dist;
+            IntVec3 target = new IntVec3(cellx + deltaX, 0, cellz + deltaZ);
             bool result = test(target, inside);
             output = result ? target : IntVec3.Zero;
             return result;
         }
 
-        //with Owlchemist
         public static bool ClearBackward(IntVec3 position, bool horizontal, cellTest test, bool inside, int dist, out IntVec3 output)
         {
-            IntVec3 target = new IntVec3(horizontal ? Math.Max(0, position.x - dist) : position.x, 0, horizontal ? position.z : Math.Max(0, position.z - dist));
+            int cellx = position.x;
+            int cellz = position.z;
+            int targetX = horizontal ? Math.Max(0, cellx - dist) : cellx;
+            int targetZ = horizontal ? cellz : Math.Max(0, cellz - dist);
+            IntVec3 target = new IntVec3(targetX, 0, targetZ);
             bool result = test(target, inside);
             output = result ? target : IntVec3.Zero;
             return result;
         }
+
+        ////with Owlchemist
+        //public static bool ClearForward(IntVec3 position, bool horizontal, cellTest test, bool inside, int dist, out IntVec3 output)
+        //{
+        //    IntVec3 target = new IntVec3(position.x + (horizontal ? dist : 0), 0, position.z + (horizontal ? 0 : dist));
+        //    bool result = test(target, inside);
+        //    output = result ? target : IntVec3.Zero;
+        //    return result;
+        //}
+
+        ////with Owlchemist
+        //public static bool ClearBackward(IntVec3 position, bool horizontal, cellTest test, bool inside, int dist, out IntVec3 output)
+        //{
+        //    IntVec3 target = new IntVec3(horizontal ? Math.Max(0, position.x - dist) : position.x, 0, horizontal ? position.z : Math.Max(0, position.z - dist));
+        //    bool result = test(target, inside);
+        //    output = result ? target : IntVec3.Zero;
+        //    return result;
+        //}
 
         public static void FindEnds(Building_Window window)
         {
