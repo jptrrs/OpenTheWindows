@@ -184,6 +184,7 @@ namespace OpenTheWindows
 
         public override void DeSpawn(DestroyMode mode = DestroyMode.Vanish)
         {
+            //fetched from Owlchemist's
             //We need to manually clean up the districts and rooms since it's based on vanilla doors which are only designed for 1x1 size
             Map map = Map;
             foreach (var cell in this.OccupiedRect().Cells)

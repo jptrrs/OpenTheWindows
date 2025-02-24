@@ -35,11 +35,11 @@ namespace OpenTheWindows
         {
             if (window != null && window.open && window.isFacingSet && window.view.Count > 0)
             {
-                IEnumerable<IntVec3> view = window.view;
                 float result = 0;
                 List<Thing> counted = new List<Thing>();
-                foreach (IntVec3 c in view)
+                foreach (int i in window.view)
                 {
+                    IntVec3 c = window.Map.cellIndices.IndexToCell(i);
                     var things = window.Map.thingGrid.ThingsListAt(c).Except(counted);
                     var skipped = things.Where(FilterOut);
                     result += BeautyUtility.CellBeauty(c, window.Map, skipped.Union(counted).ToList());

@@ -1,49 +1,13 @@
-﻿using HarmonyLib;
-using RimWorld;
-using System;
+﻿using RimWorld;
 using System.Collections.Generic;
-using System.Reflection;
-using UnityEngine;
 using Verse;
 
 namespace OpenTheWindows
 {
     public class CompWindow : CompFlickable
     {
-        private FieldInfo baseWantSwitchInfo = AccessTools.Field(typeof(CompFlickable), "wantSwitchOn");
-        private FieldInfo baseSwitchOnIntInfo = AccessTools.Field(typeof(CompFlickable), "switchOnInt");
-
-        public new CompProperties_Window Props
-        {
-            get
-            {
-                return (CompProperties_Window)props;
-            }
-        }
-
-        public bool WantSwitchOn
-        {
-            get
-            {
-                return (bool)baseWantSwitchInfo.GetValue(this);
-            }
-            set
-            {
-                baseWantSwitchInfo.SetValue(this, value);
-            }
-        }
-
-        public bool SwitchOnInt
-        {
-            get
-            {
-                return (bool)baseSwitchOnIntInfo.GetValue(this);
-            }
-            set
-            {
-                baseSwitchOnIntInfo.SetValue(this, value);
-            }
-        }
+        public new CompProperties_Window Props;
+        Building_Window window;
 
         public new string FlickedOffSignal => Props.signal + "Off";
 
@@ -55,15 +19,15 @@ namespace OpenTheWindows
             SetupState();
         }
 
+        //fetched from Owlchemist's
         public void SetupState()
         {
-            Building_Window window = parent as Building_Window;
+            Props = (CompProperties_Window)props;
+            window = parent as Building_Window;
             bool state = false;
-            if (Props.signal == "light" || Props.signal == "both") state = window.open;
-            else if (Props.signal == "air") state = window.venting;
-            WantSwitchOn = state;
-            SwitchOnInt = state;
-            SwitchIsOn = state;
+            if (Props.signal == CompProperties_Window.Signal.light || Props.signal == CompProperties_Window.Signal.both) state = window.open;
+            else if (Props.signal == CompProperties_Window.Signal.air) state = window.venting;
+            wantSwitchOn = switchOnInt = SwitchIsOn = state;
         }
 
         private CompPowerTrader PowerComp
@@ -85,10 +49,10 @@ namespace OpenTheWindows
 
         public void FlickFor(bool request)
         {
-            if (SwitchIsOn != request || WantsFlick())
+            if (switchOnInt != request || WantsFlick())
             {
-                WantSwitchOn = request;
-                if (Powered)
+                wantSwitchOn = request;
+                if (Props.automated && (window.powerComp?.PowerOn ?? false))
                 {
                     DoFlick();
                     return;
@@ -101,37 +65,23 @@ namespace OpenTheWindows
 
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {
-            if (parent.Faction == Faction.OfPlayer)
+            if (parent.factionInt.def.isPlayer)
             {
-                Building_Window window = parent as Building_Window;
                 yield return new Command_Toggle()
                 {
                     hotKey = KeyBindingDefOf.Command_TogglePower,
-                    icon = (Texture2D)AccessTools.Property(typeof(CompFlickable), "CommandTex").GetValue(this),
+                    icon = CommandTex,
                     defaultLabel = Props.commandLabelKey.Translate(),
-                    defaultDesc = Props.commandDescKey.Translate() + ManualNote,
-                    isActive = () => WantSwitchOn,
-                    disabled = GizmoDisable,
+                    defaultDesc = Props.automated ? Props.commandDescKey.Translate() + ManualNote : Props.commandDescKey.Translate(),
+                    isActive = () => wantSwitchOn,
+                    disabled = (window.autoVent && Props.signal != CompProperties_Window.Signal.light) || (window.alarmReact && AlertManagerProxy.onAlert),
                     disabledReason = window.alarmReact ? "DisabledByEmergency".Translate() : "DisabledForAutoVentilation".Translate(),
                     toggleAction = delegate ()
                     {
-                        FlickFor(!WantSwitchOn);
+                        FlickFor(!wantSwitchOn);
                     }
                 };
             }
-            yield break;
         }
-
-        private bool GizmoDisable
-        {
-            get
-            {
-                Building_Window window = parent as Building_Window;
-                bool ifAutovent = (Props.signal == "air" || Props.signal == "both") && window.autoVent;
-                bool ifAlarm = window.alarmReact && AlertManagerProxy.onAlert;
-                return ifAutovent || ifAlarm;
-            }
-        }
-
     }
 }
