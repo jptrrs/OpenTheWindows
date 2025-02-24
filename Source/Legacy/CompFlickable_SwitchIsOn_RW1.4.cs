@@ -4,6 +4,7 @@ using Verse;
 
 namespace OpenTheWindows
 {
+    //Changed in RW 1.5
     //Replaces SwitchIsOn set functionality for CompWindow (because overriding won't cut it)
     [HarmonyPatch(typeof(CompFlickable),"SwitchIsOn", MethodType.Setter)]
     public static class CompFlickable_SwitchIsOn

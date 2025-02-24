@@ -11,6 +11,7 @@ using Verse.Noise;
 
 namespace OpenTheWindows
 {
+    //Changed in RW 1.5
     using static WindowUtility;
 
     public class Building_Window : Building_Door

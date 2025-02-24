@@ -7,6 +7,7 @@ using Verse;
 
 namespace OpenTheWindows
 {
+    //Changed in RW 1.5
     public class StatPart_Landscape : StatPart
     {
         public override string ExplanationPart(StatRequest req)
