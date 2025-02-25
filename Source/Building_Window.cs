@@ -425,7 +425,7 @@ namespace OpenTheWindows
                 Map.GetComponent<MapComp_Windows>().IncludeTileRange(illuminated);
                 needsUpdate = false;
             }
-            if (Current.gameInt.tickManager.ticksGameInt % tickRareInterval == HashInterval) TickRare();
+            if (TimeToUpdate()) TickRare();
         }
 
         public override void TickRare()
@@ -555,8 +555,7 @@ namespace OpenTheWindows
 
         private void AutoVentControl()
         {
-            int ticksGame = Find.TickManager.TicksGame;
-            if ((ticksGame % (tickRareInterval * 3) != HashInterval) && !badTemperatureOnce) return; //Checks only each 12,5s or if bad temperature on last cycle.
+            if (TimeToUpdate(3) && !badTemperatureOnce) return; //Checks only each 12,5s or if bad temperature on last cycle.
             float insideTemp = AttachedRoom.Temperature;
             float outsideTemp = GenTemperature.GetTemperatureForCell(Outside, Map);
             if (TargetTemp.Includes(insideTemp)) //Stand down if temperature is right.
@@ -732,6 +731,11 @@ namespace OpenTheWindows
                 return;
             }
             niceOutside = true;
+        }
+
+        private bool TimeToUpdate(int period = 1)
+        {
+            return Find.TickManager.TicksGame % (tickRareInterval * period) != HashInterval;
         }
 
         #endregion custom
