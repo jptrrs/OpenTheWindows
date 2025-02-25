@@ -556,7 +556,7 @@ namespace OpenTheWindows
 
         private void AutoVentControl()
         {
-            if (TimeToUpdate(3) && !badTemperatureOnce) return; //Checks only each 12,5s or if bad temperature on last cycle.
+            if (!TimeToUpdate(2) && !badTemperatureOnce) return; //Checks only each 8s or if bad temperature on last cycle.
             float insideTemp = AttachedRoom.Temperature;
             float outsideTemp = GenTemperature.GetTemperatureForCell(Outside, Map);
             if (TargetTemp.Includes(insideTemp)) //Stand down if temperature is right.
@@ -736,7 +736,7 @@ namespace OpenTheWindows
 
         private bool TimeToUpdate(int period = 1)
         {
-            return Find.TickManager.TicksGame % (tickRareInterval * period) != HashInterval;
+            return Find.TickManager.TicksGame % (tickRareInterval * period) == HashInterval;
         }
 
         #endregion custom
