@@ -65,12 +65,6 @@ namespace OpenTheWindows
             }
         }
 
-        public void ExcludeTile(IntVec3 tile, bool bypass = false)
-        {
-            int index = map.cellIndices.CellToIndex(tile);
-            ExcludeTile(index, bypass);
-        }
-
         public void ExcludeTile(int index, bool bypass = false)
         {
             if (!WindowCells.Contains(index)) return;
@@ -105,12 +99,6 @@ namespace OpenTheWindows
             array = section.SectionCells();
             SectionCellsCache.Add(section, array);
             return array;
-        }
-
-        public void IncludeTile(IntVec3 tile)
-        {
-            int index = map.cellIndices.CellToIndex(tile);
-            IncludeTile(index);
         }
 
         public void IncludeTile(int index)
@@ -189,7 +177,7 @@ namespace OpenTheWindows
             if (info.removed)
             {
                 ExcludeTileRange(cells);
-                WindowUtility.ResetWindowsAround(map, info.center);
+                WindowUtility.ResetWindowsAround(map, info.origin);
             }
             else
             {
@@ -203,12 +191,12 @@ namespace OpenTheWindows
             {
                 if (info.removed)
                 {
-                    ExcludeTile(info.center, true);
-                    WindowUtility.ResetWindowsAround(map, info.center);
+                    ExcludeTile(info.Origin, true);
+                    WindowUtility.ResetWindowsAround(map, info.origin);
                 }
                 else
                 {
-                    IncludeTile(info.center);
+                    IncludeTile(info.Origin);
                 }
             }
         }

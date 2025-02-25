@@ -20,7 +20,7 @@ namespace OpenTheWindows
             RoofDef defToPass = HarmonyPatcher.TransparentRoofs ? (removing ? __state : def) : def;
             var info = new MapUpdateWatcher.MapUpdateInfo()
             {
-                center = c,
+                origin = c,
                 removed = removing,
                 roofDef = defToPass,
                 map = __instance.map

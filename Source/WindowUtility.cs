@@ -29,12 +29,12 @@ namespace OpenTheWindows
             return area;
         }
 
-        public delegate bool cellTest(IntVec3 cell, bool inside = false);
+        public delegate bool cellTest(IntVec3 pos, bool inside = false);
 
         public static List<IntVec3> UnobstructedGhost(IntVec3 position, Rot4 rot, Map map, int maxreach, bool horizontal, bool bleedRight, bool bleedLeft)
         {
             bool southward = rot == Rot4.South || rot == Rot4.West;
-            cellTest clear = (c, b) => c.InBounds(map) && c.CanBeSeenOverFast(map) && !map.roofGrid.Roofed(c);
+            cellTest clear = (pos, b) => pos.InBounds(map) && pos.CanBeSeenOverFast(map) && !map.roofGrid.Roofed(pos);
 
             //3. Determine clearance and max reach on each side
             Dictionary<IntVec3, int> cleared = new Dictionary<IntVec3, int>();
@@ -93,26 +93,28 @@ namespace OpenTheWindows
             return result;
         }
 
-        public static bool ClearForward(IntVec3 position, bool horizontal, cellTest test, bool inside, int dist, out IntVec3 output)
+        public static bool ClearForward(IntVec3 position, bool horizontal, cellTest test, bool inside, int dist, out IntVec3 output, int index = 0)
         {
             int cellx = position.x;
             int cellz = position.z;
             int deltaX = horizontal ? dist : 0;
             int deltaZ = horizontal ? 0 : dist;
             IntVec3 target = new IntVec3(cellx + deltaX, 0, cellz + deltaZ);
-            bool result = test(target, inside);
+            bool result = test(target, inside, index);
+            Log.Message($"ClearForward from {position} to {target} is {result}. inside: {inside}, index {index}");
             output = result ? target : IntVec3.Zero;
             return result;
         }
 
-        public static bool ClearBackward(IntVec3 position, bool horizontal, cellTest test, bool inside, int dist, out IntVec3 output)
+        public static bool ClearBackward(IntVec3 position, bool horizontal, cellTest test, bool inside, int dist, out IntVec3 output, int index = 0)
         {
             int cellx = position.x;
             int cellz = position.z;
             int targetX = horizontal ? Math.Max(0, cellx - dist) : cellx;
             int targetZ = horizontal ? cellz : Math.Max(0, cellz - dist);
             IntVec3 target = new IntVec3(targetX, 0, targetZ);
-            bool result = test(target, inside);
+            bool result = test(target, inside, index);
+            Log.Message($"ClearBackward from {position} to {target} is {result}. inside: {inside}, index {index}");
             output = result ? target : IntVec3.Zero;
             return result;
         }

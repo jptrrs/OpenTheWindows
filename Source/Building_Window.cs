@@ -1,13 +1,10 @@
-﻿using HarmonyLib;
-using RimWorld;
+﻿using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Verse;
-using Verse.Noise;
 
 namespace OpenTheWindows
 {
@@ -430,7 +427,6 @@ namespace OpenTheWindows
 
         public override void TickRare()
         {
-            Log.Message($"{this} TickRare");
             if (Spawned)
             {
                 if (venting)
@@ -625,20 +621,18 @@ namespace OpenTheWindows
         private void MapUpdateHandler(object sender, MapUpdateWatcher.MapUpdateInfo info)
         {
             if (info.map != Map) return;
-            var cell = info.center;
-            int cellIdx = info.map.cellIndices.CellToIndex(cell);
-            bool removed = info.removed;
+            var cellIdx = info.Origin;
+            var cellPos = info.origin;
             bool roof = sender is RoofGrid;
-            if (isFacingSet && roof && cellIdx.IsInterior(this) && !GenAdj.CellsAdjacentCardinal(this).Contains(cell)) return;
+            if (isFacingSet && roof && cellIdx.IsInterior(this) && !GenAdj.CellsAdjacentCardinal(this).Contains(cellPos)) return;
             bool unsureFace = false;
             for (int i = 0; i < scanLines.Count(); i++)
             {
-                if (scanLines[i].Affected(cell))
+                ScanLine line = scanLines[i];
+                if (line.scanLine.Contains(cellIdx))
                 {
-                    IntVec3 motivator = roof ? IntVec3.Zero : cell;
-                    var line = scanLines[i];
                     bool before = line.facingSet;
-                    line.FindObstruction(motivator, removed, info.map);
+                    line.FindObstruction(cellPos, info.removed, info.map);
                     unsureFace |= line.facingSet != before;
                     needsUpdate = true;
                 }
@@ -689,18 +683,19 @@ namespace OpenTheWindows
             report.Append($"[OpenTheWindows] Diagnostics for {this}:\n");
             bool hasRoom = AttachedRoom != null;
             string roomName = hasRoom ? $" ({AttachedRoomName})" : "";
-            report.AppendLine($"AttachedRoom? {hasRoom.ToStringYesNo()}{roomName}");
-            report.AppendLine($"isFacingSet? {isFacingSet.ToStringYesNo()}");
-            report.AppendLine($"open? {open.ToStringYesNo()}");
-            report.AppendLine($"venting? {venting.ToStringYesNo()}");
-            report.AppendLine($"needsUpdate? {needsUpdate.ToStringYesNo()}");
+            report.Append($"AttachedRoom? {hasRoom.ToStringYesNo()}{roomName}");
+            report.AppendWithSeparator($"isFacingSet? {isFacingSet.ToStringYesNo()}", " | ");
+            report.AppendWithSeparator($"open? {open.ToStringYesNo()}", " | ");
+            report.AppendWithSeparator($"venting? {venting.ToStringYesNo()}", " | ");
+            report.AppendWithSeparator($"needsUpdate? {needsUpdate.ToStringYesNo()}", " | ");
             if (scanLines.NullOrEmpty())
             {
-                report.AppendLine($"No scanLines!");
+                report.AppendWithSeparator($"No scanLines!", " | ");
             }
             else
             {
                 var scanLinesCount = scanLines.Count();
+                report.AppendWithSeparator($"{scanLinesCount} scanlines:\n", " | ");
                 for (int i = 0; i < scanLinesCount; i++)
                 {
                     var line = scanLines[i];
@@ -773,10 +768,10 @@ namespace OpenTheWindows
                 bleeds = false,
                 facingSet = false;
 
-            private List<int>
-                clearLine = new List<int>(),
-                scanLine = new List<int>();
+            public List<int> scanLine = new List<int>();
 
+            private List<int> clearLine = new List<int>();
+            
             private Map map;
             private int maxreach;
             private Building_Window parent;
@@ -807,10 +802,16 @@ namespace OpenTheWindows
             private ScanLine SiblingLeft => parent.scanLines.Find(x => x.position == toLeft);
             private ScanLine SiblingRight => parent.scanLines.Find(x => x.position == toRight);
 
-            public bool Affected(IntVec3 cell)
-            {
-                return scanLine.Contains(map.cellIndices.CellToIndex(cell));
-            }
+            //public bool Affected(IntVec3 cell)
+            //{
+            //    if (map == null)
+            //    {
+            //        Log.Error("Map is null!");
+            //        return false;
+            //    }
+            //    Log.Message($"scanline count: {scanLine.Count()}");
+            //    return scanLine.Contains(map.cellIndices.CellToIndex(cell));
+            //}
 
             public void CastLight()
             {
@@ -823,10 +824,10 @@ namespace OpenTheWindows
                 }
             }
 
-            public void FindObstruction(IntVec3 motivator, bool removed = false, Map updatedMap = null)
+            public void FindObstruction(IntVec3 motivatorPos, bool removed = false, Map updatedMap = null)
             {
                 if (updatedMap != null) map = updatedMap;
-                clearLine = Unobstructed(motivator, removed);
+                clearLine = Unobstructed(motivatorPos, removed);
             }
 
             public void Reset()
@@ -850,12 +851,11 @@ namespace OpenTheWindows
                 }
             }
 
-            public List<int> Unobstructed(IntVec3 motivator, bool removed = false)
+            public List<int> Unobstructed(IntVec3 motivatorPos, bool removed)
             {
                 //1. What is the test?
-                bool lazy = motivator == IntVec3.Zero;
-                cellTest motivated = (target, inside) => target == motivator ? removed : IsClear(target, inside);
-                cellTest clear = lazy ? IsClear : motivated;
+                cellTest motivated = (pos, inside) => pos == motivatorPos ? removed : IsClear(pos, inside); //when provoked by an external event
+                cellTest clear = motivatorPos == IntVec3.Zero ? IsClear : motivated; //either on spawn or provoked
 
                 //2. Determine facing
                 IntVec3 dummy;
@@ -918,9 +918,10 @@ namespace OpenTheWindows
                 }
             }
 
-            private bool IsClear(IntVec3 c, bool inside)
+            private bool IsClear(IntVec3 pos, bool inside)
             {
-                return Affected(c) && c.CanBeSeenOverFast(map) && (inside || !map.roofGrid.Roofed(c) || c.IsTransparentRoof(map));
+                int index = map.cellIndices.CellToIndex(pos);
+                return scanLine.Contains(index) && pos.CanBeSeenOverFast(map) && (inside || !map.roofGrid.Roofed(index) || map.IsTransparentRoof(index));
             }
 
             private bool SetFacing(bool overhangFwd, bool overhangBwd)

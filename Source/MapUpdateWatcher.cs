@@ -16,10 +16,32 @@ namespace OpenTheWindows
 
         public class MapUpdateInfo : EventArgs
         {
-            public IntVec3 center;
+            public IntVec3 origin;
             public bool removed;
             public RoofDef roofDef;
             public Map map;
+            private int originIdx;
+            public int Origin
+            {
+                get
+                {
+                    if (originIdx == 0)
+                    {
+                        originIdx = map.cellIndices.CellToIndex(origin);
+                    }
+                    return originIdx;
+                }
+                set
+                {
+                    originIdx = value;
+                    if (map == null)
+                    {
+                        Log.Error($"[HumanResources] Error while trying to set the origin of a MapUpdate event: the map field must be set first");
+                        return;
+                    }
+                    origin = map.cellIndices.IndexToCell(value);
+                }
+            }
         }
     }
 }
