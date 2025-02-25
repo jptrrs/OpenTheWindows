@@ -98,7 +98,7 @@ namespace OpenTheWindows
         {
             get
             {
-                if (hashInterval == 0) hashInterval = thingIDNumber % 200;
+                if (hashInterval == 0) hashInterval = thingIDNumber % tickRareInterval;
                 return hashInterval;
             }
         }
@@ -557,7 +557,7 @@ namespace OpenTheWindows
         private void AutoVentControl()
         {
             int ticksGame = Find.TickManager.TicksGame;
-            if ((ticksGame % (tickRareInterval * 3) != 0) && !badTemperatureOnce) return; //Checks only each 12,5s or if bad temperature on last cycle.
+            if ((ticksGame % (tickRareInterval * 3) != HashInterval) && !badTemperatureOnce) return; //Checks only each 12,5s or if bad temperature on last cycle.
             float insideTemp = AttachedRoom.Temperature;
             float outsideTemp = GenTemperature.GetTemperatureForCell(Outside, Map);
             if (TargetTemp.Includes(insideTemp)) //Stand down if temperature is right.
