@@ -9,6 +9,7 @@
       <mods>
         <li>nanoce.glasslights</li>
         <li>spoden.justglass</li>
+        <li>ReBuild.COTR.DoorsAndCorners</li>
       </mods>
 
       <nomatch Class="PatchOperationSequence">

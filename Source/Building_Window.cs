@@ -552,7 +552,6 @@ namespace OpenTheWindows
 
         private void AutoVentControl()
         {
-            Log.Message($"{this} AutoVentControl");
             if (!TimeToUpdate(2) && !badTemperatureOnce) return; //Checks only each 8s or if bad temperature on last cycle.
             float insideTemp = AttachedRoom.Temperature;
             float outsideTemp = GenTemperature.GetTemperatureForCell(Outside, Map);

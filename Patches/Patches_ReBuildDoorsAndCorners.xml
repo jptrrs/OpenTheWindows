@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+	<Operation Class="JPTools.PatchOperationFindModById">
+		<mods>
+      <li>ReBuild.COTR.DoorsAndCorners</li>
+		</mods>
+		<match Class="PatchOperationSequence">
+			<success>Normal</success>
+			<operations>
+
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/RecipeDef[@ParentName="RB_Make_GlassBase"]  </xpath>
+					<value>
+            <researchPrerequisite>Glassworks</researchPrerequisite>
+					</value>				
+				</li>
+       
+				<li Class="PatchOperationReplace">
+					<xpath>Defs/ThingDef[defName = "OpenWindow"]/costList</xpath>
+					<value>
+						<costList>
+              <RB_Glass>4</RB_Glass>
+						</costList>
+					</value>				
+				</li>
+
+				<li Class="PatchOperationReplace">
+					<xpath>Defs/ThingDef[defName = "LargeOpenWindow"]/costList</xpath>
+					<value>
+						<costList>
+              <RB_Glass>12</RB_Glass>
+            </costList>
+					</value>				
+				</li>
+
+
+        <li Class="PatchOperationAdd">
+          <xpath>Defs/ThingDef[defName = "HugeOpenWindow"]</xpath>
+          <value>
+            <costList>
+              <RB_Glass>20</RB_Glass>
+            </costList>
+          </value>
+        </li>
+
+        <li Class="PatchOperationAdd">
+          <xpath>Defs/ThingDef[defName = "ReinforcedOpenWindow"]</xpath>
+          <value>
+            <costList>
+              <RB_BallisticGlass>4</RB_BallisticGlass>
+            </costList>
+          </value>
+        </li>
+
+        <li Class="PatchOperationAdd">
+          <xpath>Defs/ThingDef[defName = "LargeReinforcedOpenWindow"]</xpath>
+          <value>
+            <costList>
+              <RB_BallisticGlass>12</RB_BallisticGlass>
+            </costList>
+          </value>
+        </li>
+
+			</operations>
+		</match> 
+	</Operation>
+
+</Patch>
+

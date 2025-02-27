@@ -206,31 +206,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patches", "Patches", "{7828
 		Patches\Patches_Glass+Lights.xml = Patches\Patches_Glass+Lights.xml
 		Patches\Patches_JustGlass.xml = Patches\Patches_JustGlass.xml
 		Patches\Patches_RaiseTheRoof.xml = Patches\Patches_RaiseTheRoof.xml
+		Patches\Patches_ReBuildDoorsAndCorners.xml = Patches\Patches_ReBuildDoorsAndCorners.xml
 		Patches\Patches_RimFridge.xml = Patches\Patches_RimFridge.xml
 		Patches\Patches_Rimmsqol.xml = Patches\Patches_Rimmsqol.xml
 		Patches\Patches_VEFurniture.xml = Patches\Patches_VEFurniture.xml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MangoThunder", "MangoThunder", "{912387E3-CD6C-4C1C-8969-6D5A0E424764}"
-	ProjectSection(SolutionItems) = preProject
-		Source\mango\Building_Door_Patch.cs = Source\mango\Building_Door_Patch.cs
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "owl", "owl", "{F0D6D259-5E88-4155-8088-B1E7F7A4D50A}"
-	ProjectSection(SolutionItems) = preProject
-		Source\owl\PlaceWorker_Window.cs = Source\owl\PlaceWorker_Window.cs
-		Source\owl\WindowUtility.cs = Source\owl\WindowUtility.cs
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HarmonyPatches", "HarmonyPatches", "{3E0C6937-D863-45A8-83B4-4045EF1F66BE}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Properties", "Properties", "{55228B08-6174-4048-9264-6481EC572C17}"
-	ProjectSection(SolutionItems) = preProject
-		Source\owl\Properties\AssemblyInfo.cs = Source\owl\Properties\AssemblyInfo.cs
-		Source\owl\Properties\Resources.Designer.cs = Source\owl\Properties\Resources.Designer.cs
-		Source\owl\Properties\Resources.resx = Source\owl\Properties\Resources.resx
-		Source\owl\Properties\Settings.Designer.cs = Source\owl\Properties\Settings.Designer.cs
-		Source\owl\Properties\Settings.settings = Source\owl\Properties\Settings.settings
 	EndProjectSection
 EndProject
 Global
@@ -296,8 +275,6 @@ Global
 		{F38E875B-6601-4922-A466-4C71390F9EE6} = {FC2F75F7-D815-41E0-9196-14ECABE34555}
 		{56A8C019-4EB5-4AFD-9813-6D3D84454D42} = {FC2F75F7-D815-41E0-9196-14ECABE34555}
 		{AFCF96BC-D940-49C5-9C2B-F5B455A694AB} = {B0A48807-0D5A-43C4-AE8C-AD1A6DC774F0}
-		{3E0C6937-D863-45A8-83B4-4045EF1F66BE} = {F0D6D259-5E88-4155-8088-B1E7F7A4D50A}
-		{55228B08-6174-4048-9264-6481EC572C17} = {F0D6D259-5E88-4155-8088-B1E7F7A4D50A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AE23F93A-4E76-4877-B2E2-7CED627DB416}
