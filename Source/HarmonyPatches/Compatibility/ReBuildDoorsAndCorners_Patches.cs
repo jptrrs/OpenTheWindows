@@ -12,17 +12,17 @@ namespace HumanResources
 
         public static void Execute(Harmony instance)
         {
-            //Defer to their roof skipping function so we can use it for our own needs.
+            //Deferring to their roof skipping function so we can use it for our own needs.
             Type LightingOverlayRegeneratePatch = AccessTools.TypeByName("ReBuildDoorsAndCorners.SectionLayer_LightingOverlay_Regenerate_Patch");
             instance.Patch(AccessTools.Method(LightingOverlayRegeneratePatch, "TryInterceptRoof"),
                 null, new HarmonyMethod(typeof(ReBuildDoorsAndCorners_Patches), nameof(TryInterceptRoofPlugin)), null);
             instance.Patch(AccessTools.Method(LightingOverlayRegeneratePatch, "TryInterceptRoofed"),
                 null, new HarmonyMethod(typeof(ReBuildDoorsAndCorners_Patches), nameof(TryInterceptRoofedPlugin)), null);
-            
-            //
+
+            //Replacing their GroundGlowAt functino with our own, so our light transmission factor also applies to their glass walls.
             Type GroundGlowAtPatch = AccessTools.TypeByName("ReBuildDoorsAndCorners.GlowGrid_GroundGlowAt_Patch");
             var undo = GroundGlowAtPatch.GetMethod("Transpiler");
-            var original = typeof(GlowGrid).GetMethod(nameof(GlowGrid.GroundGlowAt));
+            var original = typeof(GlowGrid).GetMethod("GroundGlowAt");
             instance.Unpatch(original, undo);
             instance.CreateReversePatcher(GroundGlowAtPatch.GetMethod("HasNoNaturalLight", new[] { typeof(bool), typeof(IntVec3), typeof(GlowGrid) }), new HarmonyMethod(AccessTools.Method(typeof(ReBuildDoorsAndCorners_Patches), nameof(HasNoNaturalLightProxy)))).Patch();
         }
