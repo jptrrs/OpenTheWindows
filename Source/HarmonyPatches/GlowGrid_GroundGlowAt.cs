@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using HumanResources;
 using System;
 using UnityEngine;
 using Verse;
@@ -11,7 +12,7 @@ namespace OpenTheWindows
     {
         public static void Postfix(IntVec3 c, Map ___map, ref float __result)
         {
-            if (__result < 1f && MapComp_Windows.MapCompsCache[___map.uniqueID].IsUnderWindow(c))
+            if (__result < 1f && (MapComp_Windows.MapCompsCache[___map.uniqueID].IsUnderWindow(c) || (HarmonyPatcher.Rebuild && !ReBuildDoorsAndCorners_Patches.HasNoNaturalLightProxy(true, c, ___map.glowGrid))))
             {
                 float fromSky = ___map.skyManager.CurSkyGlow * OpenTheWindowsSettings.LightTransmission;
                 if (HarmonyPatcher.RaiseTheRoof && c.Roofed(___map) && c.IsTransparentRoof(___map))

@@ -10,6 +10,11 @@ namespace OpenTheWindows
     [HarmonyPatch(typeof(SectionLayer_LightingOverlay), nameof(SectionLayer_LightingOverlay.Regenerate))]
     public static class LightingOverlay_Regenerate
     {
+        static bool Prepare()
+        {
+            return !HarmonyPatcher.Rebuild;
+        }
+
         [HarmonyBefore(new string[] { "raisetheroof.harmony" })]
         public static void Prefix(SectionLayer_LightingOverlay __instance, ref Dictionary<int, RoofDef> __state)
         {

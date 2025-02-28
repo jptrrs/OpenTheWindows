@@ -396,7 +396,6 @@ namespace OpenTheWindows
             }
 
             //basic functionality
-            map.GetComponent<MapComp_Windows>().RegisterWindow(this);
             WindowUtility.FindEnds(this);
             SetScanLines();
 
@@ -595,23 +594,23 @@ namespace OpenTheWindows
         //fetched from Owlchemist's
         private void DarkenCellsCarefully()
         {
-            if (!illuminated.NullOrEmpty())
+            if (illuminated.NullOrEmpty()) return;
+            List<int> affected = new List<int>(illuminated);
+            List<Building_Window> neighbors = Neighbors();
+            if (neighbors != null)
             {
-                List<int> affected = new List<int>(illuminated);
-                foreach (var neighbor in Neighbors())
+                foreach (var neighbor in neighbors)
                 {
                     if (neighbor != this && neighbor.open && !neighbor.illuminated.NullOrEmpty())
                     {
                         affected.RemoveAll(x => neighbor.illuminated.Contains(x));
                     }
                 }
-
-                //This actually updates the glowgrids
-                Map.GetComponent<MapComp_Windows>().ExcludeTileRange(affected);
-
-                //Update internal data
-                illuminated.Clear();
             }
+            //This actually updates the glowgrids
+            Map.GetComponent<MapComp_Windows>().ExcludeTileRange(affected);
+            //Update internal data
+            illuminated.Clear();
         }
 
         private bool GizmoInhibitor(Gizmo gizmo)
@@ -624,20 +623,18 @@ namespace OpenTheWindows
         private void MapUpdateHandler(object sender, MapUpdateWatcher.MapUpdateInfo info)
         {
             if (info.map != Map) return;
-            var cell = info.center;
-            int cellIdx = info.map.cellIndices.CellToIndex(cell);
-            bool removed = info.removed;
+            var cellIdx = info.Origin;
+            var cellPos = info.origin;
             bool roof = sender is RoofGrid;
-            if (isFacingSet && roof && cellIdx.IsInterior(this) && !GenAdj.CellsAdjacentCardinal(this).Contains(cell)) return;
+            if (isFacingSet && roof && cellIdx.IsInterior(this) && !GenAdj.CellsAdjacentCardinal(this).Contains(cellPos)) return;
             bool unsureFace = false;
             for (int i = 0; i < scanLines.Count(); i++)
             {
-                if (scanLines[i].Affected(cell))
+                ScanLine line = scanLines[i];
+                if (line.scanLine.Contains(cellIdx))
                 {
-                    IntVec3 motivator = roof ? IntVec3.Zero : cell;
-                    var line = scanLines[i];
                     bool before = line.facingSet;
-                    line.FindObstruction(motivator, removed, info.map);
+                    line.FindObstruction(cellPos, info.removed, info.map);
                     unsureFace |= line.facingSet != before;
                     needsUpdate = true;
                 }
@@ -688,18 +685,19 @@ namespace OpenTheWindows
             report.Append($"[OpenTheWindows] Diagnostics for {this}:\n");
             bool hasRoom = AttachedRoom != null;
             string roomName = hasRoom ? $" ({AttachedRoomName})" : "";
-            report.AppendLine($"AttachedRoom? {hasRoom.ToStringYesNo()}{roomName}");
-            report.AppendLine($"isFacingSet? {isFacingSet.ToStringYesNo()}");
-            report.AppendLine($"open? {open.ToStringYesNo()}");
-            report.AppendLine($"venting? {venting.ToStringYesNo()}");
-            report.AppendLine($"needsUpdate? {needsUpdate.ToStringYesNo()}");
+            report.Append($"AttachedRoom? {hasRoom.ToStringYesNo()}{roomName}");
+            report.AppendWithSeparator($"isFacingSet? {isFacingSet.ToStringYesNo()}", " | ");
+            report.AppendWithSeparator($"open? {open.ToStringYesNo()}", " | ");
+            report.AppendWithSeparator($"venting? {venting.ToStringYesNo()}", " | ");
+            report.AppendWithSeparator($"needsUpdate? {needsUpdate.ToStringYesNo()}", " | ");
             if (scanLines.NullOrEmpty())
             {
-                report.AppendLine($"No scanLines!");
+                report.AppendWithSeparator($"No scanLines!", " | ");
             }
             else
             {
                 var scanLinesCount = scanLines.Count();
+                report.AppendWithSeparator($"{scanLinesCount} scanlines:\n", " | ");
                 for (int i = 0; i < scanLinesCount; i++)
                 {
                     var line = scanLines[i];
@@ -771,11 +769,8 @@ namespace OpenTheWindows
                 horizontal = false,
                 bleeds = false,
                 facingSet = false;
-
-            private List<int>
-                clearLine = new List<int>(),
-                scanLine = new List<int>();
-
+            public List<int> scanLine = new List<int>();
+            private List<int> clearLine = new List<int>();
             private Map map;
             private int maxreach;
             private Building_Window parent;
@@ -806,11 +801,6 @@ namespace OpenTheWindows
             private ScanLine SiblingLeft => parent.scanLines.Find(x => x.position == toLeft);
             private ScanLine SiblingRight => parent.scanLines.Find(x => x.position == toRight);
 
-            public bool Affected(IntVec3 cell)
-            {
-                return scanLine.Contains(map.cellIndices.CellToIndex(cell));
-            }
-
             public void CastLight()
             {
                 if (!facingSet) return;
@@ -822,10 +812,10 @@ namespace OpenTheWindows
                 }
             }
 
-            public void FindObstruction(IntVec3 motivator, bool removed = false, Map updatedMap = null)
+            public void FindObstruction(IntVec3 motivatorPos, bool clearNow = false, Map updatedMap = null)
             {
                 if (updatedMap != null) map = updatedMap;
-                clearLine = Unobstructed(motivator, removed);
+                clearLine = Unobstructed(motivatorPos, clearNow);
             }
 
             public void Reset()
@@ -849,22 +839,17 @@ namespace OpenTheWindows
                 }
             }
 
-            public List<int> Unobstructed(IntVec3 motivator, bool removed = false)
+            public List<int> Unobstructed(IntVec3 motivatorPos, bool clearNow)
             {
-                //1. What is the test?
-                bool lazy = motivator == IntVec3.Zero;
-                cellTest motivated = (target, inside) => target == motivator ? removed : IsClear(target, inside);
-                cellTest clear = lazy ? IsClear : motivated;
-
-                //2. Determine facing
+                //1. Determine facing
                 IntVec3 dummy;
-                bool overhangFwd = !ClearForward(position, horizontal, clear, false, 1, out dummy); //sets facing Down/Left
-                bool overhangBwd = !ClearBackward(position, horizontal, clear, false, 1, out dummy); //sets facing Up/Right
+                bool overhangFwd = !ClearForward(position, horizontal, IsClear, false, 1, out dummy); //sets facing Down/Left
+                bool overhangBwd = !ClearBackward(position, horizontal, IsClear, false, 1, out dummy); //sets facing Up/Right  
                 facingSet = SetFacing(overhangFwd, overhangBwd);
                 if (!facingSet) return new List<int>(); //escape if unable to determine sides
                 bool southward = facing == LinkDirections.Down || facing == LinkDirections.Left;
 
-                //3. Determine clearance and max reach on each side
+                //2. Determine clearance and max reach on each side
                 Dictionary<int, int> cleared = new Dictionary<int, int>();
                 int reachFwd = 0;
                 int reachBwd = 0;
@@ -872,7 +857,7 @@ namespace OpenTheWindows
                 for (int i = 1; i <= maxreach; i++)
                 {
                     IntVec3 clearedFwd;
-                    if (ClearForward(position, horizontal, clear, southward, i, out clearedFwd))
+                    if (ClearForward(position, horizontal, IsClear, southward, i, out clearedFwd))
                     {
                         if (clearedFwd.InBounds(map)) cleared.Add(map.cellIndices.CellToIndex(clearedFwd), i);
                         reachFwd++;
@@ -883,7 +868,7 @@ namespace OpenTheWindows
                 for (int i = 1; i <= maxreach; i++)
                 {
                     IntVec3 clearedBwd;
-                    if (ClearBackward(position, horizontal, clear, !southward, i, out clearedBwd))
+                    if (ClearBackward(position, horizontal, IsClear, !southward, i, out clearedBwd))
                     {
                         if (clearedBwd.InBounds(map)) cleared.Add(map.cellIndices.CellToIndex(clearedBwd), i);
                         reachBwd++;
@@ -891,12 +876,11 @@ namespace OpenTheWindows
                     else break;
                 }
 
-                //5. Apply clearance.
+                //3. Apply clearance.
                 int obstructed = southward ? reachBwd : reachFwd;
                 cleared.RemoveAll(x => x.Key.IsInterior(PositionIdx, facing) && x.Value > obstructed);
                 return cleared.Keys.ToList();
             }
-
             private void AddBleed(int index, List<int> list)
             {
                 var cell = map.cellIndices.IndexToCell(index);
@@ -917,9 +901,10 @@ namespace OpenTheWindows
                 }
             }
 
-            private bool IsClear(IntVec3 c, bool inside)
+            private bool IsClear(IntVec3 pos, bool inside)
             {
-                return Affected(c) && c.CanBeSeenOverFast(map) && (inside || !map.roofGrid.Roofed(c) || c.IsTransparentRoof(map));
+                int index = map.cellIndices.CellToIndex(pos);
+                return scanLine.Contains(index) && pos.CanBeSeenOverFast(map) && (inside || !map.roofGrid.Roofed(index) || map.IsTransparentRoof(index));
             }
 
             private bool SetFacing(bool overhangFwd, bool overhangBwd)

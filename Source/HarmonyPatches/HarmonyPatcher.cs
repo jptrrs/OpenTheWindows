@@ -1,9 +1,11 @@
 ﻿using HarmonyLib;
+using HumanResources;
 using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using UnityEngine.UI;
 using Verse;
 
 namespace OpenTheWindows
@@ -17,7 +19,8 @@ namespace OpenTheWindows
             BetterPawnControl = false,
             Blueprints = false,
             DubsSkylights = false,
-            RaiseTheRoof = false;
+            RaiseTheRoof = false,
+            Rebuild = false;
         public static Type
             Building_Skylight,
             LocksType;
@@ -88,6 +91,13 @@ namespace OpenTheWindows
             {
                 Log.Message("[OpenTheWindows] Giddy-up! detected! Adapting...");
                 Instance.Patch(AccessTools.Method("GiddyUpCore.Jobs.JobDriver_Mount:letMountParticipate"), null, new HarmonyMethod(typeof(JobDriver_Mount_letMountParticipate), nameof(JobDriver_Mount_letMountParticipate.letMountParticipate_Postfix)));
+            }
+
+            if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("ReBuild.COTR.DoorsAndCorners")))
+            {
+                Log.Message("[OpenTheWindows] ReBuild: Doors and Corners detected! Integrating...");
+                Rebuild = true;
+                ReBuildDoorsAndCorners_Patches.Execute(Instance);
             }
         }
 

@@ -189,7 +189,7 @@ namespace OpenTheWindows
             if (info.removed)
             {
                 ExcludeTileRange(cells);
-                WindowUtility.ResetWindowsAround(map, info.center);
+                WindowUtility.ResetWindowsAround(map, info.origin);
             }
             else
             {
@@ -203,12 +203,12 @@ namespace OpenTheWindows
             {
                 if (info.removed)
                 {
-                    ExcludeTile(info.center, true);
-                    WindowUtility.ResetWindowsAround(map, info.center);
+                    ExcludeTile(info.Origin, true);
+                    WindowUtility.ResetWindowsAround(map, info.origin);
                 }
                 else
                 {
-                    IncludeTile(info.center);
+                    IncludeTile(info.Origin);
                 }
             }
         }

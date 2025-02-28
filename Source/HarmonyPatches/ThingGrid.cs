@@ -9,7 +9,6 @@ namespace OpenTheWindows
     {
         public static void Postfix(Thing t, IntVec3 c)
         {
-            //Log.Message($"Scribe.mode: {Scribe.mode}, ProgramState: {Current.ProgramState}");
             //if (Scribe.mode == LoadSaveMode.LoadingVars) return;
             if (Current.ProgramState != ProgramState.Playing) return;
             if ((t is Building && t.def.passability == Traversability.Impassable) || (HarmonyPatcher.DubsSkylights && t.GetType() == HarmonyPatcher.Building_Skylight))

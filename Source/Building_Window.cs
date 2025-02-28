@@ -179,6 +179,20 @@ namespace OpenTheWindows
 
         #region vanilla overrides
 
+        //public override void DeSpawn(DestroyMode mode = DestroyMode.Vanish)
+        //{
+            //    Map.GetComponent<MapComp_Windows>().DeRegisterWindow(this);
+        //    DarkenCellsCarefully();
+        //    //just link it!
+        //    if (OpenTheWindowsSettings.LinkWindows)
+        //    {
+        //        Map.thingGrid.Deregister(this, false);
+        //        Map.linkGrid.Notify_LinkerCreatedOrDestroyed(this);
+        //        Map.mapDrawer.MapMeshDirty(Position, (ulong)MapMeshFlagDefOf.Things, true, false);
+        //    }
+        //    base.DeSpawn(mode);
+        //}
+
         public override void DeSpawn(DestroyMode mode = DestroyMode.Vanish)
         {
             //fetched from Owlchemist's
@@ -392,7 +406,6 @@ namespace OpenTheWindows
             }
 
             //basic functionality
-            map.GetComponent<MapComp_Windows>().RegisterWindow(this);
             WindowUtility.FindEnds(this);
             SetScanLines();
 
@@ -591,23 +604,23 @@ namespace OpenTheWindows
         //fetched from Owlchemist's
         private void DarkenCellsCarefully()
         {
-            if (!illuminated.NullOrEmpty())
+            if (illuminated.NullOrEmpty()) return;
+            List<int> affected = new List<int>(illuminated);
+            List<Building_Window> neighbors = Neighbors();
+            if (neighbors != null)
             {
-                List<int> affected = new List<int>(illuminated);
-                foreach (var neighbor in Neighbors())
+                foreach (var neighbor in neighbors)
                 {
                     if (neighbor != this && neighbor.open && !neighbor.illuminated.NullOrEmpty())
                     {
                         affected.RemoveAll(x => neighbor.illuminated.Contains(x));
                     }
                 }
-
-                //This actually updates the glowgrids
-                Map.GetComponent<MapComp_Windows>().ExcludeTileRange(affected);
-
-                //Update internal data
-                illuminated.Clear();
             }
+            //This actually updates the glowgrids
+            Map.GetComponent<MapComp_Windows>().ExcludeTileRange(affected);
+            //Update internal data
+            illuminated.Clear();
         }
 
         private bool GizmoInhibitor(Gizmo gizmo)
@@ -623,7 +636,7 @@ namespace OpenTheWindows
             var cellIdx = info.Origin;
             var cellPos = info.origin;
             bool roof = sender is RoofGrid;
-            if (isFacingSet && roof && cellIdx.IsInterior(this) && !GenAdj.CellsAdjacentCardinal(this).Contains(cellPos)) return;
+            if (isFacingSet && roof && cellIdx.IsInterior(this) && !GenAdj.CellsAdjacentCardinal(this).Contains(cellPos)) return; //Escape if what changed was an irrelevant interior roof           
             bool unsureFace = false;
             for (int i = 0; i < scanLines.Count(); i++)
             {
@@ -766,11 +779,8 @@ namespace OpenTheWindows
                 horizontal = false,
                 bleeds = false,
                 facingSet = false;
-
             public List<int> scanLine = new List<int>();
-
             private List<int> clearLine = new List<int>();
-            
             private Map map;
             private int maxreach;
             private Building_Window parent;
@@ -823,10 +833,10 @@ namespace OpenTheWindows
                 }
             }
 
-            public void FindObstruction(IntVec3 motivatorPos, bool removed = false, Map updatedMap = null)
+            public void FindObstruction(IntVec3 motivatorPos, bool clearNow = false, Map updatedMap = null)
             {
                 if (updatedMap != null) map = updatedMap;
-                clearLine = Unobstructed(motivatorPos, removed);
+                clearLine = Unobstructed(motivatorPos, clearNow);
             }
 
             public void Reset()
@@ -850,21 +860,17 @@ namespace OpenTheWindows
                 }
             }
 
-            public List<int> Unobstructed(IntVec3 motivatorPos, bool removed)
+            public List<int> Unobstructed(IntVec3 motivatorPos, bool clearNow)
             {
-                //1. What is the test?
-                cellTest motivated = (pos, inside) => pos == motivatorPos ? removed : IsClear(pos, inside); //when provoked by an external event
-                cellTest clear = motivatorPos == IntVec3.Zero ? IsClear : motivated; //either on spawn or provoked
-
-                //2. Determine facing
+                //1. Determine facing
                 IntVec3 dummy;
-                bool overhangFwd = !ClearForward(position, horizontal, clear, false, 1, out dummy); //sets facing Down/Left
-                bool overhangBwd = !ClearBackward(position, horizontal, clear, false, 1, out dummy); //sets facing Up/Right
+                bool overhangFwd = !ClearForward(position, horizontal, IsClear, false, 1, out dummy); //sets facing Down/Left
+                bool overhangBwd = !ClearBackward(position, horizontal, IsClear, false, 1, out dummy); //sets facing Up/Right  
                 facingSet = SetFacing(overhangFwd, overhangBwd);
                 if (!facingSet) return new List<int>(); //escape if unable to determine sides
                 bool southward = facing == LinkDirections.Down || facing == LinkDirections.Left;
 
-                //3. Determine clearance and max reach on each side
+                //2. Determine clearance and max reach on each side
                 Dictionary<int, int> cleared = new Dictionary<int, int>();
                 int reachFwd = 0;
                 int reachBwd = 0;
@@ -872,7 +878,7 @@ namespace OpenTheWindows
                 for (int i = 1; i <= maxreach; i++)
                 {
                     IntVec3 clearedFwd;
-                    if (ClearForward(position, horizontal, clear, southward, i, out clearedFwd))
+                    if (ClearForward(position, horizontal, IsClear, southward, i, out clearedFwd))
                     {
                         if (clearedFwd.InBounds(map)) cleared.Add(map.cellIndices.CellToIndex(clearedFwd), i);
                         reachFwd++;
@@ -883,7 +889,7 @@ namespace OpenTheWindows
                 for (int i = 1; i <= maxreach; i++)
                 {
                     IntVec3 clearedBwd;
-                    if (ClearBackward(position, horizontal, clear, !southward, i, out clearedBwd))
+                    if (ClearBackward(position, horizontal, IsClear, !southward, i, out clearedBwd))
                     {
                         if (clearedBwd.InBounds(map)) cleared.Add(map.cellIndices.CellToIndex(clearedBwd), i);
                         reachBwd++;
@@ -891,7 +897,7 @@ namespace OpenTheWindows
                     else break;
                 }
 
-                //5. Apply clearance.
+                //3. Apply clearance.
                 int obstructed = southward ? reachBwd : reachFwd;
                 cleared.RemoveAll(x => x.Key.IsInterior(PositionIdx, facing) && x.Value > obstructed);
                 return cleared.Keys.ToList();

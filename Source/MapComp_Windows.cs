@@ -57,14 +57,6 @@ namespace OpenTheWindows
             }
         }
 
-        public void DeRegisterWindow(Building_Window window)
-        {
-            if (cachedWindows.Contains(window))
-            {
-                cachedWindows.Remove(window);
-            }
-        }
-
         public void ExcludeTile(int index, bool bypass = false)
         {
             if (!WindowCells.Contains(index)) return;
@@ -160,14 +152,6 @@ namespace OpenTheWindows
             if (TransparentRoofs && sender is RoofGrid && info.roofDef != null && TransparentRoofsList.Contains(info.roofDef))
             {
                 ReactTransparentRoof(info);
-            }
-        }
-
-        public void RegisterWindow(Building_Window window)
-        {
-            if (!cachedWindows.Contains(window))
-            {
-                cachedWindows.Add(window);
             }
         }
 
