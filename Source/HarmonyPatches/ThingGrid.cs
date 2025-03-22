@@ -10,7 +10,7 @@ namespace OpenTheWindows
         public static void Postfix(Thing t, IntVec3 c)
         {
             //if (Scribe.mode == LoadSaveMode.LoadingVars) return;
-            if (Current.ProgramState != ProgramState.Playing) return;
+            //if (Current.ProgramState != ProgramState.Playing) return;
             if ((t is Building && t.def.passability == Traversability.Impassable) || (HarmonyPatcher.DubsSkylights && t.GetType() == HarmonyPatcher.Building_Skylight))
             {
                 var info = new MapUpdateWatcher.MapUpdateInfo()

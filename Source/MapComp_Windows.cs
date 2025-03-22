@@ -16,12 +16,10 @@ namespace OpenTheWindows
         public List<Building_Window> cachedWindows = new List<Building_Window>();
         public Dictionary<Section, int[]> SectionCellsCache;
         public HashSet<int> WindowCells;
-        private bool audit = false;
         private FieldInfo DubsSkylights_skylightGridinfo;
         private Type DubsSkylights_type;
         private NaturalLightOverlay lightOverlay;
         private MethodInfo MapCompInfo;
-        private HashSet<int> wrongTiles;
 
         public MapComp_Windows(Map map) : base(map)
         {
@@ -74,15 +72,6 @@ namespace OpenTheWindows
             }
         }
 
-        public override void FinalizeInit()
-        {
-            if (DubsSkylights)
-            {
-                wrongTiles = map.AllCells.Select(x => map.cellIndices.CellToIndex(x)).Where(i => skyLightGrid[i]).ToHashSet();
-                audit = !wrongTiles.EnumerableNullOrEmpty();
-            }
-            base.FinalizeInit();
-        }
 
         public int[] GetCachedSectionCells(Section section)
         {
@@ -112,20 +101,6 @@ namespace OpenTheWindows
         {
             if (WindowCells.NullOrEmpty()) return false;
             return WindowCells.Contains(map.cellIndices.CellToIndex(cell));
-        }
-
-        public override void MapComponentTick()
-        {
-            if (audit)
-            {
-                foreach (int idx in wrongTiles)
-                {
-                    map.glowGrid.DirtyCache(map.cellIndices.IndexToCell(idx));
-                }
-                wrongTiles.Clear();
-                audit = false;
-            }
-            base.MapComponentTick();
         }
 
         public override void MapComponentUpdate()
