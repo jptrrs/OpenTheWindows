@@ -106,8 +106,8 @@
     <ErrorReport>none</ErrorReport>
     <RimWorldPath>..\..\..\..\refs\RW\RW1.5.9102.dll</RimWorldPath>
     <HugsLibPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\workshop\content\294100\818773962\v1.5\Assemblies\HugsLib.dll</HugsLibPath>
-    <!--<ModsPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods</ModsPath>-->
-    <ModsPath>..\..\..\..\..\..\..\Games\RimWorld\Mods</ModsPath>
+    <ModsPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods</ModsPath>
+    <!--<ModsPath>..\..\..\..\..\..\..\Games\RimWorld\Mods</ModsPath>-->
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
@@ -161,12 +161,14 @@
     <Compile Include="Legacy\JobDriver_Mount_letMountParticipate_RW1.2.cs" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' != '1.1' AND '$(Configuration)' != '1.2'">
-    <Compile Include="HarmonyPatches\PathFinder_GetBuildingCost.cs" />
     <Compile Include="HarmonyPatches\Compatibility\JobDriver_Mount_letMountParticipate.cs" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == '1.1' OR '$(Configuration)' == '1.2' OR '$(Configuration)' == '1.3'">
     <Compile Include="Legacy\MapComp_Windows_RW1.3.cs" />
     <Compile Include="Legacy\GlowGrid_GameGlowAt_RW1.3.cs" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == '1.3' OR '$(Configuration)' == '1.4'">
+    <Compile Include="Legacy\PathFinder_GetBuildingCost_RW1.4.cs" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == '1.4'">
     <Compile Include="Legacy\GlowGrid_GameGlowAt_RW1.4.cs" />
@@ -181,14 +183,15 @@
     <Compile Include="Legacy\WindowUtility_RW1.4.cs" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' != '1.1' AND '$(Configuration)' != '1.2' AND '$(Configuration)' != '1.3' AND '$(Configuration)' != '1.4'">
-    <Compile Include="MapComp_Windows.cs" />
     <Compile Include="Building_Window.cs" />
-    <Compile Include="HarmonyPatches\GlowGrid_GroundGlowAt.cs" />
     <Compile Include="CompWindow.cs" />
+    <Compile Include="MapComp_Windows.cs" />
+    <Compile Include="WindowUtility.cs" />
+    <Compile Include="HarmonyPatches\GlowGrid_GroundGlowAt.cs" />
     <Compile Include="StatPart_Landscape.cs" />
     <Compile Include="HarmonyPatches\Building.cs" />
     <Compile Include="HarmonyPatches\CompFlickable_SwitchIsOn.cs" />
-    <Compile Include="WindowUtility.cs" />
+    <Compile Include="HarmonyPatches\PathFinder_GetBuildingCost.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
