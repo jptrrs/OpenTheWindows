@@ -26,6 +26,7 @@ namespace OpenTheWindows
                 case TraverseMode.NoPassClosedDoorsOrWater:
                     return int.MaxValue;
                 case TraverseMode.PassAllDestroyableThings:
+                case TraverseMode.PassAllDestroyablePlayerOwnedThings:
                 case TraverseMode.PassAllDestroyableThingsNotWater:
                     return 50 + (int)(b.HitPoints * 0.2f);
                 default:

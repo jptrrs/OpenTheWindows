@@ -700,6 +700,7 @@ namespace OpenTheWindows
             report.AppendWithSeparator($"open? {open.ToStringYesNo()}", " | ");
             report.AppendWithSeparator($"venting? {venting.ToStringYesNo()}", " | ");
             report.AppendWithSeparator($"needsUpdate? {needsUpdate.ToStringYesNo()}", " | ");
+            report.AppendWithSeparator($"StuckOpen? {base.StuckOpen.ToStringYesNo()}", " | ");
             if (scanLines.NullOrEmpty())
             {
                 report.AppendWithSeparator($"No scanLines!", " | ");

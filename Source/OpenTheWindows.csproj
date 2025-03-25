@@ -106,13 +106,14 @@
     <ErrorReport>none</ErrorReport>
     <RimWorldPath>..\..\..\..\refs\RW\RW1.5.9102.dll</RimWorldPath>
     <HugsLibPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\workshop\content\294100\818773962\v1.5\Assemblies\HugsLib.dll</HugsLibPath>
-    <ModsPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods</ModsPath>
-    <!--<ModsPath>..\..\..\..\..\..\..\Games\RimWorld\Mods</ModsPath>-->
+    <!--<ModsPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods</ModsPath>-->
+    <ModsPath>..\..\..\..\..\..\..\Games\RimWorld\Mods</ModsPath>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
     <Compile Include="HarmonyPatches\Compatibility\BuildableInfo_DrawGhost.cs" />
     <Compile Include="HarmonyPatches\Compatibility\ReBuildDoorsAndCorners_Patches.cs" />
+    <Compile Include="HarmonyPatches\Building_Door_StuckOpen.cs" />
     <Compile Include="MapUpdateWatcher.cs" />
     <Compile Include="HarmonyPatches\Compatibility\AlertManagerProxy.cs" />
     <Compile Include="HarmonyPatches\CompFlickable_PostExposeData.cs" />
@@ -160,7 +161,6 @@
     <Compile Include="Legacy\JobDriver_Mount_letMountParticipate_RW1.2.cs" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' != '1.1' AND '$(Configuration)' != '1.2'">
-    <None Include="HarmonyPatches\RoomGroupTempTracker_EqualizeTemperature.cs" />
     <Compile Include="HarmonyPatches\PathFinder_GetBuildingCost.cs" />
     <Compile Include="HarmonyPatches\Compatibility\JobDriver_Mount_letMountParticipate.cs" />
   </ItemGroup>
