@@ -113,7 +113,6 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="HarmonyPatches\Compatibility\BuildableInfo_DrawGhost.cs" />
     <Compile Include="HarmonyPatches\Compatibility\ReBuildDoorsAndCorners_Patches.cs" />
-    <Compile Include="HarmonyPatches\Building_Door_StuckOpen.cs" />
     <Compile Include="MapUpdateWatcher.cs" />
     <Compile Include="HarmonyPatches\Compatibility\AlertManagerProxy.cs" />
     <Compile Include="HarmonyPatches\CompFlickable_PostExposeData.cs" />
@@ -192,6 +191,7 @@
     <Compile Include="HarmonyPatches\Building.cs" />
     <Compile Include="HarmonyPatches\CompFlickable_SwitchIsOn.cs" />
     <Compile Include="HarmonyPatches\PathFinder_GetBuildingCost.cs" />
+    <Compile Include="HarmonyPatches\Building_Door_StuckOpen.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
