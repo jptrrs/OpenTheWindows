@@ -175,6 +175,7 @@ namespace OpenTheWindows
         {
             MapUpdateWatcher.MapUpdate += MapUpdateHandler;
             if (HarmonyPatcher.BetterPawnControl) AlertManager_LoadState.Alarm += EmergencyShutOff; // register with an event, handler must match template signature
+            base.openInt = false;
         }
 
         #region vanilla overrides
@@ -217,6 +218,7 @@ namespace OpenTheWindows
         public override void ExposeData()
         {
             base.ExposeData();
+            base.openInt = false;
             Scribe_Values.Look<bool>(ref open, "open", true, false);
             Scribe_Values.Look<bool>(ref venting, "venting", false, false);
             Scribe_Values.Look<bool>(ref isFacingSet, "isFacingSet", true, false);
@@ -700,7 +702,8 @@ namespace OpenTheWindows
             report.AppendWithSeparator($"open? {open.ToStringYesNo()}", " | ");
             report.AppendWithSeparator($"venting? {venting.ToStringYesNo()}", " | ");
             report.AppendWithSeparator($"needsUpdate? {needsUpdate.ToStringYesNo()}", " | ");
-            report.AppendWithSeparator($"StuckOpen? {base.StuckOpen.ToStringYesNo()}", " | ");
+            report.AppendWithSeparator($"RoamerCanPass? {AnimalPenEnclosureCalculator.RoamerCanPass(this).ToStringYesNo()}", " | ");
+            report.AppendWithSeparator($"openInt? {base.openInt.ToStringYesNo()}", " | ");
             if (scanLines.NullOrEmpty())
             {
                 report.AppendWithSeparator($"No scanLines!", " | ");

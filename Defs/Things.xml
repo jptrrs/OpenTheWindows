@@ -32,6 +32,7 @@
     <building>
       <isInert>true</isInert>
       <canPlaceOverWall>true</canPlaceOverWall>
+      <roamerCanOpen>false</roamerCanOpen>
     </building>
     <graphicData>
       <linkFlags>
