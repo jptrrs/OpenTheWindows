@@ -8,7 +8,6 @@ namespace OpenTheWindows
         public bool needsUpdate = false;
         public static bool toggleShow = false;
         public static string tooltip;
-        public static Texture2D icon;
         protected static CellBoolDrawer drawer;
         protected float defaultOpacity;
         private Map lastSeenMap;
@@ -23,18 +22,6 @@ namespace OpenTheWindows
         }
 
         public Color Color => Color.white;
-
-        public static Texture2D Icon
-        {
-            get
-            {
-                if (icon == null)
-                {
-                    icon = ContentFinder<Texture2D>.Get("NaturalLightMap", true);
-                }
-                return icon;
-            }
-        } 
 
         public bool GetCellBool(int index)
         {
