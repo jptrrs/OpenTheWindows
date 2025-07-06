@@ -3,9 +3,7 @@ using HumanResources;
 using RimWorld;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using UnityEngine.UI;
 using Verse;
 
 namespace OpenTheWindows
@@ -29,7 +27,7 @@ namespace OpenTheWindows
         static HarmonyPatcher()
         {
             Instance.PatchAll();
-            //Harmony.DEBUG = true;
+            Harmony.DEBUG = true;
 
             if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("Dubwise.DubsSkylights")))
             {

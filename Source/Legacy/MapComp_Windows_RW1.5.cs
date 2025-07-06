@@ -8,6 +8,7 @@ using Verse;
 
 namespace OpenTheWindows
 {
+    //Changed in RW 1.6
     using static HarmonyPatcher;
 
     public class MapComp_Windows : MapComponent
@@ -163,9 +164,8 @@ namespace OpenTheWindows
         private void UpdateMapAt(int index)
         {
             IntVec3 tile = map.cellIndices.IndexToCell(index);
+            map.glowGrid.DirtyCache(tile);
             map.mapDrawer.MapMeshDirty(tile, MapMeshFlagDefOf.Roofs);
-            map.glowGrid.DirtyCell(tile);
-            map.events.Notify_RoofChanged(tile);
             lightOverlay.needsUpdate = true;
         }
     }

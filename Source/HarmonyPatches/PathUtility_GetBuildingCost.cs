@@ -6,8 +6,8 @@ namespace OpenTheWindows
 {
     //Tweaks the windows building cost for pathfinding reasons. 1/2
     //fetched from Owlchemist's
-    [HarmonyPatch(typeof(PathFinder), nameof(PathFinder.GetBuildingCost))]
-    public static class PathFinder_GetBuildingCost
+    [HarmonyPatch(typeof(PathUtility), nameof(PathUtility.GetBuildingCost))]
+    public static class PathUtility_GetBuildingCost
     {
         public static int Postfix(int result, Building b, TraverseParms traverseParms, Pawn pawn)
         {

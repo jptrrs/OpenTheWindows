@@ -59,7 +59,7 @@ namespace OpenTheWindows
                 {
                     return new IntRange((int)ThingDefOf.Human.GetStatValueAbstract(StatDefOf.ComfyTemperatureMin), (int)ThingDefOf.Human.GetStatValueAbstract(StatDefOf.ComfyTemperatureMax));
                 }
-                return IntRange.Zero;
+                return IntRange.zero;
             }
         }
 
@@ -67,7 +67,7 @@ namespace OpenTheWindows
         {
             get
             {
-                if (_comfortTemp == IntRange.Zero)
+                if (_comfortTemp == IntRange.zero)
                 {
                     return ValidateAndSetupComfortTemp();
                 }
@@ -81,7 +81,7 @@ namespace OpenTheWindows
 
         private static IntRange ValidateAndSetupComfortTemp()
         {
-            if (_comfortTemp == IntRange.Zero && (!dialogOpen || (dialogOpen && !Input.GetMouseButton(0))))
+            if (_comfortTemp == IntRange.zero && (!dialogOpen || (dialogOpen && !Input.GetMouseButton(0))))
             {
                 _comfortTemp = ComfortTempDefault;
             }
@@ -109,7 +109,7 @@ namespace OpenTheWindows
 
             //Outdoors need acceleration
             string label = $"{"IndoorsNoNaturalLightPenalty".Translate()}: {IndoorsNoNaturalLightPenalty.ToStringDecimalIfSmall()}x";
-            TipSignal desc = "IndoorsNoNaturalLightPenaltyDesc".Translate();
+            string desc = "IndoorsNoNaturalLightPenaltyDesc".Translate();
             leftColumn.Label(label, -1f, desc);
             IndoorsNoNaturalLightPenalty = leftColumn.Slider(IndoorsNoNaturalLightPenalty, 1f, 10f);
             leftColumn.Gap();
@@ -117,14 +117,14 @@ namespace OpenTheWindows
             //Light transmission through windows
             string labelNoteOnSkylights = (HarmonyPatcher.DubsSkylights || HarmonyPatcher.TransparentRoofs) ? $"\n({"LightTransmissionIncludesRoofs".Translate()})" : null;
             string label2 = $"{"LightTransmission".Translate()}: {LightTransmission.ToStringPercent()}{labelNoteOnSkylights}";
-            TipSignal desc2 = "LightTransmissionDesc".Translate();
+            string desc2 = "LightTransmissionDesc".Translate();
             leftColumn.Label(label2, -1f, desc2);
             LightTransmission = leftColumn.Slider(LightTransmission, 0f, 1f);
             leftColumn.Gap();
 
             //Temperature comfort range for auto-ventilation
             string label3 = "ComfortableTemperature".Translate();
-            TipSignal desc3 = "ComfortableTemperatureDesc".Translate();
+            string desc3 = "ComfortableTemperatureDesc".Translate();
             leftColumn.Label(label3, -1f, desc3);
             ValidateAndSetupComfortTemp();
             leftColumn.IntRange(ref _comfortTemp, -40, 100);
@@ -134,7 +134,7 @@ namespace OpenTheWindows
             {
                 leftColumn.Gap();
                 string label4 = $"{"BeautySensitivityReduction".Translate()}: {BeautySensitivityReduction.ToStringPercent()}";
-                TipSignal desc4 = "BeautySensitivityReductionDesc".Translate();
+                string desc4 = "BeautySensitivityReductionDesc".Translate();
                 leftColumn.Label(label4, -1f, desc4);
                 BeautySensitivityReduction = leftColumn.Slider(BeautySensitivityReduction, 0f, 1f);
                 leftColumn.CheckboxLabeled("BeautyFromBuildings".Translate(), ref BeautyFromBuildings, "BeautyFromBuildingsDesc".Translate());

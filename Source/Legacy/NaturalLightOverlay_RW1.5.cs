@@ -25,7 +25,7 @@ namespace OpenTheWindows
 
         public bool GetCellBool(int index)
         {
-            return !lastSeenMap.fogGrid.IsFogged(index) && (lastSeenMap.roofGrid.roofGrid[index] == null || parent.WindowCells.Contains(index));
+            return !lastSeenMap.fogGrid.fogGrid[index] && (lastSeenMap.roofGrid.roofGrid[index] == null || parent.WindowCells.Contains(index));
         }
 
         public Color GetCellExtraColor(int index)
