@@ -146,10 +146,9 @@
     <Reference Include="System" />
     <Reference Include="Unity.Collections">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Unity.Collections.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.Collections.LowLevel.ILSupport">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
-    </Reference>
+    
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
@@ -166,6 +165,7 @@
     <Reference Include="UnityEngine.InputLegacyModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.SharedInternalsModule">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.SharedInternalsModule.dll</HintPath>
@@ -182,58 +182,58 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="Building_Window.cs" Condition="$(Configuration) &gt; 1.4"/>
-	<Compile Include="CompProperties_Window.cs"/>
-	<Compile Include="CompWindow.cs" Condition="$(Configuration) &gt; 1.4"/>
-	<Compile Include="Extensions.cs"/>
-	<Compile Include="MapComp_Windows.cs" Condition="$(Configuration) &gt; 1.5"/>
-	<Compile Include="MapUpdateWatcher.cs"/>
-	<Compile Include="NaturalLightOverlay.cs" Condition="$(Configuration) &gt; 1.5"/>
-	<Compile Include="PlaceWorker_Window.cs"/>
-	<Compile Include="Properties\AssemblyInfo.cs"/>
-	<Compile Include="Settings.cs" Condition="$(Configuration) &gt; 1.5"/>
-	<Compile Include="StatPart_Landscape.cs" Condition="$(Configuration) &gt; 1.4"/>
-	<Compile Include="WindowUtility.cs" Condition="$(Configuration) &gt; 1.4"/>
-	<Compile Include="HarmonyPatches\Building.cs" Condition="$(Configuration) &gt; 1.4"/>
-	<Compile Include="HarmonyPatches\Building_Door_StuckOpen.cs" Condition="$(Configuration) &gt; 1.4"/>
-	<Compile Include="HarmonyPatches\CompFlickable_PostExposeData.cs"/>
-	<Compile Include="HarmonyPatches\CompFlickable_SwitchIsOn.cs" Condition="$(Configuration) &gt; 1.4"/>
-	<Compile Include="HarmonyPatches\Compatibility\AlertManagerProxy.cs"/>
-	<Compile Include="HarmonyPatches\Compatibility\AlertManager_LoadState.cs"/>
-	<Compile Include="HarmonyPatches\Compatibility\BuildableInfo_DrawGhost.cs"/>
-	<Compile Include="HarmonyPatches\Compatibility\JobDriver_Mount_letMountParticipate.cs" Condition="$(Configuration) &gt; 1.2"/>
-	<Compile Include="HarmonyPatches\Compatibility\NeedBeauty_LevelFromBeauty.cs"/>
-	<Compile Include="HarmonyPatches\Compatibility\ReBuildDoorsAndCorners_Patches.cs"/>
-	<Compile Include="HarmonyPatches\CoverUtility_BaseBlockChance.cs"/>
-	<Compile Include="HarmonyPatches\GenGrid_CanBeSeenOvercs.cs"/>
-	<Compile Include="HarmonyPatches\GlowGrid_GroundGlowAt.cs" Condition="$(Configuration) &gt; 1.4"/>
-	<Compile Include="HarmonyPatches\HarmonyPatcher.cs"/>
-	<Compile Include="HarmonyPatches\LightingOverlay_Regenerate.cs"/>
-	<Compile Include="HarmonyPatches\NeedOutdoors_NeedInterval.cs"/>
-	<Compile Include="HarmonyPatches\PathGrid_CalculatedCostAt.cs"/>
-	<Compile Include="HarmonyPatches\PathUtility_GetBuildingCost.cs" Condition="$(Configuration) &gt; 1.5"/>
-	<Compile Include="HarmonyPatches\PlaySettings_DoPlaySettingsGlobalControls.cs"/>
-	<Compile Include="HarmonyPatches\RoofGrid_SetRoof.cs"/>
-	<Compile Include="HarmonyPatches\ThingDef_SpecialDisplayStats.cs"/>
-	<Compile Include="HarmonyPatches\ThingGrid.cs"/>
-	<Compile Include="Legacy\Building_RW1.4.cs" Condition="$(Configuration) &lt; 1.5"/>
-	<Compile Include="Legacy\Building_Window_RW1.4.cs" Condition="$(Configuration) &lt; 1.5"/>
-	<Compile Include="Legacy\CompFlickable_SwitchIsOn_RW1.4.cs" Condition="$(Configuration) &lt; 1.5"/>
-	<Compile Include="Legacy\CompWindow_RW1.4.cs" Condition="$(Configuration) &lt; 1.5"/>
-	<Compile Include="Legacy\GlowGrid_GameGlowAt_RW1.3.cs" Condition="$(Configuration) &lt; 1.4"/>
-	<Compile Include="Legacy\GlowGrid_GameGlowAt_RW1.4.cs" Condition="$(Configuration) == 1.4"/>
-	<Compile Include="Legacy\JobDriver_Mount_letMountParticipate_RW1.2.cs" Condition="$(Configuration) &lt; 1.3"/>
-	<Compile Include="Legacy\MapComp_Windows_RW1.3.cs" Condition="$(Configuration) &lt; 1.4"/>
-	<Compile Include="Legacy\MapComp_Windows_RW1.4.cs" Condition="$(Configuration) == 1.4"/>
-	<Compile Include="Legacy\MapComp_Windows_RW1.5.cs" Condition="$(Configuration) == 1.5"/>
-	<Compile Include="Legacy\NaturalLightOverlay_RW1.5.cs" Condition="$(Configuration) &lt; 1.6"/>
-	<Compile Include="Legacy\PathFinder_GetBuildingCost_RW1.2.cs" Condition="$(Configuration) &lt; 1.3"/>
-	<Compile Include="Legacy\PathFinder_GetBuildingCost_RW1.4.cs" Condition="$(Configuration) &gt; 1.2 AND $(Configuration) &lt; 1.5"/>
-	<Compile Include="Legacy\PathFinder_GetBuildingCost_RW1.5.cs" Condition="$(Configuration) == 1.5"/>
-	<Compile Include="Legacy\RoomGroupTempTracker_EqualizeTemperature.cs" Condition="$(Configuration) &lt; 1.3"/>
-	<Compile Include="Legacy\Settings_RW1.5.cs" Condition="$(Configuration) &lt; 1.6"/>
-	<Compile Include="Legacy\StatPart_Landscape_RW1.4.cs" Condition="$(Configuration) &lt; 1.5"/>
-	<Compile Include="Legacy\WindowUtility_RW1.4.cs" Condition="$(Configuration) &lt; 1.5"/>
+    <Compile Include="Building_Window.cs" Condition="$(Configuration) &gt; 1.4" />
+    <Compile Include="CompProperties_Window.cs" />
+    <Compile Include="CompWindow.cs" Condition="$(Configuration) &gt; 1.4" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="MapComp_Windows.cs" Condition="$(Configuration) &gt; 1.5" />
+    <Compile Include="MapUpdateWatcher.cs" />
+    <Compile Include="NaturalLightOverlay.cs" Condition="$(Configuration) &gt; 1.5" />
+    <Compile Include="PlaceWorker_Window.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" Condition="$(Configuration) &gt; 1.5" />
+    <Compile Include="StatPart_Landscape.cs" Condition="$(Configuration) &gt; 1.4" />
+    <Compile Include="WindowUtility.cs" Condition="$(Configuration) &gt; 1.4" />
+    <Compile Include="HarmonyPatches\Building.cs" Condition="$(Configuration) &gt; 1.4" />
+    <Compile Include="HarmonyPatches\Building_Door_StuckOpen.cs" Condition="$(Configuration) &gt; 1.4" />
+    <Compile Include="HarmonyPatches\CompFlickable_PostExposeData.cs" />
+    <Compile Include="HarmonyPatches\CompFlickable_SwitchIsOn.cs" Condition="$(Configuration) &gt; 1.4" />
+    <Compile Include="HarmonyPatches\Compatibility\AlertManagerProxy.cs" />
+    <Compile Include="HarmonyPatches\Compatibility\AlertManager_LoadState.cs" />
+    <Compile Include="HarmonyPatches\Compatibility\BuildableInfo_DrawGhost.cs" />
+    <Compile Include="HarmonyPatches\Compatibility\JobDriver_Mount_letMountParticipate.cs" Condition="$(Configuration) &gt; 1.2" />
+    <Compile Include="HarmonyPatches\Compatibility\NeedBeauty_LevelFromBeauty.cs" />
+    <Compile Include="HarmonyPatches\Compatibility\ReBuildDoorsAndCorners_Patches.cs" />
+    <Compile Include="HarmonyPatches\CoverUtility_BaseBlockChance.cs" />
+    <Compile Include="HarmonyPatches\GenGrid_CanBeSeenOvercs.cs" />
+    <Compile Include="HarmonyPatches\GlowGrid_GroundGlowAt.cs" Condition="$(Configuration) &gt; 1.4" />
+    <Compile Include="HarmonyPatches\HarmonyPatcher.cs" />
+    <Compile Include="HarmonyPatches\LightingOverlay_Regenerate.cs" />
+    <Compile Include="HarmonyPatches\NeedOutdoors_NeedInterval.cs" />
+    <Compile Include="HarmonyPatches\PathGrid_CalculatedCostAt.cs" />
+    <Compile Include="HarmonyPatches\PathUtility_GetBuildingCost.cs" Condition="$(Configuration) &gt; 1.5" />
+    <Compile Include="HarmonyPatches\PlaySettings_DoPlaySettingsGlobalControls.cs" />
+    <Compile Include="HarmonyPatches\RoofGrid_SetRoof.cs" />
+    <Compile Include="HarmonyPatches\ThingDef_SpecialDisplayStats.cs" />
+    <Compile Include="HarmonyPatches\ThingGrid.cs" />
+    <Compile Include="Legacy\Building_RW1.4.cs" Condition="$(Configuration) &lt; 1.5" />
+    <Compile Include="Legacy\Building_Window_RW1.4.cs" Condition="$(Configuration) &lt; 1.5" />
+    <Compile Include="Legacy\CompFlickable_SwitchIsOn_RW1.4.cs" Condition="$(Configuration) &lt; 1.5" />
+    <Compile Include="Legacy\CompWindow_RW1.4.cs" Condition="$(Configuration) &lt; 1.5" />
+    <Compile Include="Legacy\GlowGrid_GameGlowAt_RW1.3.cs" Condition="$(Configuration) &lt; 1.4" />
+    <Compile Include="Legacy\GlowGrid_GameGlowAt_RW1.4.cs" Condition="$(Configuration) == 1.4" />
+    <Compile Include="Legacy\JobDriver_Mount_letMountParticipate_RW1.2.cs" Condition="$(Configuration) &lt; 1.3" />
+    <Compile Include="Legacy\MapComp_Windows_RW1.3.cs" Condition="$(Configuration) &lt; 1.4" />
+    <Compile Include="Legacy\MapComp_Windows_RW1.4.cs" Condition="$(Configuration) == 1.4" />
+    <Compile Include="Legacy\MapComp_Windows_RW1.5.cs" Condition="$(Configuration) == 1.5" />
+    <Compile Include="Legacy\NaturalLightOverlay_RW1.5.cs" Condition="$(Configuration) &lt; 1.6" />
+    <Compile Include="Legacy\PathFinder_GetBuildingCost_RW1.2.cs" Condition="$(Configuration) &lt; 1.3" />
+    <Compile Include="Legacy\PathFinder_GetBuildingCost_RW1.4.cs" Condition="$(Configuration) &gt; 1.2 AND $(Configuration) &lt; 1.5" />
+    <Compile Include="Legacy\PathFinder_GetBuildingCost_RW1.5.cs" Condition="$(Configuration) == 1.5" />
+    <Compile Include="Legacy\RoomGroupTempTracker_EqualizeTemperature.cs" Condition="$(Configuration) &lt; 1.3" />
+    <Compile Include="Legacy\Settings_RW1.5.cs" Condition="$(Configuration) &lt; 1.6" />
+    <Compile Include="Legacy\StatPart_Landscape_RW1.4.cs" Condition="$(Configuration) &lt; 1.5" />
+    <Compile Include="Legacy\WindowUtility_RW1.4.cs" Condition="$(Configuration) &lt; 1.5" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
