@@ -13,7 +13,7 @@ namespace HumanResources
         public static void Execute(Harmony instance)
         {
             //Deferring to their roof skipping function so we can use it for our own needs.
-            Type LightingOverlayRegeneratePatch = AccessTools.TypeByName("ReBuildDoorsAndCorners.SectionLayer_LightingOverlay_Regenerate_Patch");
+            Type LightingOverlayRegeneratePatch = AccessTools.TypeByName("ReBuildDoorsAndCorners.SectionLayer_LightingOverlay_GenerateLightingOverlay_Patch");
             instance.Patch(AccessTools.Method(LightingOverlayRegeneratePatch, "TryInterceptRoof"),
                 null, new HarmonyMethod(typeof(ReBuildDoorsAndCorners_Patches), nameof(TryInterceptRoofPlugin)), null);
             instance.Patch(AccessTools.Method(LightingOverlayRegeneratePatch, "TryInterceptRoofed"),
