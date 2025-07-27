@@ -27,7 +27,7 @@ namespace OpenTheWindows
         static HarmonyPatcher()
         {
             Instance.PatchAll();
-            Harmony.DEBUG = true;
+            //Harmony.DEBUG = true;
 
             if (LoadedModManager.RunningModsListForReading.Any(x => x.PackageIdPlayerFacing.StartsWith("Dubwise.DubsSkylights")))
             {
