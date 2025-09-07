@@ -1,50 +1,93 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <LanguageData>
   <!--ui-->
+  <!-- EN: Closed -->
   <ClosedWindow>关闭</ClosedWindow>
-  <!--New--><EmergencyClosed>紧急事件关闭</EmergencyClosed>
+  <!--New--><!-- EN: Closed by emergency -->
+  <EmergencyClosed>紧急事件关闭</EmergencyClosed>
+  <!-- EN: , but venting. -->
   <butVenting>，但保持通风。</butVenting>
+  <!-- EN: Sealed -->
   <notVenting>不通风</notVenting>
+  <!-- EN: Facing {0}. -->
   <Facing>朝{0}。</Facing>
+  <!-- EN: Landscape to the {0} -->
   <LandscapeToThe>视野可延伸到</LandscapeToThe>
+  <!-- EN: Cannot determine which side is exterior. -->
   <cantDetermineSides>无法确定哪一侧为外部。</cantDetermineSides>
-  <!--New--><ManualCommandNote>一个殖民者会来执行任务。</ManualCommandNote>
+  <!--New--><!-- EN: A colonist will come to perform the task. -->
+  <ManualCommandNote>一个殖民者会来执行任务。</ManualCommandNote>
+  <!-- EN: Designate Open/Close -->
   <CommandDesignateOpenCloseWindowLabel>设定打开/关闭</CommandDesignateOpenCloseWindowLabel>
-  <!--Changed--><CommandDesignateOpenCloseWindowDesc>将此窗口设定为打开或关闭。不久就会有一个殖民者来执行这项任务。</CommandDesignateOpenCloseWindowDesc>
+  <!--Changed--><!-- EN: Designate this window to be open or closed. -->
+  <CommandDesignateOpenCloseWindowDesc>将此窗口设定为打开或关闭。不久就会有一个殖民者来执行这项任务。</CommandDesignateOpenCloseWindowDesc>
+  <!-- EN: Allow Light -->
   <CommandOpenCloseWindowLightLabel>采光</CommandOpenCloseWindowLightLabel>
-  <!--Changed--><CommandOpenCloseWindowLightDesc>设定是否采光。不久就会有一个殖民者来执行这项任务。</CommandOpenCloseWindowLightDesc>
+  <!--Changed--><!-- EN: Allow or block light to pass through the window. -->
+  <CommandOpenCloseWindowLightDesc>设定是否采光。不久就会有一个殖民者来执行这项任务。</CommandOpenCloseWindowLightDesc>
+  <!-- EN: Allow Air -->
   <CommandOpenCloseWindowVentLabel>通风</CommandOpenCloseWindowVentLabel>
-  <!--Changed--><CommandOpenCloseWindowVentDesc>设定是否通风。不久就会有一个殖民者来执行这项任务。</CommandOpenCloseWindowVentDesc>
-  <!--New--><CommandAutoVentilation>自动通风</CommandAutoVentilation>
-  <!--New--><CommandAutoVentilationDesc>当室温变得不适宜时，自动在窗户上生成开或关任务标识。</CommandAutoVentilationDesc>
-  <!--New--><DisabledForAutoVentilation>遵循自动通风设定。</DisabledForAutoVentilation>
-  <!--New--><TrackingTemperature>跟踪温度。</TrackingTemperature>
-  <!--New--><WaitingTemperatureNormalization>等待温度均衡。</WaitingTemperatureNormalization>
-  <!--New--><CantTrackTemperature>邻近房间无屋顶，无法跟踪温度。</CantTrackTemperature>
-  <!--New--><CommandCloseOnEmergency>紧急事件关闭</CommandCloseOnEmergency>
-  <!--New--><CommandCloseOnEmergencyDesc>当紧急事件警报出现时，自动在窗户上生成关闭任务标识。</CommandCloseOnEmergencyDesc>
-  <!--New--><DisabledByEmergency>紧急情况下禁止正常操作。</DisabledByEmergency>
+  <!--Changed--><!-- EN: Allow or block air to pass through the window. -->
+  <CommandOpenCloseWindowVentDesc>设定是否通风。不久就会有一个殖民者来执行这项任务。</CommandOpenCloseWindowVentDesc>
+  <!--New--><!-- EN: Automatic ventilation -->
+  <CommandAutoVentilation>自动通风</CommandAutoVentilation>
+  <!--New--><!-- EN: Mark the window for opening or closing when room temperature becomes uncomfortable. -->
+  <CommandAutoVentilationDesc>当室温变得不适宜时，自动在窗户上生成开或关任务标识。</CommandAutoVentilationDesc>
+  <!--New--><!-- EN: Following automatic ventilation parameters. -->
+  <DisabledForAutoVentilation>遵循自动通风设定。</DisabledForAutoVentilation>
+  <!--New--><!-- EN: Tracking temperature. -->
+  <TrackingTemperature>跟踪温度。</TrackingTemperature>
+  <!--New--><!-- EN: Waiting for temperature to equalize. -->
+  <WaitingTemperatureNormalization>等待温度均衡。</WaitingTemperatureNormalization>
+  <!--New--><!-- EN: Adjacent room is unroofed, can't track temperature. -->
+  <CantTrackTemperature>邻近房间无屋顶，无法跟踪温度。</CantTrackTemperature>
+  <!--New--><!-- EN: Close on emergency -->
+  <CommandCloseOnEmergency>紧急事件关闭</CommandCloseOnEmergency>
+  <!--New--><!-- EN: Mark the window for closing when the emergency alarm is activated. -->
+  <CommandCloseOnEmergencyDesc>当紧急事件警报出现时，自动在窗户上生成关闭任务标识。</CommandCloseOnEmergencyDesc>
+  <!--New--><!-- EN: Normal operation disabled during emergency. -->
+  <DisabledByEmergency>紧急情况下禁止正常操作。</DisabledByEmergency>
+  <!-- EN: Show natural light. -->
   <NaturalLightMap>显示自然光</NaturalLightMap>
-
+  
   <!--settings-->
+  <!-- EN: Open The Windows! -->
   <OpenTheWindows>开窗！</OpenTheWindows>
+  <!-- EN: Outdoors need acceleration -->
   <IndoorsNoNaturalLightPenalty>户外需求</IndoorsNoNaturalLightPenalty>
+  <!-- EN: Multiplies the outdoors level degradation when the pawn is indoors but not under a window. -->
   <IndoorsNoNaturalLightPenaltyDesc>当小人在室内但不在窗旁时，将会降低的户外值。</IndoorsNoNaturalLightPenaltyDesc>
+  <!-- EN: Light transmission through windows -->
   <LightTransmission>透光率</LightTransmission>
+  <!-- EN: including devices on the ceiling -->
   <LightTransmissionIncludesRoofs>包括天窗</LightTransmissionIncludesRoofs>
+  <!-- EN: Amount of exterior light that manages to cross glass and framings. Real world values are around 90%. -->
   <LightTransmissionDesc>外部光线能够穿过玻璃和百叶的比例。现实中大约是90%。</LightTransmissionDesc>
-  <!--New--><ComfortableTemperature>舒适的温度范围（°C）</ComfortableTemperature>
-  <!--New--><ComfortableTemperatureDesc>自动通风功能所设定的温度范围。默认值是游戏设定的的人类舒适温度段。</ComfortableTemperatureDesc>
+  <!--New--><!-- EN: Comfortable temperature range (°C) -->
+  <ComfortableTemperature>舒适的温度范围（°C）</ComfortableTemperature>
+  <!--New--><!-- EN: The desired temperature range for the auto-ventilation function. The default is what the game considers the human comfort zone. -->
+  <ComfortableTemperatureDesc>自动通风功能所设定的温度范围。默认值是游戏设定的的人类舒适温度段。</ComfortableTemperatureDesc>
+  <!-- EN: Beauty sensitivity reduction -->
   <BeautySensitivityReduction>美观需求</BeautySensitivityReduction>
+  <!-- EN: Numbs the pawns' sensitivity to beauty to compensate for the amount added by "Nature is Beautiful" and captured by the windows. -->
   <BeautySensitivityReductionDesc>小人对窗外景观的敏感度，以平衡「美丽的大自然」Mod中的相关设定。</BeautySensitivityReductionDesc>
-  <!--New--><BeautyFromBuildings>在计算对窗外景观时添加来自建筑物的美观度。</BeautyFromBuildings>
-  <!--New--><BeautyFromBuildingsDesc>如果选中此项，则视野中建筑物（包括雕塑）的美观度也将与植物和其他项目一起添加到“窗外景观”的统计中。</BeautyFromBuildingsDesc>
+  <!--New--><!-- EN: Add beauty from buildings when calculating a window's view. -->
+  <BeautyFromBuildings>在计算对窗外景观时添加来自建筑物的美观度。</BeautyFromBuildings>
+  <!--New--><!-- EN: If checked, beauty from buildings in view (including sculptures) will also be added to the window beauty stat, alongside plants and other items. -->
+  <BeautyFromBuildingsDesc>如果选中此项，则视野中建筑物（包括雕塑）的美观度也将与植物和其他项目一起添加到“窗外景观”的统计中。</BeautyFromBuildingsDesc>
+  <!-- EN: Tweak the walls graphics -->
   <LinkOptionsLabel>调整墙的贴图</LinkOptionsLabel>
+  <!-- EN: requires a restart -->
   <RequiresRestart>需要重新启动游戏</RequiresRestart>
+  <!-- EN: Link with the windows -->
   <LinkWindowsAndWalls>与窗相连</LinkWindowsAndWalls>
+  <!-- EN: Link with vents & coolers -->
   <LinkVentsAndWalls>与通风孔相连&amp;颜色</LinkVentsAndWalls>
+  <!-- EN: Link with vents, coolers & refrigerators -->
   <LinkFridgesAndWalls>与通风孔相连，颜色&amp;「冰箱」Mod</LinkFridgesAndWalls>
-  <!--New--><AlarmOptionsLabel>整合“Better Pawn Control”</AlarmOptionsLabel>
-  <!--New--><AlarmReactDefault>默认紧急事件关闭</AlarmReactDefault>
-
+  <!--New--><!-- EN: <i>Better Pawn Control</i> integration -->
+  <AlarmOptionsLabel>整合“Better Pawn Control”</AlarmOptionsLabel>
+  <!--New--><!-- EN: Windows close on emergency by default -->
+  <AlarmReactDefault>默认紧急事件关闭</AlarmReactDefault>
+  
 </LanguageData>
