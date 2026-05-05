@@ -634,7 +634,7 @@ namespace OpenTheWindows
 
         private void MapUpdateHandler(object sender, MapUpdateWatcher.MapUpdateInfo info)
         {
-            if (info.map != Map) return;
+            if (!Spawned || info.map != Map) return;
             var cellIdx = info.Origin;
             var cellPos = info.origin;
             bool roof = sender is RoofGrid;
